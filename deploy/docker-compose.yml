@@ -1,0 +1,58 @@
+version: "3.8"
+
+services:
+  rproxy:
+    container_name: rproxy
+    image: "rproxy:latest"
+    volumes:
+      - /etc/letsencrypt/:/etc/letsencrypt/
+    build:
+      context: ../rproxy
+    ports:
+      - 80:80
+      - 443:443
+    depends_on:
+      - root-page
+      - cv
+      - miam-front
+      - api-server
+    deploy:
+      restart_policy:
+        condition: any
+  root-page:
+    container_name: root-page
+    image: "root-page:latest"
+    build:
+      context: ../root-page
+    deploy:
+      restart_policy:
+        condition: any
+  cv:
+    container_name: cv
+    image: "cv:latest"
+    build:
+      context: ../cv
+    deploy:
+      restart_policy:
+        condition: any
+  miam-front:
+    container_name: miam-front
+    image: "miam-front:latest"
+    build:
+      context: ../ #Must be the root of the project to get shared/common files
+      dockerfile: ./miam/Dockerfile
+    deploy:
+      restart_policy:
+        condition: any
+  api-server:
+    container_name: api-server
+    image: "api-server:latest"
+    environment:
+      - PORT=8084
+    build:
+      context: ../api-server/ #Must be the root of the project to get shared/common files
+    volumes:
+      - /data/sqllitedb:/data/sqllitedb
+    deploy:
+      restart_policy:
+        condition: any

@@ -1,0 +1,6 @@
+@media print {
+  .page-break-before {
+    margin-top: 20px;
+    page-break-before: always;
+  }
+}

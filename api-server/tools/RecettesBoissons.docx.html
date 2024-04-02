@@ -1,0 +1,226 @@
+<!-- https://www.rapidtables.com/convert/number/hex-to-decimal.html -->
+<!-- https://unicode.org/emoji/charts/full-emoji-list.html -->
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Recettes@PiBox</title>
+    
+    <style type="text/css">
+        
+        html, body, * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            border: 0;
+        }
+        
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background-color: #ffffff;
+            color: #000000;
+            text-shadow: 0.1px 0.1px 0.1px #888888;
+        }
+        
+        p {
+            margin: 0;
+        }
+        
+        .top-bar{
+            height: auto;
+            display: flex;
+            align-items: stretch;
+            justify-content: flex-end;
+            padding: 0 10px;
+            background-color: #1565C0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 2px #AAAAAA;
+        }
+        .food-line{
+            font-size: 40px;
+            height: 60px;
+            overflow: hidden;
+            line-height: 60px;/*to not see below icon when overflowed */
+        }
+        
+        .search-box {
+            background-color: white;
+            border: 1px solid rgb(173, 173, 173);
+            border-radius: 3px;
+            padding: 4px 4px 4px 8px;
+            width: auto;
+            display: flex;
+        }
+        
+        .search-input {
+            border: none;
+            padding: 0;
+            font-size: 16px;
+            width: 160px;
+        }
+        
+        .search-input::placeholder {
+            color: rgb(187, 187, 187);
+            font-style: italic;
+        }
+        
+        .search-input:focus {
+            border: none;
+            outline:none;
+        }
+        
+        .search-icon {
+            opacity: 0.6;
+            cursor: pointer;
+        }
+        .search-icon:hover {
+            opacity: 1;
+        }
+        .content{
+            padding: 5px 50px 0 50px;
+        }
+        
+        .content>p>a {
+            font-weight: bold;
+            line-height: 25px;
+            font-size: 20px;
+            color: #1565c0;
+            text-decoration: none;
+        }
+        .content>p>a::before {
+            content: '🍅';
+            vertical-align: top;
+            margin-right: 5px;
+        }
+        
+        .content>p>a:hover {
+            color: #2d8fff;
+        }
+        
+        .content>p:first-child {
+            font-weight: bold;
+            line-height: 30px;
+            color: darkgrey;
+            font-size: 40px;
+            margin: 10px auto;
+            text-align: center;
+            text-shadow: 1px 1px 2px #c3c3c3;
+            text-transform: uppercase;
+        }
+        
+        .content>h1 {
+            border-top-width: 1px;
+            border: solid black 0;
+            border-top-width: 2px;
+            border-bottom-width: 2px;
+            margin-top: 100px;
+        }
+        
+        .content>h2 {
+            margin-bottom: 6px;
+        }
+        
+        .content>p {
+            padding: 4px 10px;
+        }
+        
+        .floating-menu{
+            position: fixed;
+            bottom: 10px;
+            right: 10px;
+            border-radius: 3px;
+            box-shadow: 2px 2px 3px grey;
+        }
+        .floating-menu-button{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            height: 40px;
+            width: 40px;
+            background-color: #5cca9a;
+            font-size: 25px;
+        }
+    </style>
+    
+</head>
+
+<body>
+    <div class="top-bar">
+        <div class="food-line">🍆 🍣 🥕🥗 🧀 🍗 🥦 🍔 🧅 🌮🍕🧄🥑🥘🥪 🍞 🌽🍤 🍆 🍣 🥕🥗 🧀 🍗 🥦 🍔 🧅 🌮🍕🧄🥑🥘🥪 🍞 🌽🍤 🍆 🍣 🥕🥗 🧀 🍗 🥦 🍔 🧅 🌮🍕🧄🥑🥘🥪 🍞 🌽🍤</div>
+        <div class="search-box"><input class='search-input' type="text" spellcheck="false" placeholder="Chercher" value="" 
+            onkeyup="searchKeyUp(event)"
+            
+            />
+            
+            <span class="search-icon" ontouchend="searchClick(event)" onclick="searchClick(event)">&#128269;</span></div>
+        </div>
+        <div class="content">
+            <p>Recettes Boissons</p><p> </p><p><a href="#_Toc156901415">Punch Julien</a></p><p><a href="#_Toc156901416">Extra sangria de Domi</a></p><p><a href="#_Toc156901417">Sangria de Tikho</a></p><p><a href="#_Toc156901418">Vin de cassis</a></p><p><a href="#_Toc156901419">Vin d'orange</a></p><h1><a id="_Toc156901415"></a>Punch Julien</h1><h2>Ingrédients</h2><p>1L de Rhum </p><p>1/2L de Sucre de canne</p><p>2 cocktails de fruit (100% pur jus si possible, Joker, Passionata idéal)</p><p>1 jus de banane </p><p>1 jus ananas ou mangue (1/2 la veille puis rajout s’il faut)</p><p>2 Oranges (ou 5 clémentines selon la saison)</p><p>1 banane</p><p>Fruits de saison</p><p>1 bâton de cannelle (sinon grosse pincée)</p><p>Quelques gouttes d’extrait de vanille</p><p>Noix de muscade, girofle (facultatif)</p><h2>Préparation</h2><p>Préparer la veille pour faire macérer en mettant ne mettant pas tout le sucre puis ajuster le lendemain</p><p> </p><h1><a id="_Toc156901416"></a>Extra sangria de Domi</h1><h2>Ingrédients</h2><p>A peu prés moitié de vin rouge (pas du trop mauvais ) et moitié de jus de fruits.</p><p>1 cubi de 5 l de vin rouge (ex: sainte cecile les vignes ),</p><p>Un peu moins de 5 l de jus de fruits, des 100% pur jus :</p><p>1 a 2 l d d'orange,</p><p>1l coktail (joker),</p><p>1l poire,</p><p>1l ananas</p><p>1 verre de sucre ,en rajouter le lendemain si y faut,</p><p>1  baton de cannelle,</p><p>Et pour corser le tout un peu de gnole à pépé , 1/2 verre </p><p>2 oranges (coupées en tranches puis en 1/4)</p><p>2 citrons (coupées en tranches puis en 1/4)</p><h2>Préparation</h2><p>Il faut la préparer la veille pour que tout ca macère.</p><p> </p><p> </p><h1><a id="_Toc156901417"></a>Sangria de Tikho</h1><h2>Ingrédients</h2><p>125g de pêches</p><p>1 banane</p><p>2 rondelles de citron</p><p>1 tranche de melon</p><p>2 oranges</p><p>Cannelle</p><p>1l de vin rouge</p><p>100g de sucre</p><p>¼ l d’eau</p><p>(Rhum)</p><h2>Préparation</h2><p>Couper les fruits en morceaux, ajouter la cannelle, le vin puis le sucre dilué dans l’eau.</p><p>On peut rajouter du Rhum.</p><h1><a id="_Toc156901418"></a>Vin de cassis</h1><h2>Ingrédients</h2><p>TBD</p><h2>Préparation</h2><p>Tremper les cassis 48h dans du vin à 12°. Les presser. Faire un sirop avec le même poids de sucre que l’on cuit 20 min.</p><p>Mettre en bouteille avec ½ verre d’eau de vie.</p><h1><a id="_Toc156901419"></a>Vin d'orange</h1><h2>Ingrédients</h2><p>1kg d’écorce d’orange</p><p>10g de camomille</p><p>1 bâton de cannelle</p><p>2kg de sucre ( ?)</p><p>2kg d’alcool </p><h2>Préparation</h2><p>TBD</p><p> </p>
+        </div>
+        <div class="floating-menu">
+            <div class="floating-menu-button" onclick="goUp(event)">&#9757;</div>
+        </div>
+    </body>
+    
+    <script>
+        var TRange = null;
+        let findOption = {
+            
+        }
+        function findString(str) {
+            if (parseInt(navigator.appVersion) < 4) return;
+            var strFound;
+            if (window.find) {
+                strFound = self.find(str, false, false, true);
+                // if (strFound && self.getSelection && !self.getSelection().anchorNode) {
+                    //     strFound = self.find(str)
+                    // }
+                    // if (!strFound) {
+                        //     strFound = self.find(str, 0, 1)
+                        //     while (self.find(str, 0, 1)) continue
+                        // }
+                    } else {
+                        // EXPLORER-SPECIFIC CODE        
+                        if (TRange != null) {
+                            TRange.collapse(false)
+                            strFound = TRange.findText(str)
+                            if (strFound) TRange.select()
+                        }
+                        if (TRange == null || strFound == 0) {
+                            TRange = self.document.body.createTextRange()
+                            strFound = TRange.findText(str)
+                            if (strFound) TRange.select()
+                        }
+                    } 
+                    // if (!strFound) alert("String '" + str + "' not found!")
+                    return;
+                };
+                
+                
+                function searchKeyUp(evt){
+                    //evt.preventDefault();
+                    if( evt.code === 'Enter' || evt.key === 'Enter' ){
+                        findString(evt.target.value);  
+                        // setTimeout(()=>{
+                            //     console.info(evt.target) ;
+                            //     evt.target.focus();
+                            //     evt.target.click()
+                            // },2000)
+                        }
+                    }
+                    function searchClick(evt){
+                        evt.stopPropagation();
+                        evt.preventDefault() ;
+                        const value = document.querySelector('.search-input').value;
+                        findString(value);  
+                    }
+                    
+                    function goUp(evt){
+                        window.scrollTo(0, 0);
+                    }
+                </script>
+                </html>

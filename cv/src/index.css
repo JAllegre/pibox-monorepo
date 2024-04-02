@@ -1,0 +1,40 @@
+html {
+  box-sizing: border-box;
+}
+
+*,
+*:before,
+*:after {
+  box-sizing: inherit;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Roboto', Arial, 'Helvetica Neue', sans-serif;
+  font-size: 14px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
+}
+
+/*Force use of color/image in print mode*/
+@media print {
+  body {
+    -webkit-print-color-adjust: exact !important; /* Chrome, Safari 6 – 15.3, Edge */
+    color-adjust: exact !important; /* Firefox 48 – 96 */
+    print-color-adjust: exact !important; /* Firefox 97+, Safari 15.4+ */
+  }
+}
+@page {
+  size: A4 portrait;
+  margin-left: 0px;
+  margin-right: 0px;
+  margin-top: 0px;
+  margin-bottom: 0px;
+  margin: 0;
+  -webkit-print-color-adjust: exact;
+}

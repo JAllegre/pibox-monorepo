@@ -1,0 +1,56 @@
+{
+  "str.change.language.tooltip": "Switch to french",
+  "str.head.role": "Lead Developer",
+  "str.skills.title": "Skills",
+  "str.skills.title.main": "Active skills",
+  "str.skills.title.other": "Other skills",
+  "str.experiences.title": "Work Experience",
+  "str.formations.title": "Education",
+  "str.interests.title": "Personal interests",
+
+  "str.formations.cnam": "Computer engineering diploma - CNAM Montpellier, France",
+  "str.formations.du": "DU informatique - IUT Montpellier, France",
+  "str.formations.dut": "DUT in computer science - IUT Montpellier, France",
+
+  "str.skills.english": "English",
+  "str.skills.english.technical": "Technical english",
+  "str.skills.english.fluent": "Fluent english",
+
+  "str.interests.list": "Cooking, hiking",
+
+  "str.xp1.location": "Genesys Conferencing - Montpellier, France",
+  "str.xp1.role": "Back-end/Front-end Developer",
+  "str.xp1.period": "2000 - 2008",
+  "str.xp1.text": "Design and implementation of an apache module in C ++, allowing to connect a web application to internal audio conference servers.. Takeover of the management and maintenance of a data conference server in VC ++, in order to improve its performance and stability.. Implementation of components of the first client on web browser of the conference service of the company, replacing the old native application.. For internal needs, and as a project of the CNAM engineer thesis, design and development of a VC ++ application allowing to pilot scripts (VOS) in order to test audio features",
+  "str.xp1.notes": "C | C++ | VC++ | Java | OracleDB",
+
+  "str.xp2.location": "Intercall (ex-Genesys Conferencing) - Montpellier, France",
+  "str.xp2.period": "2009 - 2016",
+  "str.xp2.role": "Front-End development engineer",
+  "str.xp2.text": "Design and start of the implementation of the new web client for the company's teleconferencing solution in React and Material-ui, while reusing and adapting existing business components.. Implementation of an application in QML / JavaScript, embedded in a conference phone by reusing and strongly optimizing the business components of the existing web application, in order to meet the limited capabilities of the device.. Development of many graphic and business components of the company's web conference application based on Dojo toolkit.. These various projects were carried out within a team of 5 to 8 people in France and in coordination with other teams in the US, Canada, China and India, using the Agile Scrum methodology",
+  "str.xp2.notes": "Vanilla JavaScript | Dojo | JQuery | HTML/CSS | QML",
+
+  "str.xp3.location": "Intrado/West (ex-Intercall) - Montpellier, France",
+  "str.xp3.period": "2017 - 2019",
+  "str.xp3.role": "Senior developer / Technical Leader",
+  "str.xp3.text": "Design and development of the front-end and back-end of a new web portal, with the purpose of exposing to customers their usage and consumption data from the company's databases.. This portal mainly includes user authentication, user administration (creation, hierarchy, accounts, etc.), display of data using Tableau, a notification system and raw data export as a file.. Implement a CI/CD pipeline with GitHub, Jenkinsfile, Artifactory and PCF for automatic deployment of all portal applications (mono-repo).. Implementation of unit tests in Jest/Enzyme and SonarQube configuration in order to validate the code before deployment. Start of the integration of Puppeteer for the execution of end-to-end tests.. This project was carried out within a team of 12 people including 3 in France using agile methods (SAFE, Scrum)",
+  "str.xp3.notes": "ES6 | React | MUI | Redux | Node | Express | Postgres | RestAPI",
+
+  "str.xp4.location": "Videomenthe - Montpellier, France",
+  "str.xp4.period": "2020 - 2022",
+  "str.xp4.role": "Lead Developer full stack JS",
+  "str.xp4.text": "Technical management of a team of 4 full stack JS developers.. Improvement and development of features for the web application managing video workflows, based on the Meteor framework.. Development of a web multimedia player with audio/video stream management and audio transformation capabilities using the AudioContext API (multi-tracks/channels).. Implementation of the Scrum methodology using GitHub tools.. Implementation of CI/CD pipelines using GitHub and DockerHub for deployment on Azure cloud.",
+  "str.xp4.notes": "Typescript | React | Bootstrap | Redux | Meteor | Node | MongoDB | GraphQL",
+
+  "str.xp5.location": "Viabeez - Saint-Malo (France/Remote) ",
+  "str.xp5.period": "June 2022 - Jan 2023",
+  "str.xp5.role": "Lead Developer full stack JS",
+  "str.xp5.text": "Technical management of a team of 3 full stack JS developers.. Improvement and development of features for the web application managing appointments between employees and practitioners.. Participation in implementing the Kanban methodology using GitHub and Jira tools.. Implementation of CI/CD pipelines using GitHub Workflows for deployment on Heroku and Netlify.",
+  "str.xp5.notes": "Typescript | React | Redux-Toolkit | Grommet | Node | Express | MongoDB | RestAPI",
+
+  "str.xp6.location": "MyLi - Marseille,France (Télétravail)",
+  "str.xp6.period": "Feb 2023 - Oct 2023",
+  "str.xp6.role": "Lead Developer frontend",
+  "str.xp6.text": "Technical management of a front-end team consisting of 2 developers, using agility methodology (Kanban).. Implementation and development of the web application for MyLi's new platform (internet influence management).. Enhancement and development of functionalities for other \"legacy\" web applications.",
+  "str.xp6.notes": "Typescript | ViteJS | React | Redux-Toolkit | MUI | RestAPI"
+}
