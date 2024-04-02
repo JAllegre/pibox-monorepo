@@ -1,38 +1,12 @@
-const RECIPES_API_PATH = "/api/miam/recipes";
-
 import {
   GetRecipeResponse,
   GetRecipesResponse,
   RecipeInput,
 } from "@common/miamTypes";
 
-const baseApiUrl = `${import.meta.env.VITE_API_HOST}${RECIPES_API_PATH}`;
+import { fetchData, postData } from "@common/clientApi";
 
-function checkResponse(response: Response) {
-  if (!response.ok) {
-    console.log("api.ts/checkResponse | Bad response", response);
-    throw new Error(response.statusText);
-  }
-  return response.json();
-}
-
-async function postData<T>(url: string, data: T, method = "POST") {
-  const response = await fetch(url, {
-    method: method,
-    cache: "no-cache",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(data),
-  });
-
-  return checkResponse(response);
-}
-
-async function fetchData(url: string) {
-  const response = await fetch(url);
-  return checkResponse(response);
-}
+const baseApiUrl = `${import.meta.env.VITE_API_HOST}/api/miam/recipes`;
 
 export async function getAllRecipes(): Promise<GetRecipesResponse> {
   return fetchData(baseApiUrl);

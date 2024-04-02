@@ -2,7 +2,7 @@ FROM node:20-bookworm-slim as buildStage
 
 WORKDIR /app
 
-COPY ./api-server/src/features/miam ./api-server/src/features/miam
+COPY ./common/ ./common/
 
 COPY ./miam/ ./miam/
 

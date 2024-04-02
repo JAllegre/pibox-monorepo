@@ -16,5 +16,5 @@ COPY --from=buildStage /builder/node_modules ./node_modules
 
 COPY --from=buildStage /builder/build ./runtime
 
-CMD ["node", "runtime/main.js"]
+CMD ["node", "runtime/api-server/src/main.js"]
 

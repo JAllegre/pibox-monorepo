@@ -1,6 +1,6 @@
 import { Box } from "@chakra-ui/react";
 import CheckItemLine from "./CheckItemLine";
-import { CheckListCategory } from "./types";
+import { CheckListCategory } from "../../common/checkListTypes";
 
 interface CheckCategoryPanelProps {
   checkListCategory: CheckListCategory;

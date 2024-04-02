@@ -1,7 +1,11 @@
 import sqlite3 from "sqlite3";
 import { DB_FILENAME } from "../../lib/constants";
 import { DB_TABLE_RECIPES } from "./miamConstants";
-import { RecipeInput, RecipeRow, RecipeRowShort } from "./miamTypes";
+import {
+  RecipeInput,
+  RecipeRow,
+  RecipeRowShort,
+} from "../../../../common/miamTypes";
 
 const sqlite3v = sqlite3.verbose();
 

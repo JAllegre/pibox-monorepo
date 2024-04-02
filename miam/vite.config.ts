@@ -11,7 +11,7 @@ export default defineConfig({
   resolve: {
     alias: {
       "@src": path.resolve(__dirname, "./src"),
-      "@common": path.resolve(__dirname, "../api-server/src/features/miam"),
+      "@common": path.resolve(__dirname, "../common"),
     },
   },
   server: {
