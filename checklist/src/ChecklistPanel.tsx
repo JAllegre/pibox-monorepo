@@ -1,25 +1,25 @@
 import { useQuery } from "@tanstack/react-query";
 import CheckCategoryPanel from "./CheckCategoryPanel";
-import { getCheckList } from "./lib/api";
+import { getChecklist } from "./lib/api";
 import { FC } from "react";
 import MyReactQuerySuspense from "./utils/MyReactQuerySuspense";
 
-const CheckListPanel: FC = () => {
+const ChecklistPanel: FC = () => {
   const { isPending, error, data } = useQuery({
-    queryKey: ["getCheckList"],
-    queryFn: getCheckList,
+    queryKey: ["getChecklist"],
+    queryFn: getChecklist,
   });
 
-  const checkList = data?.checkList;
+  const checklist = data?.checklist;
 
   return (
     <div>
       <MyReactQuerySuspense isPending={isPending} error={error}>
         <ul>
-          {checkList?.categories.map((checkListCategory) => (
+          {checklist?.categories.map((checklistCategory) => (
             <CheckCategoryPanel
-              key={checkListCategory.id}
-              checkListCategory={checkListCategory}
+              key={checklistCategory.id}
+              checklistCategory={checklistCategory}
             />
           ))}
         </ul>
@@ -27,4 +27,4 @@ const CheckListPanel: FC = () => {
     </div>
   );
 };
-export default CheckListPanel;
+export default ChecklistPanel;

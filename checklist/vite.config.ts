@@ -7,7 +7,7 @@ const env = loadEnv(nodeEnv, process.cwd());
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  base: nodeEnv === "production" ? "/checkList" : "/",
+  base: nodeEnv === "production" ? "/checklist" : "/",
   plugins: [react()],
   resolve: {
     alias: {

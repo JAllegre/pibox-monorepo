@@ -1,18 +1,18 @@
 import { Box } from "@chakra-ui/react";
 import CheckItemLine from "./CheckItemLine";
-import { CheckListCategory } from "../../common/checkListTypes";
+import { ChecklistCategory } from "../../common/checklistTypes";
 
 interface CheckCategoryPanelProps {
-  checkListCategory: CheckListCategory;
+  checklistCategory: ChecklistCategory;
 }
 export default function CheckCategoryPanel({
-  checkListCategory,
+  checklistCategory,
 }: CheckCategoryPanelProps) {
   return (
     <Box w={{ base: "100%", md: "800px" }}>
-      <Box>{checkListCategory.title}</Box>
+      <Box>{checklistCategory.title}</Box>
       <Box>
-        {checkListCategory.items.map((checkItem) => (
+        {checklistCategory.items.map((checkItem) => (
           <CheckItemLine key={checkItem.id} checkItem={checkItem} />
         ))}
       </Box>

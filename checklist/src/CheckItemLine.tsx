@@ -1,8 +1,8 @@
 import { Box, Card, CardBody, Stack, Switch } from "@chakra-ui/react";
-import { CheckListItem } from "../../common/checkListTypes";
+import { ChecklistItem } from "../../common/checklistTypes";
 
 interface CheckItemLineProps {
-  checkItem: CheckListItem;
+  checkItem: ChecklistItem;
 }
 
 export default function CheckItemLine({ checkItem }: CheckItemLineProps) {

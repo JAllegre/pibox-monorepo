@@ -1,4 +1,4 @@
-FROM node:20-bookworm-slim as buildStage
+FROM node:20-bookworm-slim as builder
 
 WORKDIR /app
 
@@ -14,6 +14,6 @@ RUN npm run build
 
 FROM nginx:latest
 
-COPY --from=buildStage /app/miam/dist /usr/share/nginx/html
+COPY --from=builder /app/miam/dist /usr/share/nginx/html
 
 COPY ./miam/nginx.default.conf /etc/nginx/conf.d/default.conf

@@ -1,13 +1,13 @@
 import express, { NextFunction, Request, Response, Router } from "express";
 
-const checkListRouter: Router = express.Router();
+const checklistRouter: Router = express.Router();
 
-checkListRouter.get(
+checklistRouter.get(
   "/",
   async (_req: Request, res: Response, next: NextFunction) => {
     try {
       res.json({
-        checkList,
+        checklist,
       });
     } catch (err) {
       next(err);
@@ -15,9 +15,9 @@ checkListRouter.get(
   }
 );
 
-export default checkListRouter;
+export default checklistRouter;
 
-const checkList = {
+const checklist = {
   id: 1,
   title: "My Check List",
   categories: [

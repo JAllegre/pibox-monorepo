@@ -24,6 +24,6 @@
       "@common/*": ["../common/*"]
     }
   },
-  "include": ["src", "../common/checkListTypes.ts"],
+  "include": ["src", "../common/checklistTypes.ts"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }

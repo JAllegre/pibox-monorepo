@@ -1,8 +1,12 @@
-FROM node:20-bookworm-slim as buildStage
+FROM node:20-bookworm-slim as builder
 
 WORKDIR /builder
 
-COPY ./ ./
+COPY ./common/ ./common/
+
+COPY ./api-server/ ./api-server/
+
+WORKDIR /builder/api-server
 
 RUN npm install
 
@@ -12,9 +16,9 @@ FROM node:20-bookworm-slim
 
 WORKDIR /app
 
-COPY --from=buildStage /builder/node_modules ./node_modules
+COPY --from=builder /builder/api-server/node_modules ./node_modules
 
-COPY --from=buildStage /builder/build ./runtime
+COPY --from=builder /builder/api-server/build/ ./runtime
 
 CMD ["node", "runtime/api-server/src/main.js"]
 

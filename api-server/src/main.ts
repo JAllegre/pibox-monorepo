@@ -2,10 +2,10 @@ import bodyParser from "body-parser";
 import cors from "cors";
 import express, { NextFunction, Request, Response } from "express";
 import morgan from "morgan";
-import checkListRouter from "./features/checkList/checkListRouter";
+import checklistRouter from "./features/checklist/checklistRouter";
 import miamRouter from "./features/miam/miamRouter";
 
-const PORT = process.env.PORT || 8084;
+const PORT = process.env.PORT || 3000;
 
 const app = express();
 
@@ -22,7 +22,7 @@ app.get("/", (_req: Request, res: Response) => {
 
 // ROUTERS
 app.use("/api/miam/", miamRouter);
-app.use("/api/checkList", checkListRouter);
+app.use("/api/checklist", checklistRouter);
 
 // ERROR MANAGEMENT
 app.use((_req: Request, res: Response) => {
