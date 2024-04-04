@@ -3,12 +3,11 @@
   "version": "1.1.0",
   "private": true,
   "dependencies": {
-    "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-intl": "^6.2.5",
+    "react-icons": "^5.0.1",
+    "react-intl": "^6.6.4",
     "react-jss": "^10.9.0",
-    "react-scripts": "^5.0.1",
-    "web-vitals": "^3.1.0"
+    "react-scripts": "^5.0.1"
   },
   "scripts": {
     "start": "npx serve -s build -p 8082",

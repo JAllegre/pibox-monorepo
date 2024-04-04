@@ -2,10 +2,10 @@ import React, { useState } from 'react';
 import { IntlProvider } from 'react-intl';
 import './App.css';
 import Header from './Header';
+import LanguageSelector from './LanguageSelector';
+import Main from './Main';
 import messagesEn from './i18n/en.json';
 import messagesFr from './i18n/fr.json';
-import Main from './Main';
-
 // import locale_en from 'react-intl/locale-data/en';
 // import locale_de from 'react-intl/locale-data/fr';
 
@@ -28,7 +28,8 @@ function App() {
   return (
     <IntlProvider locale={language} key={language} messages={messages[language]}>
       <div className="app">
-        <Header language={language} onChangeLanguage={changeLanguage} />
+        <Header />
+        <LanguageSelector language={language} onChangeLanguage={changeLanguage} />
         <Main />
       </div>
     </IntlProvider>

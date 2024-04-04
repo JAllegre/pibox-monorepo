@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { createUseStyles } from 'react-jss';
 import LineXp from './LineXp';
-import PrintPageBreaker from './PrintPageBreaker';
 import Section from './Section';
 import SectionContent from './SectionContent';
 import SectionTitle from './SectionTitle';
@@ -34,7 +33,6 @@ function SectionXp({ intl }) {
           <LineXp key="xp5" id="xp5" />
           <LineXp key="xp4" id="xp4" />
           <LineXp key="xp3" id="xp3" />
-          <PrintPageBreaker />
           <LineXp key="xp2" id="xp2" />
           <LineXp key="xp1" id="xp1" />
         </div>

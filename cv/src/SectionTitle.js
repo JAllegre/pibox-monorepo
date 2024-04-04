@@ -10,7 +10,7 @@ const useStyles = createUseStyles({
     display: 'flex',
     alignItems: 'flex-start',
     justifyContent: 'flex-start',
-    fontSize: '1.1em',
+    fontSize: '1.2em',
     textTransform: 'uppercase',
     padding: '4px 8px 4px 0',
     color: theme.color.bg.dark,

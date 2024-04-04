@@ -1,18 +1,22 @@
 {
   "str.change.language.tooltip": "Switch to french",
-  "str.head.role": "Lead Developer",
+  "str.head.role": "Senior Developer / Lead Developer",
   "str.skills.title": "Skills",
   "str.skills.title.main": "Active skills",
   "str.skills.title.other": "Other skills",
   "str.experiences.title": "Work Experience",
   "str.formations.title": "Education",
   "str.interests.title": "Personal interests",
+  "str.title.profile": "Profile",
 
-  "str.formations.cnam": "Computer engineering diploma - CNAM Montpellier, France",
-  "str.formations.du": "DU informatique - IUT Montpellier, France",
-  "str.formations.dut": "DUT in computer science - IUT Montpellier, France",
+  "str.formations.cnam": "Ingénieur Info - CNAM Montpellier",
+  "str.formations.du": "DU Informatique - IUT Montpellier",
+  "str.formations.dut": "DUT Informatique - IUT Montpellier",
 
-  "str.skills.english": "English",
+  "str.skills.title.languages": "Languages",
+  "str.skills.english": "English: Fluent",
+  "str.skills.french": "French: Native",
+
   "str.skills.english.technical": "Technical english",
   "str.skills.english.fluent": "Fluent english",
 

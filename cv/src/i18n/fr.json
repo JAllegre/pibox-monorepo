@@ -1,20 +1,24 @@
 {
   "str.change.language.tooltip": "Basculer en anglais",
-  "str.head.role": "Lead developer",
+  "str.head.role": "Senior Developer / Lead Developer",
   "str.skills.title": "Compétences",
   "str.skills.title.main": "Compétences actives",
   "str.skills.title.other": "Autres compétences",
   "str.experiences.title": "Expériences professionnelles",
   "str.formations.title": "Formations",
   "str.interests.title": "Centres d'intérêt",
+  "str.title.profile": "Profil",
 
-  "str.formations.cnam": "Diplôme ingénieur informatique - CNAM Montpellier",
-  "str.formations.du": "DU informatique - IUT Montpellier",
-  "str.formations.dut": "DUT informatique - IUT Montpellier",
+  "str.formations.cnam": "Ingénieur Info - CNAM Montpellier",
+  "str.formations.du": "DU Informatique - IUT Montpellier",
+  "str.formations.dut": "DUT Informatique - IUT Montpellier",
 
-  "str.skills.english": "Anglais",
-  "str.skills.english.technical": "Anglais Technique",
+  "str.skills.title.languages": "Langues",
+  "str.skills.english": "Anglais: Bon niveau",
+  "str.skills.french": "Français: Langue maternelle",
+
   "str.skills.english.fluent": "Anglais Courant",
+  "str.skills.english.technical": "Anglais Technique",
 
   "str.interests.list": "Cuisine, Randonnée",
 

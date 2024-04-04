@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { FormattedMessage } from 'react-intl';
 import { createUseStyles } from 'react-jss';
-import { ReactComponent as Icon } from './images/school-black-18dp.svg';
 import Section from './Section';
 import SectionContent from './SectionContent';
 import SectionTitle from './SectionTitle';
+import { ReactComponent as Icon } from './images/school-black-18dp.svg';
 
 const useStyles = createUseStyles({
   table: {
@@ -27,7 +27,7 @@ const useStyles = createUseStyles({
   tdYear: {
     color: '#909090',
     fontWeight: 'bold',
-    width: '100px',
+    width: '50px',
     textAlign: 'left'
   }
 });

@@ -1,21 +1,15 @@
 import React from 'react';
 import { createUseStyles } from 'react-jss';
-import SectionEducation from './SectionEducation';
 // import SectionInterests from './SectionInterrest';
-import SectionSkills from './SectionSkills';
+import SectionEducation from './SectionEducation';
+import SectionNameRole from './SectionNameRole';
 import SectionXp from './SectionXp';
 
 const useStyles = createUseStyles({
   main: {
-    padding: '10px 0',
+    padding: '20px 15px',
     display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    width: '1200px',
-    '@media (max-width: 1200px)': {
-      padding: '10px',
-      width: '100%'
-    }
+    flexDirection: 'column'
   }
 });
 
@@ -23,8 +17,8 @@ function Main() {
   const classes = useStyles();
   return (
     <main className={classes.main}>
+      <SectionNameRole />
       <SectionXp />
-      <SectionSkills />
       <SectionEducation />
     </main>
   );
