@@ -7,6 +7,7 @@ import SectionXp from './SectionXp';
 
 const useStyles = createUseStyles({
   main: {
+    maxWidth: '800px',
     padding: '20px 15px',
     display: 'flex',
     flexDirection: 'column'

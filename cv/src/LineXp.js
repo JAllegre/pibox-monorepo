@@ -7,6 +7,8 @@ const useStyles = createUseStyles({
   line: {},
 
   lineRole: {
+    paddingRight: '10px',
+    paddingBottom: '20px',
     fontSize: '1.2em',
     fontWeight: 'bold'
   },
@@ -16,8 +18,7 @@ const useStyles = createUseStyles({
   },
   linePeriod: {
     fontWeight: 'bold',
-    fontSize: '1.1em',
-    color: '#878787'
+    color: theme.color.bg.dark
   },
   lineText: {
     marginBottom: '0',
@@ -35,7 +36,8 @@ const useStyles = createUseStyles({
     opacity: '0.9',
     textAlign: 'left',
     margin: '0 0 30px 0',
-    color: theme.color.bg.dark
+    color: theme.color.bg.dark,
+    fontStyle: 'italic'
   }
 });
 
@@ -50,10 +52,9 @@ function LineXp({ id, intl }) {
 
   return (
     <div className={classes.line}>
-      <div className={classes.lineRole}>{intl.formatMessage({ id: `str.${id}.role` })}</div>
-      <span className={classes.linePeriod}>{intl.formatMessage({ id: `str.${id}.period` })}</span>
-      {' / '}
-      <span className={classes.lineLocation}>{intl.formatMessage({ id: `str.${id}.location` })}</span>
+      <span className={classes.lineRole}>{intl.formatMessage({ id: `str.${id}.role` })}</span>
+      <span className={classes.lineLocation}>@{intl.formatMessage({ id: `str.${id}.location` })}</span>
+      <div className={classes.linePeriod}>{intl.formatMessage({ id: `str.${id}.period` })}</div>
       <div className={classes.lineText} dangerouslySetInnerHTML={formatXpText(intl.formatMessage({ id: `str.${id}.text` }))} />
       <div className={classes.lineNotes}>{intl.formatMessage({ id: `str.${id}.notes` })}</div>
     </div>
