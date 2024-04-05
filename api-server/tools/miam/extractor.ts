@@ -2,9 +2,9 @@
 
 import { readFileSync } from "node:fs";
 import sqlite3 from "sqlite3";
-import { DB_TABLE_RECIPES } from "../src/features/miam/miamConstants";
+import { DB_TABLE_RECIPES } from "../../src/features/miam/miamConstants";
+import { DB_FILENAME } from "../../src/lib/constants";
 import { RecipeKind } from "../src/features/miam/miamTypes";
-import { DB_FILENAME } from "../src/lib/constants";
 interface RecipeData {
   recipeName: string;
   recipePeople: string;

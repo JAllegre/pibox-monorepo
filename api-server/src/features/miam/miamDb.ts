@@ -1,44 +1,11 @@
 import sqlite3 from "sqlite3";
-import { DB_FILENAME } from "../../lib/constants";
-import { DB_TABLE_RECIPES } from "./miamConstants";
 import {
   RecipeInput,
   RecipeRow,
   RecipeRowShort,
 } from "../../../../common/miamTypes";
-
-const sqlite3v = sqlite3.verbose();
-
-async function connectDb(): Promise<sqlite3.Database> {
-  return new Promise((resolve, reject) => {
-    const db = new sqlite3v.Database(
-      DB_FILENAME,
-      sqlite3v.OPEN_READWRITE,
-      (err) => {
-        if (err) {
-          reject(err.message);
-          return;
-        }
-
-        resolve(db);
-        console.log("Connected to DB", db);
-      }
-    );
-  });
-}
-
-async function closeDb(db: sqlite3.Database): Promise<sqlite3.Database> {
-  return new Promise((resolve) => {
-    db.close((err) => {
-      resolve(db);
-      console.log(
-        "Closed DB",
-        db,
-        `${err ? "with error: " + err.message : ""}`
-      );
-    });
-  });
-}
+import { connectDb, endDb } from "../../lib/db";
+import { DB_TABLE_RECIPES } from "./miamConstants";
 
 export async function getAllRecipes(): Promise<RecipeRowShort[]> {
   const db = await connectDb();
@@ -57,21 +24,9 @@ export async function getAllRecipes(): Promise<RecipeRowShort[]> {
     } catch (error) {
       reject(error);
     } finally {
-      end(db);
+      endDb(db);
     }
   });
-}
-
-function end(dbToClose?: sqlite3.Database, stmtToFinalize?: sqlite3.Statement) {
-  if (stmtToFinalize) {
-    stmtToFinalize.finalize();
-    stmtToFinalize = undefined;
-  }
-
-  if (dbToClose) {
-    closeDb(dbToClose);
-    dbToClose = undefined;
-  }
 }
 
 export async function getOneRecipe(id: number): Promise<RecipeRow> {
@@ -97,7 +52,7 @@ export async function getOneRecipe(id: number): Promise<RecipeRow> {
     } catch (error) {
       reject(error);
     } finally {
-      end(db, stmt);
+      endDb(db, stmt);
     }
   });
 }
@@ -132,7 +87,7 @@ export async function insertOneRecipe(recipeInput: RecipeInput): Promise<void> {
     } catch (error) {
       reject(error);
     } finally {
-      end(db, stmt);
+      endDb(db, stmt);
     }
   });
 }
@@ -170,7 +125,7 @@ export async function updateOneRecipe(
     } catch (error) {
       reject(error);
     } finally {
-      end(db, stmt);
+      endDb(db, stmt);
     }
   });
 }

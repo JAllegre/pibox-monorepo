@@ -1,11 +1,8 @@
-// !!! use TSX to run this script (npm i -g tsx && tsx scripts/deleteRow.ts )
-// Set ROW_TO_DELETE to the id of a recipe that you want to delete
+// !!! Use TSX to run this script (npm i -g tsx && tsx scripts/deleteRow.ts )
 
 import sqlite3 from "sqlite3";
-import { DB_TABLE_RECIPES } from "../src/features/miam/miamConstants";
-import { DB_FILENAME } from "../src/lib/constants";
-
-const ROW_TO_DELETE = 156;
+import { DB_TABLE_RECIPES } from "../../src/features/miam/miamConstants";
+import { DB_FILENAME } from "../../src/lib/constants";
 
 const sqlite3v = sqlite3.verbose();
 // Connecting to or creating a new SQLite database file
@@ -24,12 +21,20 @@ const db = new sqlite3v.Database(
 db.serialize(() => {
   // Create the items table if it doesn't exist
   db.run(
-    `DELETE FROM ${DB_TABLE_RECIPES} WHERE id=${ROW_TO_DELETE};`,
+    `CREATE TABLE IF NOT EXISTS ${DB_TABLE_RECIPES} (
+        id INTEGER PRIMARY KEY,
+        name TEXT,
+        ingredients TEXT,
+        steps TEXT,
+        peopleNumber INTEGER,
+        imageDataUrl TEXT,
+        kind INTEGER
+      )`,
     (err) => {
       if (err) {
         return console.error(err.message);
       }
-      console.log(`DELETED`);
+      console.log(`Created ${DB_TABLE_RECIPES} table.`);
 
       //   Close the database connection after all insertions are done
       db.close((err) => {
