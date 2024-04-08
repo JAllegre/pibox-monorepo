@@ -22,7 +22,7 @@ app.get("/", (_req: Request, res: Response) => {
 
 // ROUTERS
 app.use("/api/miam/", miamRouter);
-app.use("/api/checklist", checklistRouter);
+app.use("/api/checklists", checklistRouter);
 
 // ERROR MANAGEMENT
 app.use((_req: Request, res: Response) => {

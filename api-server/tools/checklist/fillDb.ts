@@ -1,5 +1,4 @@
 import {
-  getAllChecklistItems,
   insertOneCategory,
   insertOneItem,
   insertOneList,
@@ -31,9 +30,6 @@ import {
       categoryId,
       checkStatus: 0,
     });
-
-    const rows = await getAllChecklistItems();
-    console.log("rows", rows);
   } catch (error) {
     console.error("Error", error);
   }

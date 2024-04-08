@@ -2,7 +2,6 @@ import sqlite3 from "sqlite3";
 import {
   ChecklistCategoryInput,
   ChecklistInput,
-  ChecklistItem,
   ChecklistItemInput,
 } from "../../../../common/checklistTypes";
 import { connectDb, endDb } from "../../lib/db";
@@ -12,16 +11,41 @@ import {
   DB_TABLE_CHECKLIST_LISTS,
 } from "./checklistConstants";
 
-export async function getAllChecklistItems(): Promise<ChecklistItem[]> {
+export interface ChecklistListRow {
+  id: number;
+  title: string;
+  subtitle: string;
+  checkStatus: number;
+  categoryId: number;
+  categoryTitle: string;
+  listId: number;
+  listTitle: string;
+}
+
+export async function getAllChecklistItems(
+  listId: number
+): Promise<ChecklistListRow[]> {
   const db = await connectDb();
 
   return new Promise((resolve, reject) => {
     try {
-      db.all<ChecklistItem>(
-        `SELECT items.title as itemTitle, items.subtitle as itemSubtitle, items.checkStatus as itemCheckStatus,items.categoryId as categoryId, categories.title as categoryTitle    FROM ${DB_TABLE_CHECKLIST_ITEMS} items
+      db.all<ChecklistListRow>(
+        `SELECT items.id as id, 
+          items.title as title, 
+          items.subtitle as subtitle, 
+          items.checkStatus as checkStatus,
+          categories.id as categoryId, 
+          categories.title as categoryTitle,
+          lists.title as listTitle,
+          lists.id as listId
+        FROM ${DB_TABLE_CHECKLIST_ITEMS} items
         INNER JOIN ${DB_TABLE_CHECKLIST_CATEGORIES} categories
-        ON items.categoryId=categories.id;
+        ON items.categoryId=categories.id
+        INNER JOIN ${DB_TABLE_CHECKLIST_LISTS} lists
+        ON categories.listId=lists.id;
         `,
+        //WHERE lists.id=${listId}
+
         (err, rows) => {
           if (err) {
             return reject(err);
@@ -40,7 +64,10 @@ export async function getAllChecklistItems(): Promise<ChecklistItem[]> {
 export async function insertOneList(
   checklistInput: ChecklistInput
 ): Promise<number> {
-  console.log("db.tsx/insertOneList | checklistInput=", !!checklistInput);
+  console.log(
+    "checklistDb.tsx/insertOneList | checklistInput=",
+    !!checklistInput
+  );
   const db = await connectDb();
   return new Promise((resolve, reject) => {
     let stmt: sqlite3.Statement | undefined;
@@ -69,7 +96,7 @@ export async function insertOneCategory(
   checklistCategoryInput: ChecklistCategoryInput
 ): Promise<number> {
   console.log(
-    "db.tsx/insertOneCategory | checklistCategoryInput=",
+    "checklistDb.tsx/insertOneCategory | checklistCategoryInput=",
     !!checklistCategoryInput
   );
   const db = await connectDb();
@@ -103,7 +130,7 @@ export async function insertOneItem(
   checklistItemInput: ChecklistItemInput
 ): Promise<number> {
   console.log(
-    "db.tsx/insertOneItem | checklistItemInput=",
+    "checklistDb.tsx/insertOneItem | checklistItemInput=",
     !!checklistItemInput
   );
   const db = await connectDb();
@@ -129,6 +156,154 @@ export async function insertOneItem(
             resolve(stmt?.lastID);
           }
         );
+      });
+    } catch (error) {
+      reject(error);
+    } finally {
+      endDb(db, stmt);
+    }
+  });
+}
+
+export async function updateOneChecklistItem(
+  itemId: number,
+  itemInput: ChecklistItemInput
+): Promise<void> {
+  console.log(
+    "checklistDb.tsx/updateOneChecklistItem | itemInput=",
+    !!itemInput
+  );
+
+  const db = await connectDb();
+  return new Promise((resolve, reject) => {
+    let stmt: sqlite3.Statement | undefined;
+    try {
+      db.serialize(() => {
+        stmt = db.prepare(
+          `UPDATE ${DB_TABLE_CHECKLIST_ITEMS} SET title=?,subtitle=?,checkStatus=?,categoryId=? WHERE id=?`
+        );
+        stmt.run(
+          [
+            itemInput.title,
+            itemInput.subtitle,
+            itemInput.checkStatus,
+            itemInput.categoryId,
+            itemId,
+          ],
+          (err: Error) => {
+            if (err) {
+              return reject(err);
+            }
+            resolve();
+          }
+        );
+      });
+    } catch (error) {
+      reject(error);
+    } finally {
+      endDb(db, stmt);
+    }
+  });
+}
+
+export async function updateOneChecklistCategory(
+  categoryId: number,
+  categoryInput: ChecklistCategoryInput
+): Promise<void> {
+  console.log(
+    "checklistDb.tsx/updateOneChecklistCategory | categoryInput=",
+    !!categoryInput
+  );
+
+  const db = await connectDb();
+  return new Promise((resolve, reject) => {
+    let stmt: sqlite3.Statement | undefined;
+    try {
+      db.serialize(() => {
+        stmt = db.prepare(
+          `UPDATE ${DB_TABLE_CHECKLIST_CATEGORIES} SET title=?,listId=? WHERE id=?`
+        );
+        stmt.run(
+          [categoryInput.title, categoryInput.listId, categoryId],
+          (err: Error) => {
+            if (err) {
+              return reject(err);
+            }
+            resolve();
+          }
+        );
+      });
+    } catch (error) {
+      reject(error);
+    } finally {
+      endDb(db, stmt);
+    }
+  });
+}
+
+export async function updateOneChecklistList(
+  listId: number,
+  listInput: ChecklistInput
+): Promise<void> {
+  console.log(
+    "checklistDb.tsx/updateOneChecklistList | listInput=",
+    !!listInput
+  );
+
+  const db = await connectDb();
+  return new Promise((resolve, reject) => {
+    let stmt: sqlite3.Statement | undefined;
+    try {
+      db.serialize(() => {
+        stmt = db.prepare(
+          `UPDATE ${DB_TABLE_CHECKLIST_LISTS} SET title=? WHERE id=?`
+        );
+        stmt.run([listInput.title, listId], (err: Error) => {
+          if (err) {
+            return reject(err);
+          }
+          resolve();
+        });
+      });
+    } catch (error) {
+      reject(error);
+    } finally {
+      endDb(db, stmt);
+    }
+  });
+}
+
+export async function deleteOneChecklistCategory(
+  categoryId: number
+): Promise<void> {
+  console.log(
+    "checklistDb.tsx/deleteOneChecklistCategory | categoryId=",
+    categoryId
+  );
+
+  const db = await connectDb();
+  return new Promise((resolve, reject) => {
+    let stmt: sqlite3.Statement | undefined;
+    try {
+      db.serialize(() => {
+        stmt = db.prepare(
+          `DELETE FROM ${DB_TABLE_CHECKLIST_ITEMS}  WHERE categoryId=?`
+        );
+        stmt.run([categoryId], (err: Error) => {
+          if (err) {
+            return reject(err);
+          }
+          resolve();
+        });
+        stmt = db.prepare(
+          `DELETE FROM ${DB_TABLE_CHECKLIST_CATEGORIES}  WHERE id=?`
+        );
+        stmt.run([categoryId], (err: Error) => {
+          if (err) {
+            return reject(err);
+          }
+          resolve();
+        });
       });
     } catch (error) {
       reject(error);

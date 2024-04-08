@@ -1,11 +1,49 @@
 import express, { NextFunction, Request, Response, Router } from "express";
+import { Checklist } from "../../../../common/checklistTypes";
+import {
+  ChecklistListRow,
+  getAllChecklistItems,
+  updateOneChecklistCategory,
+  updateOneChecklistItem,
+} from "./checklistDb";
 
 const checklistRouter: Router = express.Router();
 
 checklistRouter.get(
-  "/",
-  async (_req: Request, res: Response, next: NextFunction) => {
+  "/:listId",
+  async (req: Request, res: Response, next: NextFunction) => {
     try {
+      const rows: ChecklistListRow[] = await getAllChecklistItems(
+        Number(req.params.listId)
+      );
+
+      const checklist: Checklist = {
+        id: rows[0].listId,
+        title: rows[0].listTitle,
+        categories: [],
+      };
+
+      rows.reduce((acc, row) => {
+        let category = acc.find((c) => c.id === row.categoryId);
+        if (!category) {
+          category = {
+            id: row.categoryId,
+            listId: row.listId,
+            title: row.categoryTitle,
+            items: [],
+          };
+          acc.push(category);
+        }
+        category.items.push({
+          id: row.id,
+          categoryId: row.categoryId,
+          checkStatus: row.checkStatus,
+          title: row.title,
+          subtitle: row.subtitle,
+        });
+        return acc;
+      }, checklist.categories);
+
       res.json({
         checklist,
       });
@@ -15,54 +53,31 @@ checklistRouter.get(
   }
 );
 
-export default checklistRouter;
+checklistRouter.put(
+  `/:listId/items/:itemId`,
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      await updateOneChecklistItem(parseInt(req.params.itemId, 10), req.body);
+      res.json({ message: "Item successfully updated" });
+    } catch (err) {
+      next(err);
+    }
+  }
+);
 
-const checklist = {
-  id: 1,
-  title: "My Check List",
-  categories: [
-    {
-      id: 1,
-      title: "Entretien / Bazar",
-      items: [
-        {
-          id: 1,
-          checkStatus: 0,
-          title: "Charbon",
-        },
-        {
-          id: 2,
-          checkStatus: 1,
-          title: "Javel",
-        },
-        {
-          id: 3,
-          checkStatus: 2,
-          title: "Sacs poubelle",
-          subtitle: "100L/15L/30L/50L",
-        },
-      ],
-    },
-    {
-      id: 2,
-      title: "Pain / Pti Dej",
-      items: [
-        {
-          id: 4,
-          checkStatus: 0,
-          title: "Pain de mie",
-        },
-        {
-          id: 5,
-          checkStatus: 1,
-          title: "Gaufres",
-        },
-        {
-          id: 6,
-          checkStatus: 2,
-          title: "Levure fraîche ",
-        },
-      ],
-    },
-  ],
-};
+checklistRouter.put(
+  `/:listId/categories/:categoryId`,
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      await updateOneChecklistCategory(
+        parseInt(req.params.categoryId, 10),
+        req.body
+      );
+      res.json({ message: "Item successfully updated" });
+    } catch (err) {
+      next(err);
+    }
+  }
+);
+
+export default checklistRouter;
