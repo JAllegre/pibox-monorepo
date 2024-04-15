@@ -8,7 +8,7 @@
     "start": "node build/back/src/main.js",
     "dev": "tsx watch src/main.ts",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "sql": "sqlite3 db.sqlite3"
+    "sql": "tsx tools/db.ts"
   },
   "author": "JAllegre",
   "license": "ISC",

@@ -42,8 +42,8 @@ export async function getAllChecklistItems(
         INNER JOIN ${DB_TABLE_CHECKLIST_CATEGORIES} categories
         ON items.categoryId=categories.id
         INNER JOIN ${DB_TABLE_CHECKLIST_LISTS} lists
-        ON categories.listId=lists.id;
-        `,
+        ON categories.listId=lists.id
+        ;`,
         //WHERE lists.id=${listId}
 
         (err, rows) => {
@@ -169,39 +169,36 @@ export async function updateOneChecklistItem(
   itemId: number,
   itemInput: ChecklistItemInput
 ): Promise<void> {
-  console.log(
-    "checklistDb.tsx/updateOneChecklistItem | itemInput=",
-    !!itemInput
-  );
+  console.log("checklistDb.tsx/updateOneChecklistItem | itemInput=", itemInput);
 
+  const queryKeys: string[] = [];
+  const queryValues: any[] = [];
+  Object.entries(itemInput).forEach(([key, value]) => {
+    queryKeys.push(`${key}=?`);
+    queryValues.push(value);
+  });
+
+  queryValues.push(itemId);
   const db = await connectDb();
   return new Promise((resolve, reject) => {
-    let stmt: sqlite3.Statement | undefined;
     try {
-      db.serialize(() => {
-        stmt = db.prepare(
-          `UPDATE ${DB_TABLE_CHECKLIST_ITEMS} SET title=?,subtitle=?,checkStatus=?,categoryId=? WHERE id=?`
-        );
-        stmt.run(
-          [
-            itemInput.title,
-            itemInput.subtitle,
-            itemInput.checkStatus,
-            itemInput.categoryId,
-            itemId,
-          ],
-          (err: Error) => {
-            if (err) {
-              return reject(err);
-            }
-            resolve();
+      db.run(
+        `UPDATE ${DB_TABLE_CHECKLIST_ITEMS} SET ${queryKeys.join(
+          ","
+        )}  WHERE id=?`,
+        queryValues,
+        (err: Error) => {
+          console.log("SUCCESS");
+          if (err) {
+            return reject(err);
           }
-        );
-      });
+          resolve();
+        }
+      );
     } catch (error) {
       reject(error);
     } finally {
-      endDb(db, stmt);
+      endDb(db);
     }
   });
 }
@@ -217,26 +214,21 @@ export async function updateOneChecklistCategory(
 
   const db = await connectDb();
   return new Promise((resolve, reject) => {
-    let stmt: sqlite3.Statement | undefined;
     try {
-      db.serialize(() => {
-        stmt = db.prepare(
-          `UPDATE ${DB_TABLE_CHECKLIST_CATEGORIES} SET title=?,listId=? WHERE id=?`
-        );
-        stmt.run(
-          [categoryInput.title, categoryInput.listId, categoryId],
-          (err: Error) => {
-            if (err) {
-              return reject(err);
-            }
-            resolve();
+      db.run(
+        `UPDATE ${DB_TABLE_CHECKLIST_CATEGORIES} SET title=?,listId=? WHERE id=?`,
+        [categoryInput.title, categoryInput.listId, categoryId],
+        (err: Error) => {
+          if (err) {
+            return reject(err);
           }
-        );
-      });
+          resolve();
+        }
+      );
     } catch (error) {
       reject(error);
     } finally {
-      endDb(db, stmt);
+      endDb(db);
     }
   });
 }
@@ -252,23 +244,21 @@ export async function updateOneChecklistList(
 
   const db = await connectDb();
   return new Promise((resolve, reject) => {
-    let stmt: sqlite3.Statement | undefined;
     try {
-      db.serialize(() => {
-        stmt = db.prepare(
-          `UPDATE ${DB_TABLE_CHECKLIST_LISTS} SET title=? WHERE id=?`
-        );
-        stmt.run([listInput.title, listId], (err: Error) => {
+      db.run(
+        `UPDATE ${DB_TABLE_CHECKLIST_LISTS} SET title=? WHERE id=?`,
+        [listInput.title, listId],
+        (err: Error) => {
           if (err) {
             return reject(err);
           }
           resolve();
-        });
-      });
+        }
+      );
     } catch (error) {
       reject(error);
     } finally {
-      endDb(db, stmt);
+      endDb(db);
     }
   });
 }

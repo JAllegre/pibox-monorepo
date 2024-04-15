@@ -18,8 +18,8 @@ checklistRouter.get(
       );
 
       const checklist: Checklist = {
-        id: rows[0].listId,
-        title: rows[0].listTitle,
+        id: rows?.[0]?.listId || 0,
+        title: rows?.[0]?.listTitle || "Test Checklist",
         categories: [],
       };
 
