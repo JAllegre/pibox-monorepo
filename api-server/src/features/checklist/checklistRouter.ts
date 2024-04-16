@@ -3,6 +3,8 @@ import { Checklist } from "../../../../common/checklistTypes";
 import {
   ChecklistListRow,
   getAllChecklistItems,
+  insertOneCategory,
+  insertOneItem,
   updateOneChecklistCategory,
   updateOneChecklistItem,
 } from "./checklistDb";
@@ -53,12 +55,36 @@ checklistRouter.get(
   }
 );
 
+checklistRouter.post(
+  `/:listId/items`,
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const id = await insertOneItem(req.body);
+      res.json({ message: "Item successfully added", id });
+    } catch (err) {
+      next(err);
+    }
+  }
+);
+
 checklistRouter.put(
   `/:listId/items/:itemId`,
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       await updateOneChecklistItem(parseInt(req.params.itemId, 10), req.body);
       res.json({ message: "Item successfully updated" });
+    } catch (err) {
+      next(err);
+    }
+  }
+);
+
+checklistRouter.post(
+  `/:listId/categories`,
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      await insertOneCategory(req.body);
+      res.json({ message: "Category successfully added" });
     } catch (err) {
       next(err);
     }
@@ -73,7 +99,7 @@ checklistRouter.put(
         parseInt(req.params.categoryId, 10),
         req.body
       );
-      res.json({ message: "Item successfully updated" });
+      res.json({ message: "Category successfully updated" });
     } catch (err) {
       next(err);
     }

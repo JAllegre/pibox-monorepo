@@ -32,3 +32,8 @@ export type ChecklistInput = Omit<Checklist, "id" | "categories">;
 export interface GetChecklistResponse {
   checklist: Checklist;
 }
+
+export interface PostChecklistItemResponse {
+  message: string;
+  id: number;
+}

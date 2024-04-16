@@ -1,6 +1,6 @@
-import { Box, Input } from "@chakra-ui/react";
+import { Box, Button, Input } from "@chakra-ui/react";
 import { useMutation } from "@tanstack/react-query";
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import {
   ChecklistCategory,
   ChecklistCategoryInput,
@@ -8,7 +8,7 @@ import {
 } from "../../common/checklistTypes";
 import CheckItemLine from "./CheckItemLine";
 import { useChecklistStore } from "./lib/ChecklistStore";
-import { updateCategory } from "./lib/api";
+import { addItem, updateCategory } from "./lib/api";
 import eventMgr from "./lib/eventMgr";
 import { DisplayMode } from "./types";
 
@@ -19,6 +19,7 @@ export default function CheckCategoryPanel({
   checklistCategory,
 }: CheckCategoryPanelProps) {
   const [categoryTitle, setCategoryTitle] = useState(checklistCategory.title);
+  const [lastAddedItemId, setLastAddedItemId] = useState<number>(0);
 
   const updateCategoryMutation = useMutation({
     mutationFn: (checklistCategoryInput: Partial<ChecklistCategoryInput>) => {
@@ -39,12 +40,28 @@ export default function CheckCategoryPanel({
     await updateCategoryMutation.mutateAsync({ title: categoryTitle });
     eventMgr.dispatch("checklist-refresh");
   };
+  const handleAddClick = useCallback(async () => {
+    const { id } = await addItem({
+      checkStatus: ChecklistItemStatus.SelectedChecked,
+      categoryId: checklistCategory.id,
+      title: "Nouveau",
+      subtitle: "",
+    });
+    eventMgr.dispatch("checklist-refresh");
+    setLastAddedItemId(id);
+  }, [checklistCategory.id]);
 
   const filteredCheckItemLines = checklistCategory.items?.reduce<
     React.ReactNode[]
   >((accu, checkItem) => {
     if (isEditMode || checkItem.checkStatus > ChecklistItemStatus.Unselected) {
-      accu.push(<CheckItemLine key={checkItem.id} checkItem={checkItem} />);
+      accu.push(
+        <CheckItemLine
+          key={checkItem.id}
+          checkItem={checkItem}
+          isNewItem={checkItem.id === lastAddedItemId}
+        />
+      );
     }
 
     return accu;
@@ -61,9 +78,8 @@ export default function CheckCategoryPanel({
         readOnly={!isEditMode}
         sx={{ bg: "black", color: "white", border: !isEditMode ? "none" : "" }}
       />
+      <Button onClick={handleAddClick}>Ajouter un produit</Button>
       <Box sx={{ px: 1 }}>{filteredCheckItemLines}</Box>
     </Box>
   );
 }
-
-//!isEditMode ? { border: "none", paddingLeft: 0 } : {}

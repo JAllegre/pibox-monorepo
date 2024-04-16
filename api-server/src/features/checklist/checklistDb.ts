@@ -22,6 +22,46 @@ export interface ChecklistListRow {
   listTitle: string;
 }
 
+function buildUpdateQueryParams(id: number, input: Object) {
+  const queryKeys: string[] = [];
+  const queryValues: any[] = [];
+
+  Object.entries(input).forEach(([key, value]) => {
+    if (value == null) {
+      return;
+    }
+    queryKeys.push(`${key}=?`);
+    queryValues.push(value);
+  });
+
+  if (queryKeys.length <= 0) {
+    throw new Error("No values to update");
+  }
+  // Always add the id at the end
+  checkId(id);
+  queryValues.push(id);
+  return { querySet: queryKeys.join(","), queryValues };
+}
+
+function buildAddQueryParams(input: Object) {
+  const queryKeys: string[] = [];
+  const queryValues: any[] = [];
+
+  Object.entries(input).forEach(([key, value]) => {
+    if (value == null) {
+      return;
+    }
+    queryKeys.push(`${key}`);
+    queryValues.push(value);
+  });
+
+  if (queryKeys.length <= 0) {
+    throw new Error("No values to add");
+  }
+
+  return { queryKeys, queryValues };
+}
+
 export async function getAllChecklistItems(
   listId: number
 ): Promise<ChecklistListRow[]> {
@@ -98,31 +138,32 @@ export async function insertOneCategory(
 ): Promise<number> {
   console.log(
     "checklistDb.tsx/insertOneCategory | checklistCategoryInput=",
-    !!checklistCategoryInput
+    checklistCategoryInput
   );
   const db = await connectDb();
   return new Promise((resolve, reject) => {
-    let stmt: sqlite3.Statement | undefined;
     try {
-      db.serialize(() => {
-        stmt = db.prepare(
-          `INSERT INTO ${DB_TABLE_CHECKLIST_CATEGORIES} (title, listId) VALUES(?,?)`
-        );
-        stmt.run(
-          [checklistCategoryInput.title, checklistCategoryInput.listId],
-          (err: Error) => {
-            if (err) {
-              return reject(err);
-            }
-            // @ts-ignore
-            resolve(stmt?.lastID);
+      const { queryValues, queryKeys } = buildAddQueryParams(
+        checklistCategoryInput
+      );
+
+      db.run(
+        `INSERT INTO ${DB_TABLE_CHECKLIST_CATEGORIES} (${queryKeys.join(
+          ","
+        )})  VALUES (${queryKeys.map(() => "?").join(",")})`,
+        queryValues,
+        function (err: Error) {
+          if (err) {
+            return reject(err);
           }
-        );
-      });
+          // @ts-ignore
+          resolve(this?.lastID);
+        }
+      );
     } catch (error) {
       reject(error);
     } finally {
-      endDb(db, stmt);
+      endDb(db);
     }
   });
 }
@@ -132,36 +173,31 @@ export async function insertOneItem(
 ): Promise<number> {
   console.log(
     "checklistDb.tsx/insertOneItem | checklistItemInput=",
-    !!checklistItemInput
+    checklistItemInput
   );
   const db = await connectDb();
   return new Promise((resolve, reject) => {
-    let stmt: sqlite3.Statement | undefined;
     try {
-      db.serialize(() => {
-        stmt = db.prepare(
-          `INSERT INTO ${DB_TABLE_CHECKLIST_ITEMS} (title, subtitle, checkStatus, categoryId) VALUES(?,?,?,?)`
-        );
-        stmt.run(
-          [
-            checklistItemInput.title,
-            checklistItemInput.subtitle,
-            checklistItemInput.checkStatus,
-            checklistItemInput.categoryId,
-          ],
-          (err: Error) => {
-            if (err) {
-              return reject(err);
-            }
-            // @ts-ignore
-            resolve(stmt?.lastID);
+      const { queryValues, queryKeys } =
+        buildAddQueryParams(checklistItemInput);
+
+      db.run(
+        `INSERT INTO ${DB_TABLE_CHECKLIST_ITEMS} (${queryKeys.join(
+          ","
+        )})  VALUES (${queryKeys.map(() => "?").join(",")})`,
+        queryValues,
+        function (err: Error) {
+          if (err) {
+            return reject(err);
           }
-        );
-      });
+          // @ts-ignore
+          resolve(this?.lastID);
+        }
+      );
     } catch (error) {
       reject(error);
     } finally {
-      endDb(db, stmt);
+      endDb(db);
     }
   });
 }
@@ -170,27 +206,6 @@ function checkId(id: number) {
   if (!id || isNaN(id)) {
     throw new Error("Missing id");
   }
-}
-
-function buildUpdateQueryParams(id: number, input: Object) {
-  const queryKeys: string[] = [];
-  const queryValues: any[] = [];
-
-  Object.entries(input).forEach(([key, value]) => {
-    if (value == null) {
-      return;
-    }
-    queryKeys.push(`${key}=?`);
-    queryValues.push(value);
-  });
-
-  if (queryKeys.length <= 0) {
-    throw new Error("No values to update");
-  }
-  // Always add the id at the end
-  checkId(id);
-  queryValues.push(id);
-  return { querySet: queryKeys.join(","), queryValues };
 }
 
 export async function updateOneChecklistItem(

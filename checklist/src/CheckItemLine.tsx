@@ -1,6 +1,6 @@
 import { Box, Card, CardBody, Input, Stack, Switch } from "@chakra-ui/react";
 import { useMutation } from "@tanstack/react-query";
-import { ChangeEvent, useCallback, useState } from "react";
+import { ChangeEvent, useCallback, useEffect, useRef, useState } from "react";
 import { ChecklistItem, ChecklistItemInput } from "../../common/checklistTypes";
 import { useChecklistStore } from "./lib/ChecklistStore";
 import { updateItem } from "./lib/api";
@@ -9,11 +9,17 @@ import { DisplayMode } from "./types";
 
 interface CheckItemLineProps {
   checkItem: ChecklistItem;
+  isNewItem?: boolean;
 }
 
-export default function CheckItemLine({ checkItem }: CheckItemLineProps) {
+export default function CheckItemLine({
+  checkItem,
+  isNewItem,
+}: CheckItemLineProps) {
   const [title, setTitle] = useState(checkItem.title);
   const [subtitle, setSubtitle] = useState(checkItem.subtitle);
+  const [isNew, setIsNew] = useState(isNewItem);
+  const cardRef = useRef<HTMLDivElement>(null);
 
   const isEditMode = useChecklistStore(
     (state) => state.displayMode === DisplayMode.Edit
@@ -66,8 +72,24 @@ export default function CheckItemLine({ checkItem }: CheckItemLineProps) {
     eventMgr.dispatch("checklist-refresh");
   }, [checkItem.subtitle, subtitle, updateItemMutation]);
 
+  useEffect(() => {
+    let tt: number = 0;
+    if (isNew) {
+      cardRef.current?.scrollIntoView({ block: "center" });
+      tt = window.setTimeout(() => {
+        setIsNew(false);
+      }, 10000);
+    }
+
+    console.log("CheckItemLine render", checkItem.id, isNew);
+
+    return () => {
+      clearTimeout(tt);
+    };
+  }, [checkItem.id, isNew]);
+
   return (
-    <Card m="1">
+    <Card ref={cardRef} m="1" sx={isNew ? { bgColor: "mistyrose" } : {}}>
       <CardBody p={2}>
         <Stack direction="row" spacing={1} alignItems="center">
           <Box w={50}>

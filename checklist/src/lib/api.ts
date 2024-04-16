@@ -2,8 +2,9 @@ import {
   ChecklistCategoryInput,
   ChecklistItemInput,
   GetChecklistResponse,
+  PostChecklistItemResponse,
 } from "../../../common/checklistTypes";
-import { fetchData, putData } from "../../../common/clientApi";
+import { fetchData, postData, putData } from "../../../common/clientApi";
 
 const baseApiUrl = `${import.meta.env.VITE_API_HOST}/api/checklists`;
 
@@ -19,6 +20,12 @@ export async function updateCategory(
     `${baseApiUrl}/0/categories/${categoryId}`,
     checklistCategoryInput
   );
+}
+
+export async function addItem(
+  checklistItemInput: ChecklistItemInput
+): Promise<PostChecklistItemResponse> {
+  return postData(`${baseApiUrl}/0/items`, checklistItemInput);
 }
 
 export async function updateItem(
