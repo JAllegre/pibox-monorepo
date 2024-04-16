@@ -1,84 +1,119 @@
 // !!! Use TSX to run this script (npm i -g tsx && tsx scripts/deleteRow.ts )
 
+import { Database } from "sqlite3";
 import {
   DB_TABLE_CHECKLIST_CATEGORIES,
   DB_TABLE_CHECKLIST_ITEMS,
   DB_TABLE_CHECKLIST_LISTS,
 } from "../../src/features/checklist/checklistConstants";
+import {
+  insertOneCategory,
+  insertOneItem,
+  insertOneList,
+} from "../../src/features/checklist/checklistDb";
 import { connectDb } from "../../src/lib/db";
+import extractedData from "./extractFromSheet.json";
 
-// Connecting to or creating a new SQLite database file
-connectDb(true).then((db) => {
-  // Serialize method ensures that database queries are executed sequentially
-  db.serialize(() => {
-    db.run(
-      `
-    DROP TABLE IF EXISTS ${DB_TABLE_CHECKLIST_ITEMS};
-    DROP TABLE IF EXISTS ${DB_TABLE_CHECKLIST_CATEGORIES};
-    DROP TABLE IF EXISTS ${DB_TABLE_CHECKLIST_LISTS};
-    `,
+function handleResult(successMessage: string, resolve?: () => void) {
+  return function (err: Error | null) {
+    if (err) {
+      throw err;
+    }
+    if (resolve) {
+      resolve();
+    }
+    console.log(successMessage);
+  };
+}
 
-      (err) => {
-        if (err) {
-          return console.error(err.message);
-        }
-        console.log(`DROPPED `);
-      }
-    );
-
-    db.run(
-      `CREATE TABLE IF NOT EXISTS ${DB_TABLE_CHECKLIST_LISTS} (
-        id INTEGER PRIMARY KEY,
-        title TEXT
-      )`,
-      (err) => {
-        if (err) {
-          return console.error(err.message);
-        }
-        console.log(`Created ${DB_TABLE_CHECKLIST_LISTS} table.`);
-      }
-    );
-
-    db.run(
-      `CREATE TABLE IF NOT EXISTS ${DB_TABLE_CHECKLIST_CATEGORIES} (
-        id INTEGER PRIMARY KEY,
-        listId INTEGER,
-        title TEXT,
-        FOREIGN KEY(listId) REFERENCES ${DB_TABLE_CHECKLIST_LISTS}(id)
-      )`,
-      (err) => {
-        if (err) {
-          return console.error(err.message);
-        }
-        console.log(`Created ${DB_TABLE_CHECKLIST_CATEGORIES} table.`);
-      }
-    );
-
-    // Create the items table if it doesn't exist
-    db.run(
-      `CREATE TABLE IF NOT EXISTS ${DB_TABLE_CHECKLIST_ITEMS} (
-        id INTEGER PRIMARY KEY,
-        categoryId INTEGER ,
-        title TEXT,
-        subtitle TEXT,
-        checkStatus INTEGER,
-        FOREIGN KEY(categoryId) REFERENCES ${DB_TABLE_CHECKLIST_CATEGORIES}(id)
-      )`,
-      (err) => {
-        if (err) {
-          return console.error(err.message);
-        }
-        console.log(`Created ${DB_TABLE_CHECKLIST_ITEMS} table.`);
-
-        //   Close the database connection after all insertions are done
-        db.close((err) => {
-          if (err) {
-            return console.error(err.message);
-          }
-          console.log("Closed the database connection.");
-        });
-        // });
-      }
-    );
+function dropTables(db: Database): Promise<void> {
+  return new Promise((resolve, reject) => {
+    try {
+      db.serialize(() => {
+        db.run(
+          `DROP TABLE IF EXISTS ${DB_TABLE_CHECKLIST_ITEMS};`,
+          handleResult(`Table ${DB_TABLE_CHECKLIST_ITEMS} DROPPED`)
+        )
+          .run(
+            `DROP TABLE IF EXISTS ${DB_TABLE_CHECKLIST_CATEGORIES};`,
+            handleResult(`Table ${DB_TABLE_CHECKLIST_CATEGORIES} DROPPED`)
+          )
+          .run(
+            `DROP TABLE IF EXISTS ${DB_TABLE_CHECKLIST_LISTS};`,
+            handleResult(`Table ${DB_TABLE_CHECKLIST_LISTS} DROPPED`, resolve)
+          );
+      });
+    } catch (error) {
+      reject(error);
+    }
   });
-});
+}
+
+function createTables(db: Database): Promise<void> {
+  return new Promise((resolve, reject) => {
+    try {
+      db.serialize(() => {
+        db.run(
+          `CREATE TABLE IF NOT EXISTS ${DB_TABLE_CHECKLIST_LISTS} (
+          id INTEGER PRIMARY KEY,
+          title TEXT
+        )`,
+          handleResult(`Created ${DB_TABLE_CHECKLIST_LISTS} table`)
+        )
+          .run(
+            `CREATE TABLE IF NOT EXISTS ${DB_TABLE_CHECKLIST_CATEGORIES} (
+          id INTEGER PRIMARY KEY,
+          listId INTEGER,
+          title TEXT,
+          FOREIGN KEY(listId) REFERENCES ${DB_TABLE_CHECKLIST_LISTS}(id)
+        )`,
+            handleResult(`Created ${DB_TABLE_CHECKLIST_CATEGORIES} table`)
+          )
+          .run(
+            `CREATE TABLE IF NOT EXISTS ${DB_TABLE_CHECKLIST_ITEMS} (
+          id INTEGER PRIMARY KEY,
+          categoryId INTEGER ,
+          title TEXT,
+          subtitle TEXT,
+          checkStatus INTEGER,
+          FOREIGN KEY(categoryId) REFERENCES ${DB_TABLE_CHECKLIST_CATEGORIES}(id)
+        )`,
+            handleResult(`Created ${DB_TABLE_CHECKLIST_ITEMS} table`, resolve)
+          );
+      });
+    } catch (error) {
+      reject(error);
+    }
+  });
+}
+
+// Fill the db tables using the extractFromSheet.json file
+async function fillDB() {
+  const listId = await insertOneList({ title: extractedData.title });
+
+  for (const category of extractedData.categories) {
+    const categoryId = await insertOneCategory({
+      title: category.title,
+      listId,
+    });
+
+    for (const item of category.items) {
+      await insertOneItem({
+        title: item.title,
+        categoryId,
+        checkStatus: 0,
+      });
+    }
+  }
+}
+
+(async function () {
+  try {
+    const db = await connectDb(true);
+    await dropTables(db);
+    await createTables(db);
+    await fillDB();
+  } catch (error) {
+    console.error("FINAL CATCH Error", error);
+  }
+})();

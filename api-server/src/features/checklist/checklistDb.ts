@@ -47,6 +47,7 @@ export async function getAllChecklistItems(
         //WHERE lists.id=${listId}
 
         (err, rows) => {
+          console.info("listId", rows.length);
           if (err) {
             return reject(err);
           }
@@ -165,27 +166,52 @@ export async function insertOneItem(
   });
 }
 
-export async function updateOneChecklistItem(
-  itemId: number,
-  itemInput: ChecklistItemInput
-): Promise<void> {
-  console.log("checklistDb.tsx/updateOneChecklistItem | itemInput=", itemInput);
+function checkId(id: number) {
+  if (!id || isNaN(id)) {
+    throw new Error("Missing id");
+  }
+}
 
+function buildUpdateQueryParams(id: number, input: Object) {
   const queryKeys: string[] = [];
   const queryValues: any[] = [];
-  Object.entries(itemInput).forEach(([key, value]) => {
+
+  Object.entries(input).forEach(([key, value]) => {
+    if (value == null) {
+      return;
+    }
     queryKeys.push(`${key}=?`);
     queryValues.push(value);
   });
 
-  queryValues.push(itemId);
+  if (queryKeys.length <= 0) {
+    throw new Error("No values to update");
+  }
+  // Always add the id at the end
+  checkId(id);
+  queryValues.push(id);
+  return { querySet: queryKeys.join(","), queryValues };
+}
+
+export async function updateOneChecklistItem(
+  itemId: number,
+  itemInput: ChecklistItemInput
+): Promise<void> {
+  console.log("checklistDb.tsx/updateOneChecklistItem | Params=", {
+    itemId,
+    itemInput,
+  });
+
   const db = await connectDb();
+
   return new Promise((resolve, reject) => {
     try {
+      const { queryValues, querySet } = buildUpdateQueryParams(
+        itemId,
+        itemInput
+      );
       db.run(
-        `UPDATE ${DB_TABLE_CHECKLIST_ITEMS} SET ${queryKeys.join(
-          ","
-        )}  WHERE id=?`,
+        `UPDATE ${DB_TABLE_CHECKLIST_ITEMS} SET ${querySet}  WHERE id=?`,
         queryValues,
         (err: Error) => {
           console.log("SUCCESS");
@@ -207,17 +233,22 @@ export async function updateOneChecklistCategory(
   categoryId: number,
   categoryInput: ChecklistCategoryInput
 ): Promise<void> {
-  console.log(
-    "checklistDb.tsx/updateOneChecklistCategory | categoryInput=",
-    !!categoryInput
-  );
+  console.log("checklistDb.tsx/updateOneChecklistCategory | Params=", {
+    categoryId,
+    categoryInput,
+  });
 
   const db = await connectDb();
   return new Promise((resolve, reject) => {
     try {
+      const { queryValues, querySet } = buildUpdateQueryParams(
+        categoryId,
+        categoryInput
+      );
+
       db.run(
-        `UPDATE ${DB_TABLE_CHECKLIST_CATEGORIES} SET title=?,listId=? WHERE id=?`,
-        [categoryInput.title, categoryInput.listId, categoryId],
+        `UPDATE ${DB_TABLE_CHECKLIST_CATEGORIES} SET ${querySet} WHERE id=?`,
+        queryValues,
         (err: Error) => {
           if (err) {
             return reject(err);
@@ -237,17 +268,19 @@ export async function updateOneChecklistList(
   listId: number,
   listInput: ChecklistInput
 ): Promise<void> {
-  console.log(
-    "checklistDb.tsx/updateOneChecklistList | listInput=",
-    !!listInput
-  );
+  console.log("checklistDb.tsx/updateOneChecklistList | listInput=", listInput);
 
   const db = await connectDb();
   return new Promise((resolve, reject) => {
     try {
+      const { queryValues, querySet } = buildUpdateQueryParams(
+        listId,
+        listInput
+      );
+
       db.run(
-        `UPDATE ${DB_TABLE_CHECKLIST_LISTS} SET title=? WHERE id=?`,
-        [listInput.title, listId],
+        `UPDATE ${DB_TABLE_CHECKLIST_LISTS} SET ${querySet} WHERE id=?`,
+        queryValues,
         (err: Error) => {
           if (err) {
             return reject(err);
