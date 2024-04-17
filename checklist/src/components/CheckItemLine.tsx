@@ -14,11 +14,14 @@ import {
 import { useMutation } from "@tanstack/react-query";
 import { ChangeEvent, useCallback, useEffect, useRef, useState } from "react";
 import { FaRegTrashAlt } from "react-icons/fa";
-import { ChecklistItem, ChecklistItemInput } from "../../common/checklistTypes";
-import { useChecklistStore } from "./lib/ChecklistStore";
-import { removeItem, updateItem } from "./lib/api";
-import eventMgr from "./lib/eventMgr";
-import { DisplayMode } from "./types";
+import {
+  ChecklistItem,
+  ChecklistItemInput,
+} from "../../../common/checklistTypes";
+import { DisplayMode } from "../types";
+import { useChecklistStore } from "../utils/ChecklistStore";
+import { removeItem, updateItem } from "../utils/api";
+import eventMgr from "../utils/eventMgr";
 interface CheckItemLineProps {
   checkItem: ChecklistItem;
   isNewItem?: boolean;
@@ -119,7 +122,7 @@ export default function CheckItemLine({
       bgColor={isNew ? "red.100" : "gray.600"}
       color="teal.50"
     >
-      <CardBody p={2}>
+      <CardBody px={2} py={1}>
         <Stack direction="row" spacing={1} alignItems="center">
           <Box w={50}>
             <Switch
@@ -150,7 +153,9 @@ export default function CheckItemLine({
           {isEditMode && (
             <Menu colorScheme="black">
               <MenuButton as={Box} cursor="pointer">
-                <FaRegTrashAlt color="red" />
+                <Box color="red.400">
+                  <FaRegTrashAlt />
+                </Box>
               </MenuButton>
               <MenuList bgColor="black">
                 <MenuGroup title="Êtes vous sur ?" bgColor="black">

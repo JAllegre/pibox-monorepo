@@ -12,12 +12,12 @@ export const useChecklistStore = create<ChecklistState>()(
   devtools(
     persist(
       (set) => ({
-        displayMode: 0,
+        displayMode: DisplayMode.View,
         setDisplayMode: (newDisplayMode) =>
           set(() => ({ displayMode: newDisplayMode })),
       }),
       {
-        name: "bear-storage",
+        name: "checklist-store",
       }
     )
   )

@@ -6,12 +6,12 @@ import {
   ChecklistCategory,
   ChecklistCategoryInput,
   ChecklistItemStatus,
-} from "../../common/checklistTypes";
+} from "../../../common/checklistTypes";
+import { DisplayMode } from "../types";
+import { useChecklistStore } from "../utils/ChecklistStore";
+import { addItem, updateCategory } from "../utils/api";
+import eventMgr from "../utils/eventMgr";
 import CheckItemLine from "./CheckItemLine";
-import { useChecklistStore } from "./lib/ChecklistStore";
-import { addItem, updateCategory } from "./lib/api";
-import eventMgr from "./lib/eventMgr";
-import { DisplayMode } from "./types";
 
 interface CheckCategoryPanelProps {
   checklistCategory: ChecklistCategory;

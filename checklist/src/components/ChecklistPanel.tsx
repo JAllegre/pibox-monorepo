@@ -2,12 +2,12 @@ import { Box, HStack, Heading, Switch, Text } from "@chakra-ui/react";
 import { ChecklistItemStatus } from "@common/checklistTypes";
 import { useQuery } from "@tanstack/react-query";
 import { ChangeEvent, FC, useCallback, useEffect } from "react";
+import { DisplayMode } from "../types";
+import { useChecklistStore } from "../utils/ChecklistStore";
+import MyReactQuerySuspense from "../utils/MyReactQuerySuspense";
+import { getChecklist } from "../utils/api";
+import eventMgr from "../utils/eventMgr";
 import CheckCategoryPanel from "./CheckCategoryPanel";
-import { useChecklistStore } from "./lib/ChecklistStore";
-import { getChecklist } from "./lib/api";
-import eventMgr from "./lib/eventMgr";
-import { DisplayMode } from "./types";
-import MyReactQuerySuspense from "./utils/MyReactQuerySuspense";
 
 const ChecklistPanel: FC = () => {
   const { isPending, error, data, refetch } = useQuery({
