@@ -4,7 +4,7 @@ import {
   GetChecklistResponse,
   PostChecklistItemResponse,
 } from "../../../common/checklistTypes";
-import { fetchData, postData, putData } from "../../../common/clientApi";
+import { del, fetchData, postData, putData } from "../../../common/clientApi";
 
 const baseApiUrl = `${import.meta.env.VITE_API_HOST}/api/checklists`;
 
@@ -33,4 +33,8 @@ export async function updateItem(
   checklistItemInput: Partial<ChecklistItemInput>
 ): Promise<void> {
   return putData(`${baseApiUrl}/0/items/${itemId}`, checklistItemInput);
+}
+
+export async function removeItem(itemId: number): Promise<void> {
+  return del(`${baseApiUrl}/0/items/${itemId}`);
 }

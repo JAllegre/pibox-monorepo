@@ -1,4 +1,5 @@
-import { FormControl, FormLabel, SimpleGrid, Switch } from "@chakra-ui/react";
+import { Box, HStack, Heading, Switch, Text } from "@chakra-ui/react";
+import { ChecklistItemStatus } from "@common/checklistTypes";
 import { useQuery } from "@tanstack/react-query";
 import { ChangeEvent, FC, useCallback, useEffect } from "react";
 import CheckCategoryPanel from "./CheckCategoryPanel";
@@ -24,7 +25,9 @@ const ChecklistPanel: FC = () => {
     };
   }, [refetch]);
 
-  const displayMode = useChecklistStore((state) => state.displayMode);
+  const isEditMode = useChecklistStore(
+    (state) => state.displayMode === DisplayMode.Edit
+  );
   const setDisplayMode = useChecklistStore((state) => state.setDisplayMode);
 
   const checklist = data?.checklist;
@@ -39,28 +42,46 @@ const ChecklistPanel: FC = () => {
   );
 
   return (
-    <div>
+    <Box bgColor="gray.700" px={3}>
       <MyReactQuerySuspense isPending={isPending} error={error}>
-        <div>{checklist?.title}</div>
-        <FormControl as={SimpleGrid} columns={{ base: 2, lg: 4 }}>
-          <FormLabel htmlFor="isDisplayModeChecked">Mode Edition:</FormLabel>
-          <Switch
-            id="isDisplayModeChecked"
-            isChecked={displayMode === DisplayMode.Edit}
-            onChange={handleDisplayModeChange}
-          />
-        </FormControl>
-
-        <ul>
-          {checklist?.categories.map((checklistCategory) => (
-            <CheckCategoryPanel
-              key={checklistCategory.id}
-              checklistCategory={checklistCategory}
+        <HStack justifyContent="space-between" py={2}>
+          <Heading as="h1" size="lg">
+            {checklist?.title}
+          </Heading>
+          <HStack justifyContent="space-between">
+            <Text>Edition:</Text>
+            <Switch
+              size="lg"
+              isChecked={isEditMode}
+              onChange={handleDisplayModeChange}
             />
-          ))}
+          </HStack>
+        </HStack>
+        <ul>
+          {checklist?.categories.reduce<React.ReactNode[]>(
+            (accu, checklistCategory) => {
+              if (
+                isEditMode ||
+                (checklistCategory.items.length > 0 &&
+                  checklistCategory.items.some(
+                    (item) => item.checkStatus > ChecklistItemStatus.Unselected
+                  ))
+              ) {
+                accu.push(
+                  <CheckCategoryPanel
+                    key={checklistCategory.id}
+                    checklistCategory={checklistCategory}
+                  />
+                );
+              }
+
+              return accu;
+            },
+            []
+          )}
         </ul>
       </MyReactQuerySuspense>
-    </div>
+    </Box>
   );
 };
 export default ChecklistPanel;

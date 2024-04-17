@@ -2,6 +2,7 @@ import express, { NextFunction, Request, Response, Router } from "express";
 import { Checklist } from "../../../../common/checklistTypes";
 import {
   ChecklistListRow,
+  deleteOneChecklistItem,
   getAllChecklistItems,
   insertOneCategory,
   insertOneItem,
@@ -73,6 +74,18 @@ checklistRouter.put(
     try {
       await updateOneChecklistItem(parseInt(req.params.itemId, 10), req.body);
       res.json({ message: "Item successfully updated" });
+    } catch (err) {
+      next(err);
+    }
+  }
+);
+
+checklistRouter.delete(
+  `/:listId/items/:itemId`,
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      await deleteOneChecklistItem(parseInt(req.params.itemId, 10));
+      res.json({ message: "Item successfully deleted" });
     } catch (err) {
       next(err);
     }

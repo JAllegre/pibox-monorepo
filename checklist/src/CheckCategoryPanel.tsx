@@ -1,6 +1,7 @@
-import { Box, Button, Input } from "@chakra-ui/react";
+import { Box, Card, Input, Stack } from "@chakra-ui/react";
 import { useMutation } from "@tanstack/react-query";
 import React, { useCallback, useState } from "react";
+import { RiMenuAddLine } from "react-icons/ri";
 import {
   ChecklistCategory,
   ChecklistCategoryInput,
@@ -68,18 +69,38 @@ export default function CheckCategoryPanel({
   }, []);
 
   return (
-    <Box w={{ base: "100%", md: "800px" }} pb={2}>
-      <Input
-        size="sm"
-        placeholder="Nom catégorie"
-        value={categoryTitle}
-        onChange={handleCategoryTitleChange}
-        onBlur={handleCategoryTitleBlur}
-        readOnly={!isEditMode}
-        sx={{ bg: "black", color: "white", border: !isEditMode ? "none" : "" }}
-      />
-      <Button onClick={handleAddClick}>Ajouter un produit</Button>
+    <Card w={{ base: "100%", md: "800px" }} pb={1} bgColor="gray.900" my={2}>
+      <Stack direction="row" borderRadius={5} py={1} px={2} alignItems="center">
+        <Input
+          size="xs"
+          placeholder="Nom catégorie"
+          value={categoryTitle}
+          onChange={handleCategoryTitleChange}
+          onBlur={handleCategoryTitleBlur}
+          readOnly={!isEditMode}
+          sx={{
+            border: !isEditMode ? "none" : "",
+          }}
+          color="teal.200"
+          fontSize={"md"}
+        />
+        {isEditMode && (
+          // <Button onClick={handleAddClick}>Ajouter un produit</Button>
+          <Box
+            color="teal.300"
+            onClick={handleAddClick}
+            sx={{
+              "&:hover": {
+                color: "teal.50",
+              },
+            }}
+            cursor="pointer"
+          >
+            <RiMenuAddLine fontSize="30px" />
+          </Box>
+        )}
+      </Stack>
       <Box sx={{ px: 1 }}>{filteredCheckItemLines}</Box>
-    </Box>
+    </Card>
   );
 }

@@ -311,6 +311,30 @@ export async function updateOneChecklistList(
   });
 }
 
+export async function deleteOneChecklistItem(itemId: number): Promise<void> {
+  console.log("checklistDb.tsx/deleteOneChecklistItem | itemId=", itemId);
+  checkId(itemId);
+  const db = await connectDb();
+  return new Promise((resolve, reject) => {
+    try {
+      db.run(
+        `DELETE FROM ${DB_TABLE_CHECKLIST_ITEMS} WHERE id=?`,
+        [itemId],
+        (err: Error) => {
+          if (err) {
+            return reject(err);
+          }
+          resolve();
+        }
+      );
+    } catch (error) {
+      reject(error);
+    } finally {
+      endDb(db);
+    }
+  });
+}
+
 export async function deleteOneChecklistCategory(
   categoryId: number
 ): Promise<void> {
@@ -318,30 +342,25 @@ export async function deleteOneChecklistCategory(
     "checklistDb.tsx/deleteOneChecklistCategory | categoryId=",
     categoryId
   );
-
+  checkId(categoryId);
   const db = await connectDb();
   return new Promise((resolve, reject) => {
     let stmt: sqlite3.Statement | undefined;
     try {
       db.serialize(() => {
-        stmt = db.prepare(
-          `DELETE FROM ${DB_TABLE_CHECKLIST_ITEMS}  WHERE categoryId=?`
-        );
-        stmt.run([categoryId], (err: Error) => {
-          if (err) {
-            return reject(err);
+        db.run(`DELETE FROM ${DB_TABLE_CHECKLIST_ITEMS}  WHERE categoryId=?`, [
+          categoryId,
+        ]).run(
+          `DELETE FROM ${DB_TABLE_CHECKLIST_CATEGORIES}  WHERE id=?`,
+          [categoryId],
+
+          (err: Error) => {
+            if (err) {
+              return reject(err);
+            }
+            resolve();
           }
-          resolve();
-        });
-        stmt = db.prepare(
-          `DELETE FROM ${DB_TABLE_CHECKLIST_CATEGORIES}  WHERE id=?`
         );
-        stmt.run([categoryId], (err: Error) => {
-          if (err) {
-            return reject(err);
-          }
-          resolve();
-        });
       });
     } catch (error) {
       reject(error);

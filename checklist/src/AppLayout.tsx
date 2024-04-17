@@ -1,11 +1,11 @@
-import { Stack } from "@chakra-ui/react";
+import { HStack } from "@chakra-ui/react";
 import ChecklistPanel from "./ChecklistPanel";
 
 const AppLayout = () => {
   return (
-    <Stack direction="row" justify="center">
+    <HStack justify="center">
       <ChecklistPanel />
-    </Stack>
+    </HStack>
   );
 };
 

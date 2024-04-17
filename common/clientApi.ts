@@ -23,6 +23,15 @@ export async function postData<T>(url: string, data: T, method = "POST") {
 
   return checkResponse(response);
 }
+
 export async function putData<T>(url: string, data: T) {
   return postData(url, data, "PUT");
+}
+
+export async function del(url: string) {
+  const response = await fetch(url, {
+    method: "DELETE",
+    cache: "no-cache",
+  });
+  return checkResponse(response);
 }

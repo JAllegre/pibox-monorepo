@@ -1,12 +1,24 @@
-import { Box, Card, CardBody, Input, Stack, Switch } from "@chakra-ui/react";
+import {
+  Box,
+  Card,
+  CardBody,
+  Input,
+  Menu,
+  MenuButton,
+  MenuGroup,
+  MenuItem,
+  MenuList,
+  Stack,
+  Switch,
+} from "@chakra-ui/react";
 import { useMutation } from "@tanstack/react-query";
 import { ChangeEvent, useCallback, useEffect, useRef, useState } from "react";
+import { FaRegTrashAlt } from "react-icons/fa";
 import { ChecklistItem, ChecklistItemInput } from "../../common/checklistTypes";
 import { useChecklistStore } from "./lib/ChecklistStore";
-import { updateItem } from "./lib/api";
+import { removeItem, updateItem } from "./lib/api";
 import eventMgr from "./lib/eventMgr";
 import { DisplayMode } from "./types";
-
 interface CheckItemLineProps {
   checkItem: ChecklistItem;
   isNewItem?: boolean;
@@ -28,6 +40,12 @@ export default function CheckItemLine({
   const updateItemMutation = useMutation({
     mutationFn: (checklistCategoryInput: Partial<ChecklistItemInput>) => {
       return updateItem(checkItem.id, checklistCategoryInput);
+    },
+  });
+
+  const removeItemMutation = useMutation({
+    mutationFn: (itemId: number) => {
+      return removeItem(itemId);
     },
   });
 
@@ -72,6 +90,11 @@ export default function CheckItemLine({
     eventMgr.dispatch("checklist-refresh");
   }, [checkItem.subtitle, subtitle, updateItemMutation]);
 
+  const handleDeleteClick = useCallback(async () => {
+    await removeItemMutation.mutateAsync(checkItem.id);
+    eventMgr.dispatch("checklist-refresh");
+  }, [checkItem.id, removeItemMutation]);
+
   useEffect(() => {
     let tt: number = 0;
     if (isNew) {
@@ -89,13 +112,20 @@ export default function CheckItemLine({
   }, [checkItem.id, isNew]);
 
   return (
-    <Card ref={cardRef} m="1" sx={isNew ? { bgColor: "mistyrose" } : {}}>
+    <Card
+      ref={cardRef}
+      m="1"
+      // sx={isNew ? { bgColor: "mistyrose" } : { bgColor: "grey.100" }}
+      bgColor={isNew ? "red.100" : "gray.600"}
+      color="teal.50"
+    >
       <CardBody p={2}>
         <Stack direction="row" spacing={1} alignItems="center">
           <Box w={50}>
             <Switch
               isChecked={!!checkItem.checkStatus}
               onChange={handleCheckSwitch}
+              size="md"
             />
           </Box>
           <Input
@@ -116,6 +146,22 @@ export default function CheckItemLine({
             readOnly={!isEditMode}
             sx={{ border: !isEditMode ? "none" : "" }}
           />
+
+          {isEditMode && (
+            <Menu colorScheme="black">
+              <MenuButton as={Box} cursor="pointer">
+                <FaRegTrashAlt color="red" />
+              </MenuButton>
+              <MenuList bgColor="black">
+                <MenuGroup title="Êtes vous sur ?" bgColor="black">
+                  <MenuItem bgColor="black" onClick={handleDeleteClick}>
+                    Oui
+                  </MenuItem>
+                  <MenuItem bgColor="black">Non</MenuItem>
+                </MenuGroup>
+              </MenuList>
+            </Menu>
+          )}
         </Stack>
       </CardBody>
     </Card>

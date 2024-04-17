@@ -102,6 +102,7 @@ async function fillDB() {
         title: item.title,
         categoryId,
         checkStatus: 0,
+        ...(item.subtitle && { subtitle: item.subtitle }),
       });
     }
   }

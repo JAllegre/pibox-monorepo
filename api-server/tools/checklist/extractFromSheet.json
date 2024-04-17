@@ -1,18 +1,18 @@
 {
-  "title": "Liste de courses",
+  "title": "Liste Carrefour",
   "categories": [
     {
       "title": "ENTRETIEN / BAZAR",
       "items": [
-        { "title": "Sac poubelle  💩5L/🛁15L/💐30L/🍽50L" },
+        { "title": "Sac poubelle", "subtitle": "💩5L/🛁15L/💐30L/🍽50L" },
         { "title": "Cellophane" },
         { "title": "Papier cuisson" },
         { "title": "Papier alu" },
         { "title": "Multi-usage/sols" },
-        { "title": "Sel régénérant" },
         { "title": "Javel" },
         { "title": "Mir Vaisselle" },
-        { "title": "Produit  lave-vaisselle" },
+        { "title": "Sel régénérant" },
+        { "title": "Produit lave-vaisselle" },
         { "title": "Lessive" },
         { "title": "Sopalin" },
         { "title": "PQ" }
@@ -20,7 +20,7 @@
     },
 
     {
-      "title": "PAIN / VIENOISERIE",
+      "title": "PAIN / VIENNOISERIES",
       "items": [
         { "title": "Pain de mie" },
         { "title": "Muffins" },
@@ -37,7 +37,6 @@
     {
       "title": "TEXTILE/HYGIENE",
       "items": [
-        { "title": "Gel cheveux max5" },
         { "title": "Dentifrice Enfant" },
         { "title": "Dentifrice Adulte" },
         { "title": "Love&Green SUPER 5g" },
@@ -50,9 +49,10 @@
         { "title": "Shampoing  Marseillais bio infusion pureté (gras)" },
         { "title": "Shampoing  Argile et Cédrat" },
         { "title": "Après shampoing coco | tous types de cheveux" },
+        { "title": "Gel cheveux", "subtitle": "max force 6" },
         { "title": "Gel rasage" },
-        { "title": "Deodorant Ju Menen Stick large Vert" },
-        { "title": "Deodorant Léa ushuaia rose foncé" },
+        { "title": "Deodorant Ju", "subtitle": "Menen Stick large Vert" },
+        { "title": "Deodorant Léa", "subtitle": "Ushuaia rose foncé" },
         { "title": "Mouchoirs boite" },
         { "title": "Mouchoirs mini paquet" },
         { "title": "Lingettes fesses" }
