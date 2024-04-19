@@ -30,7 +30,7 @@ export default function RecipePage() {
 
       <div className="flex flex-col justify-between gap-2 pt-2">
         <div className="flex flex-col justify-between md:flex-row-reverse">
-          {imageDataUrl && (
+          {imageDataUrl ? (
             <div className="flex items-center justify-center md:basis-1/2 md:items-start">
               <img
                 src={imageDataUrl}
@@ -38,6 +38,8 @@ export default function RecipePage() {
                 className="rounded-md shadow-md h-[200px] md:h-auto"
               />
             </div>
+          ) : (
+            <div />
           )}
 
           <div>
