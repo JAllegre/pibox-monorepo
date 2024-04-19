@@ -13,3 +13,10 @@ body,
 label {
   font-family: "Roboto", sans-serif;
 }
+
+html,
+body,
+:root,
+#root {
+  height: 100%;
+}

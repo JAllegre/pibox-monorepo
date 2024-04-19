@@ -18,7 +18,7 @@ export default function Root() {
         />
 
         <SearchContextProvider>
-          <div className="w-full md:max-w-2xl m-auto bg-[#FFFFFFEE] relative">
+          <div className="w-full md:max-w-2xl min-h-screen m-auto bg-[#FFFFFFEE] relative">
             <Navbar />
             <div className="pl-4 pr-2 pt-[--nav-height] pb-[--footer-height] px-0">
               <Outlet />
