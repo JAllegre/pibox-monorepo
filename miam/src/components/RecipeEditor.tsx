@@ -1,4 +1,5 @@
 import { RecipeInput, RecipeKind, RecipeRow } from "@common/miamTypes";
+import { ReloadIcon } from "@radix-ui/react-icons";
 import { addOneRecipe, updateOneRecipe } from "@src/lib/api";
 import convertFileToImageDataUrl from "@src/lib/convertFileToImageDataUrl";
 import { getLabelFromRecipeKind } from "@src/lib/tools";
@@ -39,8 +40,11 @@ interface RecipeEditorProps {
 }
 
 export default function RecipeEditor({ recipe }: RecipeEditorProps) {
+  const [isLoading, setIsLoading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const [newImageDataUrl, setNewImageDataUrl] = useState<string>(recipe?.imageDataUrl|| "");
+  const [newImageDataUrl, setNewImageDataUrl] = useState<string>(
+    recipe?.imageDataUrl || ""
+  );
   const [currentKind, setCurrentKind] = useState<RecipeKind>(RecipeKind.Course);
   const navigate = useNavigate();
 
@@ -57,20 +61,26 @@ export default function RecipeEditor({ recipe }: RecipeEditorProps) {
   }, []);
 
   const handleFormSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
+    setIsLoading(true);
+    try {
+      event.preventDefault();
 
-    const formData = new FormData(event.currentTarget);
+      const formData = new FormData(event.currentTarget);
 
-    formData.set("kind", String(currentKind) || String(RecipeKind.Course));
+      formData.set("kind", String(currentKind) || String(RecipeKind.Course));
 
-    if (recipe) {
-      formData.set("recipeId", String(recipe.id));
-      await updateOneRecipe(recipe.id, buildRecipeInput(formData));
-      navigate(`${Paths.Recipes}/${recipe.id}`);
-    } else {
-      await addOneRecipe(buildRecipeInput(formData));
-      navigate(Paths.Recipes);
+      if (recipe) {
+        formData.set("recipeId", String(recipe.id));
+        await updateOneRecipe(recipe.id, buildRecipeInput(formData));
+        navigate(`${Paths.Recipes}/${recipe.id}`);
+      } else {
+        await addOneRecipe(buildRecipeInput(formData));
+        navigate(Paths.Recipes);
+      }
+    } catch (e) {
+      console.error(e);
     }
+    setIsLoading(false);
   };
 
   const handleDeleteImageClick = useCallback(() => {
@@ -218,7 +228,8 @@ export default function RecipeEditor({ recipe }: RecipeEditorProps) {
         </div>
 
         <div className="flex gap-4 pt-5">
-          <Button type="submit" color="success">
+          <Button type="submit" color="success" disabled={isLoading}>
+            {isLoading && <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />}
             {recipe ? "Appliquer les modifications" : "Ajouter la recette"}
           </Button>
           <Button type="reset" color="failure" onClick={handleResetClick}>

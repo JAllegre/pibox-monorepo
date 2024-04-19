@@ -1,6 +1,7 @@
 import { useState } from "react";
 
 import { RecipeRow } from "@common/miamTypes";
+import { ReloadIcon } from "@radix-ui/react-icons";
 import { checkPassword } from "@src/lib/api";
 import { useLoaderData } from "react-router-dom";
 import RecipeEditor from "./RecipeEditor";
@@ -8,22 +9,23 @@ import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 
 export default function RecipeEditorWithPassword() {
+  const [isLoading, setIsLoading] = useState(false);
   const [isIdentified, setIsIdentified] = useState(false);
   const [password, setPassword] = useState("");
   const [isError, setIsError] = useState(false);
   const recipe = useLoaderData() as RecipeRow;
 
-  const handleIdentify = () => {
-    checkPassword(password).then(
-      () => {
-        setIsIdentified(true);
-        setIsError(false);
-      },
-      () => {
-        setIsError(true);
-      }
-    );
-
+  const handleIdentify = async () => {
+    try {
+      setIsLoading(true);
+      await checkPassword(password);
+      setIsIdentified(true);
+      setIsError(false);
+    } catch (e) {
+      setIsError(true);
+      console.error(e);
+    }
+    setIsLoading(false);
     setPassword("");
   };
 
@@ -42,8 +44,8 @@ export default function RecipeEditorWithPassword() {
             onChange={handlePasswordInput}
             autoCapitalize="off"
           />
-
-          <Button color="success" onClick={handleIdentify}>
+          <Button color="success" onClick={handleIdentify} disabled={isLoading}>
+            {isLoading && <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />}
             {"S'identifier"}
           </Button>
         </div>
