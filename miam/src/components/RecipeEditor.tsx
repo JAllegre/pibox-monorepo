@@ -40,7 +40,7 @@ interface RecipeEditorProps {
 
 export default function RecipeEditor({ recipe }: RecipeEditorProps) {
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const [newImageDataUrl, setNewImageDataUrl] = useState<string>("");
+  const [newImageDataUrl, setNewImageDataUrl] = useState<string>(recipe?.imageDataUrl|| "");
   const [currentKind, setCurrentKind] = useState<RecipeKind>(RecipeKind.Course);
   const navigate = useNavigate();
 
