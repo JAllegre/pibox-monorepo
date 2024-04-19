@@ -29,7 +29,17 @@ export default function RecipePage() {
       </div>
 
       <div className="flex flex-col justify-between gap-2 pt-2">
-        <div className="flex flex-col-reverse md:flex-row justify-between">
+        <div className="flex flex-col justify-between md:flex-row-reverse">
+          {imageDataUrl && (
+            <div className="flex items-center justify-center md:basis-1/2 md:items-start">
+              <img
+                src={imageDataUrl}
+                alt="recipe"
+                className="rounded-md shadow-md h-[200px] md:h-auto"
+              />
+            </div>
+          )}
+
           <div>
             <div className="text-md font-medium pt-3 md:pt-0">
               Ingrédients
@@ -41,16 +51,6 @@ export default function RecipePage() {
               ))}
             </ul>
           </div>
-
-          {imageDataUrl && (
-            <div className="flex items-center justify-center md:basis-1/2">
-              <img
-                src={imageDataUrl}
-                alt="recipe"
-                className="rounded-md shadow-md h-[200px] md:h-auto"
-              />
-            </div>
-          )}
         </div>
         <div>
           <div className="text-md font-medium pt-4">Préparation</div>
