@@ -3,7 +3,7 @@ import ChecklistPanel from "./ChecklistPanel";
 
 const AppLayout = () => {
   return (
-    <HStack justify="center">
+    <HStack m="auto" w="100%" maxW="2xl">
       <ChecklistPanel />
     </HStack>
   );

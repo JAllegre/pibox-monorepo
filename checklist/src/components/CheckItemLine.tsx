@@ -1,24 +1,8 @@
-import {
-  Box,
-  Card,
-  CardBody,
-  Input,
-  Menu,
-  MenuButton,
-  MenuGroup,
-  MenuItem,
-  MenuList,
-  Stack,
-  Switch,
-} from "@chakra-ui/react";
+import { Box, Card, CardBody, Input, Menu, MenuButton, MenuGroup, MenuItem, MenuList, Stack, Switch } from "@chakra-ui/react";
 import { useMutation } from "@tanstack/react-query";
 import { ChangeEvent, useCallback, useEffect, useRef, useState } from "react";
 import { FaRegTrashAlt } from "react-icons/fa";
-import {
-  ChecklistItem,
-  ChecklistItemInput,
-  ChecklistItemStatus,
-} from "../../../common/checklistTypes";
+import { ChecklistItem, ChecklistItemInput, ChecklistItemStatus } from "../../../common/checklistTypes";
 import { DisplayMode } from "../types";
 import { useChecklistStore } from "../utils/ChecklistStore";
 import { removeItem, updateItem } from "../utils/api";
@@ -28,18 +12,12 @@ interface CheckItemLineProps {
   isNewItem?: boolean;
 }
 
-export default function CheckItemLine({
-  checkItem,
-  isNewItem,
-}: CheckItemLineProps) {
+export default function CheckItemLine({ checkItem, isNewItem }: CheckItemLineProps) {
   const [title, setTitle] = useState(checkItem.title);
-  const [subtitle, setSubtitle] = useState(checkItem.subtitle);
   const [isNew, setIsNew] = useState(isNewItem);
   const cardRef = useRef<HTMLDivElement>(null);
 
-  const isEditMode = useChecklistStore(
-    (state) => state.displayMode === DisplayMode.Edit
-  );
+  const isEditMode = useChecklistStore((state) => state.displayMode === DisplayMode.Edit);
 
   const updateItemMutation = useMutation({
     mutationFn: (checklistCategoryInput: Partial<ChecklistItemInput>) => {
@@ -77,23 +55,6 @@ export default function CheckItemLine({
     eventMgr.dispatch("checklist-refresh");
   }, [checkItem.title, title, updateItemMutation]);
 
-  const handleSubtitleChange = useCallback(
-    async (event: ChangeEvent<HTMLInputElement>) => {
-      setSubtitle(event.target.value);
-    },
-    [setSubtitle]
-  );
-
-  const handleSubtitleBlur = useCallback(async () => {
-    if (subtitle === checkItem.subtitle) {
-      return;
-    }
-    await updateItemMutation.mutateAsync({
-      subtitle,
-    });
-    eventMgr.dispatch("checklist-refresh");
-  }, [checkItem.subtitle, subtitle, updateItemMutation]);
-
   const handleDeleteClick = useCallback(async () => {
     await removeItemMutation.mutateAsync(checkItem.id);
     eventMgr.dispatch("checklist-refresh");
@@ -113,44 +74,25 @@ export default function CheckItemLine({
     };
   }, [checkItem.id, isNew]);
 
-  const isDisplayed =
-    isEditMode || checkItem.checkStatus > ChecklistItemStatus.Unselected;
+  const isDisplayed = isEditMode || checkItem.checkStatus > ChecklistItemStatus.Unselected;
   return (
-    <Card
-      ref={cardRef}
-      m="1"
-      bgColor={isNew ? "red.100" : "gray.600"}
-      color="teal.50"
-      display={isDisplayed ? "" : "none"}
-    >
+    <Card ref={cardRef} my="1" bgColor={isNew ? "red.100" : "gray.600"} color="teal.50" display={isDisplayed ? "" : "none"}>
       <CardBody px={2} py={1}>
-        <Stack direction="row" spacing={1} alignItems="center">
-          <Box w={50}>
-            <Switch
-              isChecked={!!checkItem.checkStatus}
-              onChange={handleCheckSwitch}
-              size="md"
-            />
+        <Stack direction="row" alignItems="center" gap={1}>
+          <Box>
+            <Switch isChecked={!!checkItem.checkStatus} onChange={handleCheckSwitch} size="md" />
           </Box>
           <Input
             size="sm"
+            p={1}
             placeholder="Titre"
             value={title || ""}
             onChange={handleTitleChange}
             onBlur={handleTitleBlur}
             readOnly={!isEditMode}
             sx={{ border: !isEditMode ? "none" : "" }}
+            flexGrow={1}
           />
-          <Input
-            size="sm"
-            placeholder={isEditMode ? "Sous titre..." : ""}
-            value={subtitle || ""}
-            onChange={handleSubtitleChange}
-            onBlur={handleSubtitleBlur}
-            readOnly={!isEditMode}
-            sx={{ border: !isEditMode ? "none" : "" }}
-          />
-
           {isEditMode && (
             <Menu colorScheme="black">
               <MenuButton as={Box} cursor="pointer">

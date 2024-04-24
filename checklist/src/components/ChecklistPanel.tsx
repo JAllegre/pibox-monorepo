@@ -41,7 +41,7 @@ const ChecklistPanel: FC = () => {
   );
 
   return (
-    <Box bgColor="gray.700" px={3}>
+    <Box bgColor="gray.700" px={2} className="checklist-panel" flexGrow={1}>
       <MyReactQuerySuspense isPending={isPending} error={error}>
         <HStack justifyContent="space-between" py={2}>
           <Heading as="h1" size="lg">
