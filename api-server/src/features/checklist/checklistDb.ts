@@ -14,7 +14,6 @@ import {
 export interface ChecklistListRow {
   id: number;
   title: string;
-  subtitle: string;
   checkStatus: number;
   categoryId: number;
   categoryTitle: string;
@@ -72,7 +71,6 @@ export async function getAllChecklistItems(
       db.all<ChecklistListRow>(
         `SELECT items.id as id, 
           items.title as title, 
-          items.subtitle as subtitle, 
           items.checkStatus as checkStatus,
           categories.id as categoryId, 
           categories.title as categoryTitle,

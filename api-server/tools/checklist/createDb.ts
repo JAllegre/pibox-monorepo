@@ -74,7 +74,6 @@ function createTables(db: Database): Promise<void> {
           id INTEGER PRIMARY KEY,
           categoryId INTEGER ,
           title TEXT,
-          subtitle TEXT,
           checkStatus INTEGER,
           FOREIGN KEY(categoryId) REFERENCES ${DB_TABLE_CHECKLIST_CATEGORIES}(id)
         )`,
@@ -102,7 +101,6 @@ async function fillDB() {
         title: item.title,
         categoryId,
         checkStatus: 0,
-        ...(item.subtitle && { subtitle: item.subtitle }),
       });
     }
   }

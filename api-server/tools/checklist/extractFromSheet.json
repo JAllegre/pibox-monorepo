@@ -4,23 +4,22 @@
     {
       "title": "ENTRETIEN / BAZAR",
       "items": [
-        { "title": "Sac poubelle", "subtitle": "💩5L/🛁15L/💐30L/🍽50L" },
+        { "title": "Sac poubelle 💩5L/🛁15L/💐30L/🍽50L" },
         { "title": "Cellophane" },
         { "title": "Papier cuisson" },
         { "title": "Papier alu" },
         { "title": "Multi-usage/sols" },
+        { "title": "Sel regenerant" },
         { "title": "Javel" },
         { "title": "Mir Vaisselle" },
-        { "title": "Sel régénérant" },
-        { "title": "Produit lave-vaisselle" },
+        { "title": "Produit  lave-vaisselle" },
         { "title": "Lessive" },
         { "title": "Sopalin" },
         { "title": "PQ" }
       ]
     },
-
     {
-      "title": "PAIN / VIENNOISERIES",
+      "title": "PAIN / PTIT DEJ",
       "items": [
         { "title": "Pain de mie" },
         { "title": "Muffins" },
@@ -28,39 +27,37 @@
         { "title": "Brioche/Pain au lait" },
         { "title": "Pain aux noix" },
         { "title": "Pain complet" },
-        { "title": "Gaufre" },
+        { "title": "Gauffre" },
         { "title": "Gressin" },
-        { "title": "Levure Fraîche" }
+        { "title": "Levure Fraiche" }
       ]
     },
-
     {
-      "title": "TEXTILE/HYGIENE",
+      "title": "HYGIENE",
       "items": [
         { "title": "Dentifrice Enfant" },
         { "title": "Dentifrice Adulte" },
         { "title": "Love&Green SUPER 5g" },
-        { "title": "Always Daily NORMAL 2G" },
-        { "title": "Always Organic Long" },
-        { "title": "Always Organic Normal" },
+        { "title": "Always Dayli NORMAL 2G" },
+        { "title": "Always Organic 1 Normal" },
+        { "title": "Always Organic 2 Long" },
+        { "title": "Always Organic 3 night" },
         { "title": "Savon bain" },
         { "title": "Savon main" },
-        { "title": "Shampoing Julien H&S" },
-        { "title": "Shampoing  Marseillais bio infusion pureté (gras)" },
-        { "title": "Shampoing  Argile et Cédrat" },
-        { "title": "Après shampoing coco | tous types de cheveux" },
-        { "title": "Gel cheveux", "subtitle": "max force 6" },
+        { "title": "Shampoing JulienH&S" },
+        { "title": "Shampoing Marseillais bio infusion pureté (gras)" },
+        { "title": "Shampoing Argile et Cédrat" },
+        { "title": "Aprés shampoingcoco | tous types de cheveux" },
         { "title": "Gel rasage" },
-        { "title": "Deodorant Ju", "subtitle": "Menen Stick large Vert" },
-        { "title": "Deodorant Léa", "subtitle": "Ushuaia rose foncé" },
+        { "title": "Deodorant JuMenen Stick large Vert" },
+        { "title": "Deodorant Léaushuaia rose foncé" },
         { "title": "Mouchoirs boite" },
         { "title": "Mouchoirs mini paquet" },
         { "title": "Lingettes fesses" }
       ]
     },
-
     {
-      "title": "ÉPICERIE / DEJ",
+      "title": "EPICERIE",
       "items": [
         { "title": "Farine T55" },
         { "title": "Farine T45" },
@@ -71,8 +68,12 @@
         { "title": "Levure chimique" },
         { "title": "Grillotine/craquotte" },
         { "title": "Croutons Apéro" },
-        { "title": "Avoine" },
-
+        { "title": "Avoine" }
+      ]
+    },
+    {
+      "title": "EPICERIE 2",
+      "items": [
         { "title": "Thé" },
         { "title": "Café" },
         { "title": "Confiture" },
@@ -80,12 +81,11 @@
         { "title": "Miel" },
         { "title": "Noitella" },
         { "title": "Biscuits" },
-        { "title": "Chocolat noir/lait" }
+        { "title": "Choloat noir/lait" }
       ]
     },
-
     {
-      "title": "ÉPICERIE 2",
+      "title": "EPICERIE 3",
       "items": [
         { "title": "Foie de morue" },
         { "title": "Brandade" },
@@ -96,34 +96,34 @@
         { "title": "Pois chiches" },
         { "title": "Haricots rouge" },
         { "title": "Haricots blancs" },
-        { "title": "Pâté" }
+        { "title": "Paté" }
       ]
     },
-
     {
-      "title": "ÉPICERIE 3",
+      "title": "EPICERIE 3",
       "items": [
-        { "title": "Huile Olive carrefour bio" },
+        { "title": "Huile Olivecarrefour bio" },
         { "title": "Huile colza" },
         { "title": "Huile Arachide" },
+        { "title": "Vinaigre Basalmique" },
+        { "title": "Vinaigre de Xeres" },
+        { "title": "Vinaigre Cidre  " },
         { "title": "Vinaigre Blanc" },
-        { "title": "Vinaigre Balsamique" },
-        { "title": "Vinaigre Cidre" },
         { "title": "Moutarde" },
         { "title": "Moutarde ancienne" },
         { "title": "Cornichons" },
         { "title": "Ketchup" },
         { "title": "Bouillon cubes" },
-        { "title": "Sel fin" },
+        { "title": "Sel fin " },
         { "title": "Gros sel" },
-        { "title": "Épices" }
+        { "title": "Epices" }
       ]
     },
     {
-      "title": "EPICERIE 4 / APERO",
+      "title": "EPICERIE 4",
       "items": [
         { "title": "Pulpe de tomates" },
-        { "title": "Coulis de tomate grand" },
+        { "title": "Coulis de tomategrand " },
         { "title": "Concentré de tomates" },
         { "title": "Pâtes" },
         { "title": "Lasagnes" },
@@ -131,19 +131,18 @@
         { "title": "Riz Basmati/Thai" },
         { "title": "Riz Long" },
         { "title": "Polenta" },
-        { "title": "wrap/tortillas" },
+        { "title": "wrap/tortillas " },
         { "title": "Lentilles vertes" },
         { "title": "Lentilles corail" },
-        { "title": "gressin" },
-        { "title": "Cacahuète (non salées)" },
+        { "title": "Cacahuete (non salées)" },
         { "title": "Pistaches" },
         { "title": "Noix de cajou" }
       ]
     },
-
     {
       "title": "BIO",
       "items": [
+        { "title": "" },
         { "title": "Noix" },
         { "title": "Amandes" },
         { "title": "Jus de Citron Vert" },
@@ -151,7 +150,6 @@
         { "title": "Bouillon cube" }
       ]
     },
-
     {
       "title": "BOISSON",
       "items": [
@@ -160,52 +158,50 @@
         { "title": "Jus Ananas" },
         { "title": "Jus pomme/raisin" },
         { "title": "Mini jus multi" },
-        { "title": "Vin blanc cuisine" }
+        { "title": "Vin blanc cuisine" },
+        { "title": "Vin rouge cuisine" },
+        { "title": "Cidre" }
       ]
     },
-
     {
       "title": "FRAIS",
       "items": [
-        { "title": "Rillettes/Pâté" },
-        { "title": "Pate brisée" },
+        { "title": "Rillettes/Paté" },
+        { "title": "Pate brisée " },
         { "title": "Pate feuilletée" },
         { "title": "Lardons/Lard" },
         { "title": "Boudin blanc" },
         { "title": "Quenelle" },
         { "title": "Jambon blanc" },
-        { "title": "Gnocchi/Ravioli" }
+        { "title": "Gnocchi/Raviol" }
       ]
     },
-
     {
       "title": "VIANDE/LEGUMES",
       "items": [
-        { "title": "Tomates cerises" },
+        { "title": "Tomates cerises " },
         { "title": "Truite/Saumon fumé" }
       ]
     },
-
     {
-      "title": "Fromages/LAITIERS",
+      "title": "CREMERIE",
       "items": [
         { "title": "Fromages" },
         { "title": "Parmesan" },
         { "title": "Emmental/comté" },
-        { "title": "Mozzarella" },
+        { "title": "Mozza" },
         { "title": "Madame Loyc" },
-        { "title": "Feta" },
+        { "title": "Feta " },
         { "title": "Lait" },
-        { "title": "Crème liquide" },
+        { "title": "Crème liquide " },
         { "title": "Oeufs" },
-        { "title": "Yaourt grec" },
+        { "title": "Yahourt grec" },
         { "title": "Fromage blanc (7%)" },
         { "title": "Pressé basque" },
         { "title": "Beurre doux" },
         { "title": "Beurre tendre" }
       ]
     },
-
-    { "title": "SURGELÉS", "items": [{ "title": "Épinards" }] }
+    { "title": "SURGELES", "items": [{ "title": "Epinards" }] }
   ]
 }

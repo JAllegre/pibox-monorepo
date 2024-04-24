@@ -42,7 +42,6 @@ checklistRouter.get(
           categoryId: row.categoryId,
           checkStatus: row.checkStatus,
           title: row.title,
-          subtitle: row.subtitle,
         });
         return acc;
       }, checklist.categories);

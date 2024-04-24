@@ -49,7 +49,7 @@ export default function CheckCategoryPanel({ checklistCategory }: CheckCategoryP
     isEditMode || (checklistCategory.items.length > 0 && checklistCategory.items.some((item) => item.checkStatus > ChecklistItemStatus.Unselected));
   return (
     <Card pb={1} bgColor="gray.900" my={2} style={{ display: displayMe ? "" : "none" }}>
-      <Stack direction="row" borderRadius={5} py={1} px={2} alignItems="center">
+      <Stack direction="row" borderRadius={5} py={0} px={2} alignItems="center">
         <Input
           size="xs"
           placeholder="Nom catégorie"
