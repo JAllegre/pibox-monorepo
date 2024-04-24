@@ -6,6 +6,8 @@ import { devtools, persist } from "zustand/middleware";
 interface ChecklistState {
   displayMode: DisplayMode;
   setDisplayMode: (newDisplayMode: DisplayMode) => void;
+  searchFilter: string;
+  setSearchFilter: (newSearchFilter: string) => void;
 }
 
 export const useChecklistStore = create<ChecklistState>()(
@@ -13,8 +15,9 @@ export const useChecklistStore = create<ChecklistState>()(
     persist(
       (set) => ({
         displayMode: DisplayMode.View,
-        setDisplayMode: (newDisplayMode) =>
-          set(() => ({ displayMode: newDisplayMode })),
+        setDisplayMode: (newDisplayMode) => set(() => ({ displayMode: newDisplayMode })),
+        searchFilter: "",
+        setSearchFilter: (newSearchFilter) => set(() => ({ searchFilter: newSearchFilter })),
       }),
       {
         name: "checklist-store",

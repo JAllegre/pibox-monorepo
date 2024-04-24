@@ -1,5 +1,5 @@
 import { GetRecipesResponse, RecipeKind } from "@common/miamTypes";
-import { matchSearch } from "@src/lib/tools";
+import { matchSearch } from "@common/stringUtils";
 import { CakeSlice, Plus, Soup, Wine } from "lucide-react";
 import { ReactNode, useContext, useState } from "react";
 import { Link, useLoaderData } from "react-router-dom";
@@ -12,9 +12,7 @@ export default function RecipesPage() {
   const { recipes } = useLoaderData() as GetRecipesResponse;
 
   const handleClickRecipeKind = (newRecipeKind: RecipeKind) => () => {
-    setSelectedKind((currentRecipeKind) =>
-      currentRecipeKind === newRecipeKind ? 0 : newRecipeKind
-    );
+    setSelectedKind((currentRecipeKind) => (currentRecipeKind === newRecipeKind ? 0 : newRecipeKind));
   };
 
   const { searchText } = useContext(SearchContext);
@@ -28,25 +26,19 @@ export default function RecipesPage() {
         <div className="flex flex-grow justify-center">
           <div className="flex rounded-md  text-sm cursor-pointer">
             <div
-              className={`${toggleButtonClass} rounded-l-md ${
-                selectedKind === RecipeKind.Course ? bgColorSelected : bgColor
-              }`}
+              className={`${toggleButtonClass} rounded-l-md ${selectedKind === RecipeKind.Course ? bgColorSelected : bgColor}`}
               onClick={handleClickRecipeKind(RecipeKind.Course)}
             >
               Plats
             </div>
             <div
-              className={`${toggleButtonClass} ${
-                selectedKind === RecipeKind.Dessert ? bgColorSelected : bgColor
-              }`}
+              className={`${toggleButtonClass} ${selectedKind === RecipeKind.Dessert ? bgColorSelected : bgColor}`}
               onClick={handleClickRecipeKind(RecipeKind.Dessert)}
             >
               Desserts
             </div>
             <div
-              className={`${toggleButtonClass} rounded-r-md ${
-                selectedKind === RecipeKind.Drink ? bgColorSelected : bgColor
-              }`}
+              className={`${toggleButtonClass} rounded-r-md ${selectedKind === RecipeKind.Drink ? bgColorSelected : bgColor}`}
               onClick={handleClickRecipeKind(RecipeKind.Drink)}
             >
               Boissons
@@ -70,38 +62,14 @@ export default function RecipesPage() {
           }
           return [
             ...acc,
-            <li
-              key={`${recipe.name}-${recipe.id}`}
-              className="px-2 py-1 hover:bg-gray-100"
-            >
+            <li key={`${recipe.name}-${recipe.id}`} className="px-2 py-1 hover:bg-gray-100">
               <Link to={`${Paths.Recipes}/${recipe.id}`}>
                 <div className="flex items-center justify-start gap-2">
-                  {recipe.kind === RecipeKind.Course && (
-                    <Soup
-                      size={18}
-                      strokeWidth={2}
-                      color="purple"
-                      className="mb-1"
-                    />
-                  )}
+                  {recipe.kind === RecipeKind.Course && <Soup size={18} strokeWidth={2} color="purple" className="mb-1" />}
 
-                  {recipe.kind === RecipeKind.Dessert && (
-                    <CakeSlice
-                      size={18}
-                      strokeWidth={2}
-                      color="orange"
-                      className="mb-1"
-                    />
-                  )}
+                  {recipe.kind === RecipeKind.Dessert && <CakeSlice size={18} strokeWidth={2} color="orange" className="mb-1" />}
 
-                  {recipe.kind === RecipeKind.Drink && (
-                    <Wine
-                      size={18}
-                      strokeWidth={2}
-                      color="green"
-                      className="mb-1"
-                    />
-                  )}
+                  {recipe.kind === RecipeKind.Drink && <Wine size={18} strokeWidth={2} color="green" className="mb-1" />}
 
                   <span className="font-semibold">{recipe.name}</span>
                 </div>

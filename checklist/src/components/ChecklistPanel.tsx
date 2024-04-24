@@ -1,8 +1,6 @@
-import { Box, HStack, Heading, Switch, Text } from "@chakra-ui/react";
+import { Box, HStack, Heading } from "@chakra-ui/react";
 import { useQuery } from "@tanstack/react-query";
-import { ChangeEvent, FC, useCallback, useEffect } from "react";
-import { DisplayMode } from "../types";
-import { useChecklistStore } from "../utils/ChecklistStore";
+import { FC, useEffect } from "react";
 import MyReactQuerySuspense from "../utils/MyReactQuerySuspense";
 import { getChecklist } from "../utils/api";
 import eventMgr from "../utils/eventMgr";
@@ -24,21 +22,7 @@ const ChecklistPanel: FC = () => {
     };
   }, [refetch]);
 
-  const isEditMode = useChecklistStore(
-    (state) => state.displayMode === DisplayMode.Edit
-  );
-  const setDisplayMode = useChecklistStore((state) => state.setDisplayMode);
-
   const checklist = data?.checklist;
-
-  const handleDisplayModeChange = useCallback(
-    (event: ChangeEvent<HTMLInputElement>) => {
-      setDisplayMode(
-        event.target.checked ? DisplayMode.Edit : DisplayMode.View
-      );
-    },
-    [setDisplayMode]
-  );
 
   return (
     <Box bgColor="gray.700" px={2} className="checklist-panel" flexGrow={1}>
@@ -47,23 +31,10 @@ const ChecklistPanel: FC = () => {
           <Heading as="h1" size="lg">
             {checklist?.title}
           </Heading>
-          <HStack justifyContent="space-between">
-            <Text>Edition:</Text>
-            <Switch
-              size="lg"
-              isChecked={isEditMode}
-              onChange={handleDisplayModeChange}
-            />
-          </HStack>
         </HStack>
         <ul>
           {checklist?.categories.map((checklistCategory) => {
-            return (
-              <CheckCategoryPanel
-                key={checklistCategory.id}
-                checklistCategory={checklistCategory}
-              />
-            );
+            return <CheckCategoryPanel key={checklistCategory.id} checklistCategory={checklistCategory} />;
           })}
         </ul>
       </MyReactQuerySuspense>

@@ -1,4 +1,5 @@
 import { Box, Card, CardBody, Input, Menu, MenuButton, MenuGroup, MenuItem, MenuList, Stack, Switch } from "@chakra-ui/react";
+import { matchSearch } from "@common/stringUtils";
 import { useMutation } from "@tanstack/react-query";
 import { ChangeEvent, useCallback, useEffect, useRef, useState } from "react";
 import { FaRegTrashAlt } from "react-icons/fa";
@@ -18,6 +19,7 @@ export default function CheckItemLine({ checkItem, isNewItem }: CheckItemLinePro
   const cardRef = useRef<HTMLDivElement>(null);
 
   const isEditMode = useChecklistStore((state) => state.displayMode === DisplayMode.Edit);
+  const searchFilter = useChecklistStore((state) => state.searchFilter);
 
   const updateItemMutation = useMutation({
     mutationFn: (checklistCategoryInput: Partial<ChecklistItemInput>) => {
@@ -74,7 +76,7 @@ export default function CheckItemLine({ checkItem, isNewItem }: CheckItemLinePro
     };
   }, [checkItem.id, isNew]);
 
-  const isDisplayed = isEditMode || checkItem.checkStatus > ChecklistItemStatus.Unselected;
+  const isDisplayed = matchSearch(searchFilter, checkItem.title) && (isEditMode || checkItem.checkStatus > ChecklistItemStatus.Unselected);
   return (
     <Card ref={cardRef} my="1" bgColor={isNew ? "red.100" : "gray.600"} color="teal.50" display={isDisplayed ? "" : "none"}>
       <CardBody px={2} py={1}>
