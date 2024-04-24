@@ -87,10 +87,10 @@ export async function getAllChecklistItems(
         //WHERE lists.id=${listId}
 
         (err, rows) => {
-          console.info("listId", rows.length);
           if (err) {
             return reject(err);
           }
+          console.info("listId", rows?.length);
           resolve(rows);
         }
       );
