@@ -17,6 +17,7 @@ import { FaRegTrashAlt } from "react-icons/fa";
 import {
   ChecklistItem,
   ChecklistItemInput,
+  ChecklistItemStatus,
 } from "../../../common/checklistTypes";
 import { DisplayMode } from "../types";
 import { useChecklistStore } from "../utils/ChecklistStore";
@@ -107,20 +108,20 @@ export default function CheckItemLine({
       }, 10000);
     }
 
-    console.log("CheckItemLine render", checkItem.id, isNew);
-
     return () => {
       clearTimeout(tt);
     };
   }, [checkItem.id, isNew]);
 
+  const isDisplayed =
+    isEditMode || checkItem.checkStatus > ChecklistItemStatus.Unselected;
   return (
     <Card
       ref={cardRef}
       m="1"
-      // sx={isNew ? { bgColor: "mistyrose" } : { bgColor: "grey.100" }}
       bgColor={isNew ? "red.100" : "gray.600"}
       color="teal.50"
+      display={isDisplayed ? "" : "none"}
     >
       <CardBody px={2} py={1}>
         <Stack direction="row" spacing={1} alignItems="center">

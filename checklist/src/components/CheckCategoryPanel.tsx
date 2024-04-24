@@ -52,24 +52,30 @@ export default function CheckCategoryPanel({
     setLastAddedItemId(id);
   }, [checklistCategory.id]);
 
-  const filteredCheckItemLines = checklistCategory.items?.reduce<
-    React.ReactNode[]
-  >((accu, checkItem) => {
-    if (isEditMode || checkItem.checkStatus > ChecklistItemStatus.Unselected) {
-      accu.push(
-        <CheckItemLine
-          key={checkItem.id}
-          checkItem={checkItem}
-          isNewItem={checkItem.id === lastAddedItemId}
-        />
-      );
-    }
+  const filteredCheckItemLines = checklistCategory.items?.map((checkItem) => {
+    return (
+      <CheckItemLine
+        key={checkItem.id}
+        checkItem={checkItem}
+        isNewItem={checkItem.id === lastAddedItemId}
+      />
+    );
+  });
 
-    return accu;
-  }, []);
-
+  const displayMe =
+    isEditMode ||
+    (checklistCategory.items.length > 0 &&
+      checklistCategory.items.some(
+        (item) => item.checkStatus > ChecklistItemStatus.Unselected
+      ));
   return (
-    <Card w={{ base: "100%", md: "800px" }} pb={1} bgColor="gray.900" my={2}>
+    <Card
+      w={{ base: "100%", md: "800px" }}
+      pb={1}
+      my={2}
+      bgColor="gray.900"
+      style={{ display: displayMe ? "" : "none" }}
+    >
       <Stack direction="row" borderRadius={5} py={1} px={2} alignItems="center">
         <Input
           size="xs"
@@ -85,7 +91,6 @@ export default function CheckCategoryPanel({
           fontSize={"md"}
         />
         {isEditMode && (
-          // <Button onClick={handleAddClick}>Ajouter un produit</Button>
           <Box
             color="teal.300"
             onClick={handleAddClick}

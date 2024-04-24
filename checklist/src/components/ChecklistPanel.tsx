@@ -1,5 +1,4 @@
 import { Box, HStack, Heading, Switch, Text } from "@chakra-ui/react";
-import { ChecklistItemStatus } from "@common/checklistTypes";
 import { useQuery } from "@tanstack/react-query";
 import { ChangeEvent, FC, useCallback, useEffect } from "react";
 import { DisplayMode } from "../types";
@@ -58,27 +57,14 @@ const ChecklistPanel: FC = () => {
           </HStack>
         </HStack>
         <ul>
-          {checklist?.categories.reduce<React.ReactNode[]>(
-            (accu, checklistCategory) => {
-              if (
-                isEditMode ||
-                (checklistCategory.items.length > 0 &&
-                  checklistCategory.items.some(
-                    (item) => item.checkStatus > ChecklistItemStatus.Unselected
-                  ))
-              ) {
-                accu.push(
-                  <CheckCategoryPanel
-                    key={checklistCategory.id}
-                    checklistCategory={checklistCategory}
-                  />
-                );
-              }
-
-              return accu;
-            },
-            []
-          )}
+          {checklist?.categories.map((checklistCategory) => {
+            return (
+              <CheckCategoryPanel
+                key={checklistCategory.id}
+                checklistCategory={checklistCategory}
+              />
+            );
+          })}
         </ul>
       </MyReactQuerySuspense>
     </Box>
