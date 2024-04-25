@@ -17,6 +17,7 @@ interface CheckItemLineProps {
 export default function CheckItemLine({ checkItem, isNewItem }: CheckItemLineProps) {
   const [title, setTitle] = useState(checkItem.title);
   const [isNew, setIsNew] = useState(isNewItem);
+  const [isItemChecked, setIsItemChecked] = useState(checkItem.checkStatus > ChecklistItemStatus.Unselected);
   const cardRef = useRef<HTMLDivElement>(null);
   const isEditMode = useChecklistStore((state) => state.displayMode === DisplayMode.Edit);
   const searchFilter = useChecklistStore((state) => state.searchFilter);
@@ -29,11 +30,23 @@ export default function CheckItemLine({ checkItem, isNewItem }: CheckItemLinePro
   });
 
   const handleCheckSwitch = async (event: ChangeEvent<HTMLInputElement>) => {
-    await updateItemMutation.mutateAsync({
-      checkStatus: event.target.checked ? 2 : 0,
-    });
-    eventMgr.dispatch("checklist-refresh");
+    // Want to update the local state immediately
+    setIsItemChecked(event.target.checked);
+    setTimeout(() => {
+      updateItemMutation
+        .mutateAsync({
+          checkStatus: event.target.checked ? 2 : 0,
+        })
+        .then(() => {
+          eventMgr.dispatch("checklist-refresh");
+        });
+    }, 1);
   };
+
+  useEffect(() => {
+    // reset to the remote state when changed
+    setIsItemChecked(checkItem.checkStatus > ChecklistItemStatus.Unselected);
+  }, [checkItem.checkStatus]);
 
   const handleTitleChange = useCallback(
     async (event: ChangeEvent<HTMLInputElement>) => {
@@ -81,14 +94,14 @@ export default function CheckItemLine({ checkItem, isNewItem }: CheckItemLinePro
     <Card
       ref={cardRef}
       my="1"
-      bgColor={isNew ? "red.100" : "gray.600"}
+      bgColor={isNew ? "teal.700" : "gray.600"}
       color="teal.50"
       display={isDisplayed ? "" : "none"}
     >
       <CardBody px={2} py={1}>
         <Stack direction="row" alignItems="center" gap={1}>
           <Box>
-            <Switch isChecked={!!checkItem.checkStatus} onChange={handleCheckSwitch} size="md" />
+            <Switch isChecked={isItemChecked} onChange={handleCheckSwitch} size="md" />
           </Box>
           <Input
             size="sm"
