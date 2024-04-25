@@ -1,43 +1,65 @@
-import { HStack, Input, InputGroup, InputLeftElement, Switch, Text } from "@chakra-ui/react";
+import { HStack, Input, InputGroup, InputLeftElement, InputRightElement, Switch, Text } from "@chakra-ui/react";
 import { DisplayMode } from "@src/types";
 import { useChecklistStore } from "@src/utils/ChecklistStore";
-import { ChangeEvent, useCallback } from "react";
+import { useDebounce } from "@uidotdev/usehooks";
+import { ChangeEvent, useCallback, useEffect, useState } from "react";
 import { FaMagnifyingGlass } from "react-icons/fa6";
+import { ImCross } from "react-icons/im";
+import { MyIconButton } from "./MyIconButton";
 
 export default function BottomBar() {
+  const [searchTerm, setSearchTerm] = useState("");
   const isEditMode = useChecklistStore((state) => state.displayMode === DisplayMode.Edit);
   const setDisplayMode = useChecklistStore((state) => state.setDisplayMode);
-  const searchFilter = useChecklistStore((state) => state.searchFilter);
   const setSearchFilter = useChecklistStore((state) => state.setSearchFilter);
+  const debouncedSearchTerm = useDebounce(searchTerm, 200);
 
   const handleDisplayModeChange = useCallback(
     (event: ChangeEvent<HTMLInputElement>) => {
       setDisplayMode(event.target.checked ? DisplayMode.Edit : DisplayMode.View);
     },
-    [setDisplayMode],
+    [setDisplayMode]
   );
 
   const handleSearchFilterChange = useCallback(
     (event: ChangeEvent<HTMLInputElement>) => {
-      setSearchFilter(event.target.value);
+      setSearchTerm(event.target.value);
     },
-    [setSearchFilter],
+    [setSearchTerm]
   );
+
+  const handleSearchFilterClear = useCallback(() => {
+    setSearchTerm("");
+  }, [setSearchTerm]);
+  useEffect(() => {
+    const searchHN = async () => {
+      setSearchFilter(debouncedSearchTerm);
+    };
+
+    searchHN();
+  }, [debouncedSearchTerm, setSearchFilter]);
 
   return (
     <HStack pos="fixed" w="100%" maxW="2xl" bottom={0} p={2} bgColor="gray.700" gap={5} justify={"space-between"}>
-      <InputGroup>
+      <InputGroup w="auto">
         <InputLeftElement pointerEvents="none">
           <FaMagnifyingGlass />
         </InputLeftElement>
         <Input
           placeholder="Filtrer"
           color="teal.200"
-          w="auto"
-          value={searchFilter}
+          value={searchTerm}
           onChange={handleSearchFilterChange}
           maxW={200}
         />
+        <InputRightElement>
+          <MyIconButton
+            ReactIcon={ImCross}
+            color="red.200"
+            display={searchTerm ? "" : "none"}
+            onClick={handleSearchFilterClear}
+          />
+        </InputRightElement>
       </InputGroup>
 
       <HStack justifyContent="space-between">

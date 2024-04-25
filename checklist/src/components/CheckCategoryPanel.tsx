@@ -72,7 +72,7 @@ export default function CheckCategoryPanel({ checklistCategory }: CheckCategoryP
           fontSize={"md"}
         />
         <MyIconButton
-          Icon={RiMenuAddLine}
+          ReactIcon={RiMenuAddLine}
           color="teal.300"
           display={isEditMode ? "" : "none"}
           onClick={handleAddClick}

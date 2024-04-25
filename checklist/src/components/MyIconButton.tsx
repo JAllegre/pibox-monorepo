@@ -2,10 +2,10 @@ import { Box, BoxProps } from "@chakra-ui/react";
 import { IconType } from "react-icons";
 
 interface MyIconButtonProps extends BoxProps {
-  Icon: IconType;
+  ReactIcon: IconType;
 }
 
-export function MyIconButton({ Icon, ...props }: MyIconButtonProps) {
+export function MyIconButton({ ReactIcon, ...props }: MyIconButtonProps) {
   return (
     <Box
       p={1}
@@ -17,7 +17,7 @@ export function MyIconButton({ Icon, ...props }: MyIconButtonProps) {
       cursor="pointer"
       {...props}
     >
-      <Icon />
+      <ReactIcon />
     </Box>
   );
 }

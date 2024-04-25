@@ -102,7 +102,7 @@ export default function CheckItemLine({ checkItem, isNewItem }: CheckItemLinePro
             flexGrow={1}
           />
           <MyIconButton
-            Icon={FaRegTrashAlt}
+            ReactIcon={FaRegTrashAlt}
             color="red.400"
             display={isEditMode ? "" : "none"}
             onClick={handleDeleteClick}
