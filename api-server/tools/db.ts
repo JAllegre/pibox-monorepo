@@ -4,21 +4,17 @@ import { connectDb } from "../src/lib/db";
 async function header(): Promise<void> {
   const db = await connectDb();
   return new Promise((resolve, reject) => {
-    db.all(
-      'SELECT name FROM sqlite_master WHERE type = "table"',
-      [],
-      (err, rows) => {
-        if (err) {
-          return reject(err);
-        }
-        let dbNames: string[] = [];
-        rows.forEach((row) => {
-          dbNames.push(row.name);
-        });
-        console.log("DB Names:", dbNames.join(" | "));
-        resolve();
+    db.all('SELECT name FROM sqlite_master WHERE type = "table"', [], (err, rows) => {
+      if (err) {
+        return reject(err);
       }
-    );
+      let dbNames: string[] = [];
+      rows.forEach((row) => {
+        dbNames.push(row.name);
+      });
+      console.log("DB Names:", dbNames.join(" | "));
+      resolve();
+    });
   });
 }
 

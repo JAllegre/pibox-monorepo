@@ -13,30 +13,16 @@ interface RecipeData {
   kind: RecipeKind;
 }
 
-function extractRecipeData(
-  recipe: string,
-  kind: RecipeKind
-): RecipeData | undefined {
+function extractRecipeData(recipe: string, kind: RecipeKind): RecipeData | undefined {
   const sections = recipe.split("<h2>");
   if (sections.length !== 3) {
-    console.error(
-      "extractor.js/extractRecipeData | Wrong number of sections",
-      sections.length,
-      sections
-    );
+    console.error("extractor.js/extractRecipeData | Wrong number of sections", sections.length, sections);
     return;
   }
 
-  const recipeName = sections[0].replace(
-    /.*<\/a>(.*?)<\/h1>[\s\S]*/i,
-    (c, p1) => `${p1}`
-  );
+  const recipeName = sections[0].replace(/.*<\/a>(.*?)<\/h1>[\s\S]*/i, (c, p1) => `${p1}`);
   if (!recipeName) {
-    console.error(
-      "extractor.js/extractRecipeData | Empty recipe name",
-      recipeName,
-      sections
-    );
+    console.error("extractor.js/extractRecipeData | Empty recipe name", recipeName, sections);
     return;
   }
 
@@ -48,14 +34,12 @@ function extractRecipeData(
     console.error(
       "extractor.js/extractRecipeData | Wrong number of ingredientsParts",
       ingredientsParts.length,
-      ingredientsParts
+      ingredientsParts,
     );
     return;
   }
 
-  let recipePeople = ingredientsParts[0].replace(/.*?(\d+).*/i, (c, p1) =>
-    p1 ? p1 : "0"
-  );
+  let recipePeople = ingredientsParts[0].replace(/.*?(\d+).*/i, (c, p1) => (p1 ? p1 : "0"));
 
   //@ts-ignore
   recipePeople = parseInt(recipePeople, 0) || 0; //ensure value
@@ -70,11 +54,7 @@ function extractRecipeData(
 
   const stepsParts = stepsSection.split("</h2>");
   if (stepsParts.length !== 2) {
-    console.error(
-      "extractor.js/extractRecipeData | Wrong number of stepsParts",
-      stepsParts.length,
-      stepsParts
-    );
+    console.error("extractor.js/extractRecipeData | Wrong number of stepsParts", stepsParts.length, stepsParts);
     return;
   }
   const stepsList = stepsParts[1]
@@ -112,34 +92,21 @@ function extractRecipesData(recipePath: string, kind: RecipeKind) {
 }
 
 try {
-  const saltyRecipes = extractRecipesData(
-    "./tools/RecettesSalées.docx.html",
-    RecipeKind.Course
-  );
+  const saltyRecipes = extractRecipesData("./tools/RecettesSalées.docx.html", RecipeKind.Course);
   //console.log("saltyRecipes", saltyRecipes);
-  const sweetRecipes = extractRecipesData(
-    "./tools/RecettesSucrées.docx.html",
-    RecipeKind.Dessert
-  );
+  const sweetRecipes = extractRecipesData("./tools/RecettesSucrées.docx.html", RecipeKind.Dessert);
 
-  const drinkRecipes = extractRecipesData(
-    "./tools/RecettesBoissons.docx.html",
-    RecipeKind.Drink
-  );
+  const drinkRecipes = extractRecipesData("./tools/RecettesBoissons.docx.html", RecipeKind.Drink);
 
   const allRecipes = [...saltyRecipes, ...sweetRecipes, ...drinkRecipes];
   // connect and insert into DB
   const sqlite3v = sqlite3.verbose();
-  const db = new sqlite3v.Database(
-    DB_FILENAME,
-    sqlite3v.OPEN_READWRITE | sqlite3v.OPEN_CREATE,
-    (err) => {
-      if (err) {
-        return console.error(err.message);
-      }
-      console.log("Connected to the SQlite database.");
+  const db = new sqlite3v.Database(DB_FILENAME, sqlite3v.OPEN_READWRITE | sqlite3v.OPEN_CREATE, (err) => {
+    if (err) {
+      return console.error(err.message);
     }
-  );
+    console.log("Connected to the SQlite database.");
+  });
 
   db.serialize(() => {
     const insertSql = `INSERT INTO ${DB_TABLE_RECIPES}(name, ingredients, steps, peopleNumber, imageDataUrl, kind) VALUES(?, ?, ?,?, ?, ?)`;

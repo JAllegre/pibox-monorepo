@@ -1,8 +1,4 @@
-import {
-  GetRecipeResponse,
-  GetRecipesResponse,
-  RecipeInput,
-} from "@common/miamTypes";
+import { GetRecipeResponse, GetRecipesResponse, RecipeInput } from "@common/miamTypes";
 
 import { fetchData, postData } from "@common/clientApi";
 
@@ -12,22 +8,15 @@ export async function getAllRecipes(): Promise<GetRecipesResponse> {
   return fetchData(baseApiUrl);
 }
 
-export async function getOneRecipe(
-  recipeId: number
-): Promise<GetRecipeResponse> {
+export async function getOneRecipe(recipeId: number): Promise<GetRecipeResponse> {
   return fetchData(`${baseApiUrl}/${recipeId}`);
 }
 
-export async function updateOneRecipe(
-  recipeId: number,
-  recipeInput: RecipeInput
-): Promise<GetRecipeResponse> {
+export async function updateOneRecipe(recipeId: number, recipeInput: RecipeInput): Promise<GetRecipeResponse> {
   return postData<RecipeInput>(`${baseApiUrl}/${recipeId}`, recipeInput, "PUT");
 }
 
-export async function addOneRecipe(
-  recipeInput: RecipeInput
-): Promise<GetRecipeResponse> {
+export async function addOneRecipe(recipeInput: RecipeInput): Promise<GetRecipeResponse> {
   return postData(`${baseApiUrl}`, recipeInput);
 }
 

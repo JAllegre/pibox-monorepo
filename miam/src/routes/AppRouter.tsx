@@ -1,9 +1,5 @@
 import RecipeEditorWithPassword from "@src/components/RecipeEditorWithPassword";
-import {
-  Navigate,
-  RouterProvider,
-  createBrowserRouter,
-} from "react-router-dom";
+import { Navigate, RouterProvider, createBrowserRouter } from "react-router-dom";
 import ErrorPage from "../ErrorPage";
 import RecipePage from "../components/RecipePage";
 import RecipesPage from "../components/RecipesPage";

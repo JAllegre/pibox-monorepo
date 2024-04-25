@@ -49,9 +49,7 @@ function shutDown() {
   });
 
   setTimeout(() => {
-    console.error(
-      "Could not close connections in time, forcefully shutting down"
-    );
+    console.error("Could not close connections in time, forcefully shutting down");
     process.exit(1);
   }, 4000);
 }

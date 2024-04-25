@@ -19,10 +19,7 @@ export default function RecipePage() {
       <div className="flex justify-between">
         <div className="text-2xl font-medium">{name}</div>
         <Button size="icon" className="bg-primary-700 ">
-          <Link
-            to={`${Paths.Recipes}/${recipeId}/update`}
-            className="text-[20px] p-5"
-          >
+          <Link to={`${Paths.Recipes}/${recipeId}/update`} className="text-[20px] p-5">
             <Pencil />
           </Link>
         </Button>
@@ -32,11 +29,7 @@ export default function RecipePage() {
         <div className="flex flex-col justify-between md:flex-row-reverse">
           {imageDataUrl ? (
             <div className="flex items-center justify-center md:basis-1/2 md:items-start">
-              <img
-                src={imageDataUrl}
-                alt="recipe"
-                className="rounded-md shadow-md h-[200px] md:h-auto"
-              />
+              <img src={imageDataUrl} alt="recipe" className="rounded-md shadow-md h-[200px] md:h-auto" />
             </div>
           ) : (
             <div />
@@ -48,19 +41,15 @@ export default function RecipePage() {
               {!!peopleNumber && <span>(pour {peopleNumber} personnes)</span>}
             </div>
             <ul>
-              {ingredients?.split(/\r?\n/).map((ingredient, i) => (
-                <Line key={`${ingredient}-${i}`} text={ingredient} />
-              ))}
+              {ingredients
+                ?.split(/\r?\n/)
+                .map((ingredient, i) => <Line key={`${ingredient}-${i}`} text={ingredient} />)}
             </ul>
           </div>
         </div>
         <div>
           <div className="text-md font-medium pt-4">Préparation</div>
-          <ul>
-            {steps?.split(/\r?\n/).map((step, i) => (
-              <Line key={`${step}-${i}`} text={step} />
-            ))}
-          </ul>
+          <ul>{steps?.split(/\r?\n/).map((step, i) => <Line key={`${step}-${i}`} text={step} />)}</ul>
         </div>
       </div>
     </main>

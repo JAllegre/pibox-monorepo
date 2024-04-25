@@ -1,15 +1,9 @@
 import { MAX_RECIPE_IMAGE_HEIGHT, MAX_RECIPE_IMAGE_WIDTH } from "./constants";
 
-export default async function convertFileToImageDataUrl(
-  file?: File
-): Promise<string> {
+export default async function convertFileToImageDataUrl(file?: File): Promise<string> {
   return new Promise((resolve, reject) => {
     if (!file) {
-      reject(
-        new Error(
-          "convertFileToImageDataUrl/convertFileToImageDataUrl | Provided file is null"
-        )
-      );
+      reject(new Error("convertFileToImageDataUrl/convertFileToImageDataUrl | Provided file is null"));
       return;
     }
 
@@ -27,9 +21,7 @@ export default async function convertFileToImageDataUrl(
           const canvas = document.createElement("canvas");
           let ctx = canvas.getContext("2d");
           if (!ctx) {
-            throw new Error(
-              "convertFileToImageDataUrl/convertFileToImageDataUrl | ctx is null"
-            );
+            throw new Error("convertFileToImageDataUrl/convertFileToImageDataUrl | ctx is null");
           }
           ctx.drawImage(img, 0, 0);
 
@@ -51,9 +43,7 @@ export default async function convertFileToImageDataUrl(
           canvas.height = height;
           ctx = canvas.getContext("2d");
           if (!ctx) {
-            throw new Error(
-              "convertFileToImageDataUrl/convertFileToImageDataUrl | ctx is null"
-            );
+            throw new Error("convertFileToImageDataUrl/convertFileToImageDataUrl | ctx is null");
           }
           ctx.drawImage(img, 0, 0, width, height);
 

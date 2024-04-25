@@ -1,9 +1,5 @@
 import sqlite3 from "sqlite3";
-import {
-  RecipeInput,
-  RecipeRow,
-  RecipeRowShort,
-} from "../../../../common/miamTypes";
+import { RecipeInput, RecipeRow, RecipeRowShort } from "../../../../common/miamTypes";
 import { connectDb, endDb } from "../../lib/db";
 import { DB_TABLE_RECIPES } from "./miamConstants";
 
@@ -19,7 +15,7 @@ export async function getAllRecipes(): Promise<RecipeRowShort[]> {
             return reject(err);
           }
           resolve(rows);
-        }
+        },
       );
     } catch (error) {
       reject(error);
@@ -65,7 +61,7 @@ export async function insertOneRecipe(recipeInput: RecipeInput): Promise<void> {
     try {
       db.serialize(() => {
         stmt = db.prepare(
-          `INSERT INTO ${DB_TABLE_RECIPES} (name, ingredients, steps, peopleNumber, imageDataUrl, kind) VALUES(?,?,?,?,?, ?)`
+          `INSERT INTO ${DB_TABLE_RECIPES} (name, ingredients, steps, peopleNumber, imageDataUrl, kind) VALUES(?,?,?,?,?, ?)`,
         );
         stmt.run(
           [
@@ -81,7 +77,7 @@ export async function insertOneRecipe(recipeInput: RecipeInput): Promise<void> {
               return reject(err);
             }
             resolve();
-          }
+          },
         );
       });
     } catch (error) {
@@ -92,10 +88,7 @@ export async function insertOneRecipe(recipeInput: RecipeInput): Promise<void> {
   });
 }
 
-export async function updateOneRecipe(
-  recipeId: number,
-  recipeInput: RecipeInput
-): Promise<void> {
+export async function updateOneRecipe(recipeId: number, recipeInput: RecipeInput): Promise<void> {
   console.log("db.tsx/updateOneRecipe | recipeInput=", !!recipeInput);
   const db = await connectDb();
   return new Promise((resolve, reject) => {
@@ -103,7 +96,7 @@ export async function updateOneRecipe(
     try {
       db.serialize(() => {
         stmt = db.prepare(
-          `UPDATE ${DB_TABLE_RECIPES} SET  name = ?, ingredients = ?, steps = ?, peopleNumber = ?, imageDataUrl = ? WHERE id=?`
+          `UPDATE ${DB_TABLE_RECIPES} SET  name = ?, ingredients = ?, steps = ?, peopleNumber = ?, imageDataUrl = ? WHERE id=?`,
         );
         stmt.run(
           [
@@ -119,7 +112,7 @@ export async function updateOneRecipe(
               return reject(err);
             }
             resolve();
-          }
+          },
         );
       });
     } catch (error) {

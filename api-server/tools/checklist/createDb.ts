@@ -6,11 +6,7 @@ import {
   DB_TABLE_CHECKLIST_ITEMS,
   DB_TABLE_CHECKLIST_LISTS,
 } from "../../src/features/checklist/checklistConstants";
-import {
-  insertOneCategory,
-  insertOneItem,
-  insertOneList,
-} from "../../src/features/checklist/checklistDb";
+import { insertOneCategory, insertOneItem, insertOneList } from "../../src/features/checklist/checklistDb";
 import { connectDb } from "../../src/lib/db";
 import extractedData from "./extractFromSheet.json";
 
@@ -32,15 +28,15 @@ function dropTables(db: Database): Promise<void> {
       db.serialize(() => {
         db.run(
           `DROP TABLE IF EXISTS ${DB_TABLE_CHECKLIST_ITEMS};`,
-          handleResult(`Table ${DB_TABLE_CHECKLIST_ITEMS} DROPPED`)
+          handleResult(`Table ${DB_TABLE_CHECKLIST_ITEMS} DROPPED`),
         )
           .run(
             `DROP TABLE IF EXISTS ${DB_TABLE_CHECKLIST_CATEGORIES};`,
-            handleResult(`Table ${DB_TABLE_CHECKLIST_CATEGORIES} DROPPED`)
+            handleResult(`Table ${DB_TABLE_CHECKLIST_CATEGORIES} DROPPED`),
           )
           .run(
             `DROP TABLE IF EXISTS ${DB_TABLE_CHECKLIST_LISTS};`,
-            handleResult(`Table ${DB_TABLE_CHECKLIST_LISTS} DROPPED`, resolve)
+            handleResult(`Table ${DB_TABLE_CHECKLIST_LISTS} DROPPED`, resolve),
           );
       });
     } catch (error) {
@@ -58,7 +54,7 @@ function createTables(db: Database): Promise<void> {
           id INTEGER PRIMARY KEY,
           title TEXT
         )`,
-          handleResult(`Created ${DB_TABLE_CHECKLIST_LISTS} table`)
+          handleResult(`Created ${DB_TABLE_CHECKLIST_LISTS} table`),
         )
           .run(
             `CREATE TABLE IF NOT EXISTS ${DB_TABLE_CHECKLIST_CATEGORIES} (
@@ -67,7 +63,7 @@ function createTables(db: Database): Promise<void> {
           title TEXT,
           FOREIGN KEY(listId) REFERENCES ${DB_TABLE_CHECKLIST_LISTS}(id)
         )`,
-            handleResult(`Created ${DB_TABLE_CHECKLIST_CATEGORIES} table`)
+            handleResult(`Created ${DB_TABLE_CHECKLIST_CATEGORIES} table`),
           )
           .run(
             `CREATE TABLE IF NOT EXISTS ${DB_TABLE_CHECKLIST_ITEMS} (
@@ -77,7 +73,7 @@ function createTables(db: Database): Promise<void> {
           checkStatus INTEGER,
           FOREIGN KEY(categoryId) REFERENCES ${DB_TABLE_CHECKLIST_CATEGORIES}(id)
         )`,
-            handleResult(`Created ${DB_TABLE_CHECKLIST_ITEMS} table`, resolve)
+            handleResult(`Created ${DB_TABLE_CHECKLIST_ITEMS} table`, resolve),
           );
       });
     } catch (error) {

@@ -6,16 +6,12 @@ import { DB_FILENAME } from "../../src/lib/constants";
 
 const sqlite3v = sqlite3.verbose();
 // Connecting to or creating a new SQLite database file
-const db = new sqlite3v.Database(
-  DB_FILENAME,
-  sqlite3v.OPEN_READWRITE | sqlite3v.OPEN_CREATE,
-  (err) => {
-    if (err) {
-      return console.error(err.message);
-    }
-    console.log("Connected to the SQlite database.");
+const db = new sqlite3v.Database(DB_FILENAME, sqlite3v.OPEN_READWRITE | sqlite3v.OPEN_CREATE, (err) => {
+  if (err) {
+    return console.error(err.message);
   }
-);
+  console.log("Connected to the SQlite database.");
+});
 
 // Serialize method ensures that database queries are executed sequentially
 db.serialize(() => {
@@ -44,6 +40,6 @@ db.serialize(() => {
         console.log("Closed the database connection.");
       });
       // });
-    }
+    },
   );
 });

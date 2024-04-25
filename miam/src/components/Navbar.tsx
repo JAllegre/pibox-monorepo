@@ -18,7 +18,7 @@ export default function Navbar() {
         navigate(Paths.Recipes);
       }
     },
-    [navigate, pathname, setSearchText]
+    [navigate, pathname, setSearchText],
   );
 
   const handleLogoClick = useCallback(() => {
@@ -30,9 +30,7 @@ export default function Navbar() {
       <Link to={Paths.Recipes} onClick={handleLogoClick}>
         <div className="flex items-center justify-start">
           <Utensils size="18" strokeWidth="3" className="text-primary-700" />
-          <div className="font-bold text-2xl pl-2 text-primary-700">
-            miam miam
-          </div>
+          <div className="font-bold text-2xl pl-2 text-primary-700">miam miam</div>
         </div>
       </Link>
 

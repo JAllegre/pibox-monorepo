@@ -6,9 +6,7 @@ import { SearchContextProvider } from "../contexts/SearchContext";
 export default function Root() {
   return (
     <>
-      <div
-        className={`text-slate-800 dark:text-slate-300 max-w-[100vw] relative`}
-      >
+      <div className={`text-slate-800 dark:text-slate-300 max-w-[100vw] relative`}>
         <img
           src={bg}
           width={500}

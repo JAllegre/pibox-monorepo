@@ -1,7 +1,7 @@
 {
-    "cSpell.language": "en,fr",
+  "cSpell.language": "en,fr",
 
-    "editor.codeActionsOnSave": {
-        "source.organizeImports": "always",
-      },
+  "editor.codeActionsOnSave": {
+    "source.organizeImports": "always"
+  }
 }

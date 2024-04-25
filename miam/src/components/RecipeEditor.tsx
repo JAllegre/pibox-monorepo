@@ -10,14 +10,7 @@ import { Paths } from "../lib/constants";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { Label } from "./ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "./ui/select";
+import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "./ui/select";
 import { Textarea } from "./ui/textarea";
 
 function buildRecipeInput(formData: FormData): RecipeInput {
@@ -25,9 +18,7 @@ function buildRecipeInput(formData: FormData): RecipeInput {
   const idStr = formData.get("recipeId")?.toString() || "";
   return {
     name: formData.get("name")?.toString() || "",
-    kind: parseInt(
-      formData.get("kind")?.toString() || String(RecipeKind.Course)
-    ),
+    kind: parseInt(formData.get("kind")?.toString() || String(RecipeKind.Course)),
     peopleNumber: peopleNumberStr ? parseInt(peopleNumberStr) : undefined,
     ingredients: formData.get("ingredients")?.toString() || "",
     steps: formData.get("steps")?.toString() || "",
@@ -42,19 +33,14 @@ interface RecipeEditorProps {
 export default function RecipeEditor({ recipe }: RecipeEditorProps) {
   const [isLoading, setIsLoading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const [newImageDataUrl, setNewImageDataUrl] = useState<string>(
-    recipe?.imageDataUrl || ""
-  );
+  const [newImageDataUrl, setNewImageDataUrl] = useState<string>(recipe?.imageDataUrl || "");
   const [currentKind, setCurrentKind] = useState<RecipeKind>(RecipeKind.Course);
   const navigate = useNavigate();
 
-  const handleFileChange = useCallback(
-    async (e: ChangeEvent<HTMLInputElement>) => {
-      const imageDataUrl = await convertFileToImageDataUrl(e.target.files?.[0]);
-      setNewImageDataUrl(imageDataUrl);
-    },
-    []
-  );
+  const handleFileChange = useCallback(async (e: ChangeEvent<HTMLInputElement>) => {
+    const imageDataUrl = await convertFileToImageDataUrl(e.target.files?.[0]);
+    setNewImageDataUrl(imageDataUrl);
+  }, []);
 
   const handleSelectKindChange = useCallback((kind: string) => {
     setCurrentKind(parseInt(kind, 10));
@@ -124,10 +110,7 @@ export default function RecipeEditor({ recipe }: RecipeEditorProps) {
         <div className="flex items-center justify-start gap-10">
           <div className="flex items-center gap-2 py-2">
             <Label className="font-bold">Type:</Label>
-            <Select
-              onValueChange={handleSelectKindChange}
-              value={String(currentKind)}
-            >
+            <Select onValueChange={handleSelectKindChange} value={String(currentKind)}>
               <SelectTrigger className="w-[120px]">
                 <SelectValue placeholder="" />
               </SelectTrigger>
@@ -195,13 +178,7 @@ export default function RecipeEditor({ recipe }: RecipeEditorProps) {
           Image:
         </Label>
         <div className="flex gap-3">
-          {newImageDataUrl && (
-            <img
-              src={newImageDataUrl}
-              alt="recipe"
-              className="w-[150px] h-[150px]"
-            />
-          )}
+          {newImageDataUrl && <img src={newImageDataUrl} alt="recipe" className="w-[150px] h-[150px]" />}
 
           <div className="flex flex-col gap-2 items-start">
             <Input
@@ -219,12 +196,7 @@ export default function RecipeEditor({ recipe }: RecipeEditorProps) {
             )}
           </div>
 
-          <input
-            type="hidden"
-            id="imageDataUrl"
-            name="imageDataUrl"
-            defaultValue={newImageDataUrl}
-          />
+          <input type="hidden" id="imageDataUrl" name="imageDataUrl" defaultValue={newImageDataUrl} />
         </div>
 
         <div className="flex gap-4 pt-5">

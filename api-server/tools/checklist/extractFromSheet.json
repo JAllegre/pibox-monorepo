@@ -178,10 +178,7 @@
     },
     {
       "title": "VIANDE/LEGUMES",
-      "items": [
-        { "title": "Tomates cerises " },
-        { "title": "Truite/Saumon fumé" }
-      ]
+      "items": [{ "title": "Tomates cerises " }, { "title": "Truite/Saumon fumé" }]
     },
     {
       "title": "CREMERIE",

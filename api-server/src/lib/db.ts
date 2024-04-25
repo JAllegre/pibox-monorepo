@@ -25,19 +25,12 @@ export async function closeDb(db: sqlite3.Database): Promise<sqlite3.Database> {
   return new Promise((resolve) => {
     db.close((err) => {
       resolve(db);
-      console.log(
-        "Closed DB",
-        DB_FILENAME,
-        `${err ? "with error: " + err.message : ""}`
-      );
+      console.log("Closed DB", DB_FILENAME, `${err ? "with error: " + err.message : ""}`);
     });
   });
 }
 
-export async function endDb(
-  dbToClose?: sqlite3.Database,
-  stmtToFinalize?: sqlite3.Statement
-) {
+export async function endDb(dbToClose?: sqlite3.Database, stmtToFinalize?: sqlite3.Statement) {
   if (stmtToFinalize) {
     stmtToFinalize.finalize();
     stmtToFinalize = undefined;
