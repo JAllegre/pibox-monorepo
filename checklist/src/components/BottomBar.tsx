@@ -14,14 +14,14 @@ export default function BottomBar() {
     (event: ChangeEvent<HTMLInputElement>) => {
       setDisplayMode(event.target.checked ? DisplayMode.Edit : DisplayMode.View);
     },
-    [setDisplayMode]
+    [setDisplayMode],
   );
 
   const handleSearchFilterChange = useCallback(
     (event: ChangeEvent<HTMLInputElement>) => {
       setSearchFilter(event.target.value);
     },
-    [setSearchFilter]
+    [setSearchFilter],
   );
 
   return (
@@ -30,7 +30,14 @@ export default function BottomBar() {
         <InputLeftElement pointerEvents="none">
           <FaMagnifyingGlass />
         </InputLeftElement>
-        <Input placeholder="Filtrer" color="teal.200" w="auto" value={searchFilter} onChange={handleSearchFilterChange} />
+        <Input
+          placeholder="Filtrer"
+          color="teal.200"
+          w="auto"
+          value={searchFilter}
+          onChange={handleSearchFilterChange}
+          maxW={200}
+        />
       </InputGroup>
 
       <HStack justifyContent="space-between">

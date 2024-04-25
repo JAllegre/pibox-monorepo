@@ -6,10 +6,7 @@ function dispatch(eventType: EventType) {
   eventTarget.dispatchEvent(new Event(eventType));
 }
 
-function addListener(
-  eventType: EventType,
-  callback: EventListener
-): EventListener {
+function addListener(eventType: EventType, callback: EventListener): EventListener {
   eventTarget.addEventListener(eventType, callback);
   return callback;
 }

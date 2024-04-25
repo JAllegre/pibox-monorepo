@@ -14,24 +14,16 @@ export async function getChecklist(): Promise<GetChecklistResponse> {
 
 export async function updateCategory(
   categoryId: number,
-  checklistCategoryInput: Partial<ChecklistCategoryInput>
+  checklistCategoryInput: Partial<ChecklistCategoryInput>,
 ): Promise<void> {
-  return putData(
-    `${baseApiUrl}/0/categories/${categoryId}`,
-    checklistCategoryInput
-  );
+  return putData(`${baseApiUrl}/0/categories/${categoryId}`, checklistCategoryInput);
 }
 
-export async function addItem(
-  checklistItemInput: ChecklistItemInput
-): Promise<PostChecklistItemResponse> {
+export async function addItem(checklistItemInput: ChecklistItemInput): Promise<PostChecklistItemResponse> {
   return postData(`${baseApiUrl}/0/items`, checklistItemInput);
 }
 
-export async function updateItem(
-  itemId: number,
-  checklistItemInput: Partial<ChecklistItemInput>
-): Promise<void> {
+export async function updateItem(itemId: number, checklistItemInput: Partial<ChecklistItemInput>): Promise<void> {
   return putData(`${baseApiUrl}/0/items/${itemId}`, checklistItemInput);
 }
 

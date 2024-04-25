@@ -21,7 +21,7 @@ export const useChecklistStore = create<ChecklistState>()(
       }),
       {
         name: "checklist-store",
-      }
-    )
-  )
+      },
+    ),
+  ),
 );
