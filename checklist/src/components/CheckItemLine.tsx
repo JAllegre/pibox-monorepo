@@ -1,25 +1,14 @@
-import {
-  Box,
-  Card,
-  CardBody,
-  Input,
-  Menu,
-  MenuButton,
-  MenuGroup,
-  MenuItem,
-  MenuList,
-  Stack,
-  Switch,
-} from "@chakra-ui/react";
+import { Box, Card, CardBody, Input, Stack, Switch } from "@chakra-ui/react";
 import { matchSearch } from "@common/stringUtils";
 import { useMutation } from "@tanstack/react-query";
-import { ChangeEvent, useCallback, useEffect, useRef, useState } from "react";
+import { ChangeEvent, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { FaRegTrashAlt } from "react-icons/fa";
 import { ChecklistItem, ChecklistItemInput, ChecklistItemStatus } from "../../../common/checklistTypes";
 import { DisplayMode } from "../types";
 import { useChecklistStore } from "../utils/ChecklistStore";
-import { removeItem, updateItem } from "../utils/api";
+import { updateItem } from "../utils/api";
 import eventMgr from "../utils/eventMgr";
+import { MyIconButton } from "./MyIconButton";
 interface CheckItemLineProps {
   checkItem: ChecklistItem;
   isNewItem?: boolean;
@@ -29,19 +18,13 @@ export default function CheckItemLine({ checkItem, isNewItem }: CheckItemLinePro
   const [title, setTitle] = useState(checkItem.title);
   const [isNew, setIsNew] = useState(isNewItem);
   const cardRef = useRef<HTMLDivElement>(null);
-
   const isEditMode = useChecklistStore((state) => state.displayMode === DisplayMode.Edit);
   const searchFilter = useChecklistStore((state) => state.searchFilter);
+  const setItemIdToDelete = useChecklistStore((state) => state.setItemIdToDelete);
 
   const updateItemMutation = useMutation({
     mutationFn: (checklistCategoryInput: Partial<ChecklistItemInput>) => {
       return updateItem(checkItem.id, checklistCategoryInput);
-    },
-  });
-
-  const removeItemMutation = useMutation({
-    mutationFn: (itemId: number) => {
-      return removeItem(itemId);
     },
   });
 
@@ -56,7 +39,7 @@ export default function CheckItemLine({ checkItem, isNewItem }: CheckItemLinePro
     async (event: ChangeEvent<HTMLInputElement>) => {
       setTitle(event.target.value);
     },
-    [setTitle],
+    [setTitle]
   );
 
   const handleTitleBlur = useCallback(async () => {
@@ -68,11 +51,6 @@ export default function CheckItemLine({ checkItem, isNewItem }: CheckItemLinePro
     });
     eventMgr.dispatch("checklist-refresh");
   }, [checkItem.title, title, updateItemMutation]);
-
-  const handleDeleteClick = useCallback(async () => {
-    await removeItemMutation.mutateAsync(checkItem.id);
-    eventMgr.dispatch("checklist-refresh");
-  }, [checkItem.id, removeItemMutation]);
 
   useEffect(() => {
     let tt: number = 0;
@@ -88,9 +66,17 @@ export default function CheckItemLine({ checkItem, isNewItem }: CheckItemLinePro
     };
   }, [checkItem.id, isNew]);
 
-  const isDisplayed =
-    matchSearch(searchFilter, checkItem.title) &&
-    (isEditMode || checkItem.checkStatus > ChecklistItemStatus.Unselected);
+  const handleDeleteClick = useCallback(async () => {
+    setItemIdToDelete(checkItem.id);
+  }, [setItemIdToDelete, checkItem.id]);
+
+  const isDisplayed = useMemo(() => {
+    return (
+      matchSearch(searchFilter, checkItem.title) &&
+      (isEditMode || checkItem.checkStatus > ChecklistItemStatus.Unselected)
+    );
+  }, [checkItem.checkStatus, checkItem.title, isEditMode, searchFilter]);
+
   return (
     <Card
       ref={cardRef}
@@ -115,23 +101,13 @@ export default function CheckItemLine({ checkItem, isNewItem }: CheckItemLinePro
             sx={{ border: !isEditMode ? "none" : "" }}
             flexGrow={1}
           />
-          {isEditMode && (
-            <Menu colorScheme="black">
-              <MenuButton as={Box} cursor="pointer">
-                <Box color="red.400">
-                  <FaRegTrashAlt />
-                </Box>
-              </MenuButton>
-              <MenuList bgColor="black">
-                <MenuGroup title="Êtes vous sur ?" bgColor="black">
-                  <MenuItem bgColor="black" onClick={handleDeleteClick}>
-                    Oui
-                  </MenuItem>
-                  <MenuItem bgColor="black">Non</MenuItem>
-                </MenuGroup>
-              </MenuList>
-            </Menu>
-          )}
+          <MyIconButton
+            Icon={FaRegTrashAlt}
+            color="red.400"
+            display={isEditMode ? "" : "none"}
+            onClick={handleDeleteClick}
+            fontSize={20}
+          />
         </Stack>
       </CardBody>
     </Card>
