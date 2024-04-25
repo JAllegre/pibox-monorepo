@@ -1,4 +1,5 @@
 import { RecipeKind } from "@common/miamTypes";
+import { CakeSlice, CookingPot, LucideIcon, Salad, Wine } from "lucide-react";
 
 /**
  * Returns the label corresponding to a RecipeKind.
@@ -17,5 +18,20 @@ export function getLabelFromRecipeKind(kind?: RecipeKind): string {
       return "Boisson";
     default:
       return "???";
+  }
+}
+
+export function getColorAndIconFromRecipeKind(kind?: RecipeKind): { color: string; Icon: LucideIcon } {
+  switch (kind) {
+    case RecipeKind.Appetizer:
+      return { color: "cornflowerblue", Icon: Salad };
+    case RecipeKind.Course:
+      return { color: "purple", Icon: CookingPot };
+    case RecipeKind.Dessert:
+      return { color: "orange", Icon: CakeSlice };
+    case RecipeKind.Drink:
+      return { color: "green", Icon: Wine };
+    default:
+      return { color: "green", Icon: CookingPot };
   }
 }

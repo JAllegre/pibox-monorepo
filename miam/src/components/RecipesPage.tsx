@@ -1,6 +1,7 @@
 import { GetRecipesResponse, RecipeKind } from "@common/miamTypes";
 import { matchSearch } from "@common/stringUtils";
-import { CakeSlice, Plus, Soup, Wine } from "lucide-react";
+import { getColorAndIconFromRecipeKind } from "@src/lib/tools";
+import { Plus } from "lucide-react";
 import { ReactNode, useContext, useState } from "react";
 import { Link, useLoaderData } from "react-router-dom";
 import { SearchContext } from "../contexts/SearchContext";
@@ -26,7 +27,13 @@ export default function RecipesPage() {
         <div className="flex flex-grow justify-center">
           <div className="flex rounded-md  text-sm cursor-pointer">
             <div
-              className={`${toggleButtonClass} rounded-l-md ${selectedKind === RecipeKind.Course ? bgColorSelected : bgColor}`}
+              className={`${toggleButtonClass} rounded-l-md ${selectedKind === RecipeKind.Appetizer ? bgColorSelected : bgColor}`}
+              onClick={handleClickRecipeKind(RecipeKind.Appetizer)}
+            >
+              Entrées
+            </div>
+            <div
+              className={`${toggleButtonClass}  ${selectedKind === RecipeKind.Course ? bgColorSelected : bgColor}`}
               onClick={handleClickRecipeKind(RecipeKind.Course)}
             >
               Plats
@@ -60,17 +67,13 @@ export default function RecipesPage() {
           if (!matchSearch(searchText, recipe.name)) {
             return acc;
           }
+          const { color, Icon } = getColorAndIconFromRecipeKind(recipe.kind);
           return [
             ...acc,
             <li key={`${recipe.name}-${recipe.id}`} className="px-2 py-1 hover:bg-gray-100">
               <Link to={`${Paths.Recipes}/${recipe.id}`}>
                 <div className="flex items-center justify-start gap-2">
-                  {recipe.kind === RecipeKind.Course && <Soup size={18} strokeWidth={2} color="purple" className="mb-1" />}
-
-                  {recipe.kind === RecipeKind.Dessert && <CakeSlice size={18} strokeWidth={2} color="orange" className="mb-1" />}
-
-                  {recipe.kind === RecipeKind.Drink && <Wine size={18} strokeWidth={2} color="green" className="mb-1" />}
-
+                  <Icon size={18} strokeWidth={2} color={color} className="mb-1" />
                   <span className="font-semibold">{recipe.name}</span>
                 </div>
               </Link>
