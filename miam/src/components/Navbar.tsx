@@ -1,6 +1,6 @@
 import { Paths } from "@src/lib/constants";
 import { Utensils } from "lucide-react";
-import { ChangeEvent, useCallback, useContext } from "react";
+import { ChangeEvent, useCallback, useContext, useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { SearchContext } from "../contexts/SearchContext";
 import { Input } from "./ui/input";
@@ -18,12 +18,16 @@ export default function Navbar() {
         navigate(Paths.Recipes);
       }
     },
-    [navigate, pathname, setSearchText],
+    [navigate, pathname, setSearchText]
   );
 
   const handleLogoClick = useCallback(() => {
     setSearchText("");
   }, [setSearchText]);
+
+  useEffect(() => {
+    setSearchText((curSearchText) => (curSearchText && pathname !== Paths.Recipes ? "" : curSearchText));
+  }, [pathname, setSearchText]);
 
   return (
     <nav className="fixed px-3 md:max-w-2xl m-auto top-0 left-0 right-0 p-1 h-[--nav-height] z-10 flex items-center justify-between bg-white shadow-[0_4px_6px_-4px_gray]">
