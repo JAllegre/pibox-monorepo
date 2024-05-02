@@ -1,7 +1,7 @@
 {
-  "name": "miam-back",
+  "name": "api-server",
   "version": "1.0.0",
-  "description": "Backend for the miam app",
+  "description": "Backend for the pibox apps",
   "main": "main.ts",
   "scripts": {
     "build": "tsc -p tsconfig.prod.json",

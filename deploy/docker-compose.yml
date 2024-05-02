@@ -14,7 +14,7 @@ services:
     depends_on:
       - root-page
       - cv
-      - miam-front
+      - miam
       - checklist
       - api-server
     deploy:
@@ -36,9 +36,9 @@ services:
     deploy:
       restart_policy:
         condition: any
-  miam-front:
-    container_name: miam-front
-    image: "miam-front:latest"
+  miam:
+    container_name: miam
+    image: "miam:latest"
     build:
       context: ../ #Must be the root of the project to get shared/common files
       dockerfile: ./miam/Dockerfile
