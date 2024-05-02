@@ -1,7 +1,6 @@
 import { Box, Card, CardBody, Input, Stack, Switch } from "@chakra-ui/react";
-import { matchSearch } from "@common/stringUtils";
 import { useMutation } from "@tanstack/react-query";
-import { ChangeEvent, useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { ChangeEvent, useCallback, useEffect, useRef, useState } from "react";
 import { FaRegTrashAlt } from "react-icons/fa";
 import { ChecklistItem, ChecklistItemInput, ChecklistItemStatus } from "../../../common/checklistTypes";
 import { DisplayMode } from "../types";
@@ -20,7 +19,6 @@ export default function CheckItemLine({ checkItem, isNewItem }: CheckItemLinePro
   const [isItemChecked, setIsItemChecked] = useState(checkItem.checkStatus > ChecklistItemStatus.Unselected);
   const cardRef = useRef<HTMLDivElement>(null);
   const isEditMode = useChecklistStore((state) => state.displayMode === DisplayMode.Edit);
-  const searchFilter = useChecklistStore((state) => state.searchFilter);
   const setItemIdToDelete = useChecklistStore((state) => state.setItemIdToDelete);
 
   const updateItemMutation = useMutation({
@@ -83,21 +81,8 @@ export default function CheckItemLine({ checkItem, isNewItem }: CheckItemLinePro
     setItemIdToDelete(checkItem.id);
   }, [setItemIdToDelete, checkItem.id]);
 
-  const isDisplayed = useMemo(() => {
-    return (
-      matchSearch(searchFilter, checkItem.title) &&
-      (isEditMode || checkItem.checkStatus > ChecklistItemStatus.Unselected)
-    );
-  }, [checkItem.checkStatus, checkItem.title, isEditMode, searchFilter]);
-
   return (
-    <Card
-      ref={cardRef}
-      my="1"
-      bgColor={isNew ? "teal.700" : "gray.600"}
-      color="teal.50"
-      display={isDisplayed ? "" : "none"}
-    >
+    <Card ref={cardRef} my="1" bgColor={isNew ? "teal.700" : "gray.600"} color="teal.50">
       <CardBody px={2} py={1}>
         <Stack direction="row" alignItems="center" gap={1}>
           <Box>
@@ -106,7 +91,7 @@ export default function CheckItemLine({ checkItem, isNewItem }: CheckItemLinePro
           <Input
             size="sm"
             p={1}
-            placeholder="Titre"
+            placeholder="Entrez un nom"
             value={title || ""}
             onChange={handleTitleChange}
             onBlur={handleTitleBlur}

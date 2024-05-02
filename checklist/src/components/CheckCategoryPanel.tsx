@@ -1,6 +1,6 @@
 import { Box, Card, Input, Stack } from "@chakra-ui/react";
 import { useMutation } from "@tanstack/react-query";
-import React, { useCallback, useMemo, useState } from "react";
+import React, { useCallback, useState } from "react";
 import { RiMenuAddLine } from "react-icons/ri";
 import { ChecklistCategory, ChecklistCategoryInput, ChecklistItemStatus } from "../../../common/checklistTypes";
 import { DisplayMode } from "../types";
@@ -13,6 +13,7 @@ import { MyIconButton } from "./MyIconButton";
 interface CheckCategoryPanelProps {
   checklistCategory: ChecklistCategory;
 }
+
 export default function CheckCategoryPanel({ checklistCategory }: CheckCategoryPanelProps) {
   const [categoryTitle, setCategoryTitle] = useState(checklistCategory.title);
   const [lastAddedItemId, setLastAddedItemId] = useState<number>(0);
@@ -22,6 +23,7 @@ export default function CheckCategoryPanel({ checklistCategory }: CheckCategoryP
       return updateCategory(checklistCategory.id, checklistCategoryInput);
     },
   });
+
   const isEditMode = useChecklistStore((state) => state.displayMode === DisplayMode.Edit);
 
   const handleCategoryTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -37,26 +39,18 @@ export default function CheckCategoryPanel({ checklistCategory }: CheckCategoryP
     const { id } = await addItem({
       checkStatus: ChecklistItemStatus.SelectedChecked,
       categoryId: checklistCategory.id,
-      title: "Nouveau",
+      title: "",
     });
     eventMgr.dispatch("checklist-refresh");
     setLastAddedItemId(id);
   }, [checklistCategory.id]);
 
-  const filteredCheckItemLines = checklistCategory.items?.map((checkItem) => {
+  const itemLines = checklistCategory.items?.map((checkItem) => {
     return <CheckItemLine key={checkItem.id} checkItem={checkItem} isNewItem={checkItem.id === lastAddedItemId} />;
   });
 
-  const displayMe = useMemo(() => {
-    return (
-      isEditMode ||
-      (checklistCategory.items.length > 0 &&
-        checklistCategory.items.some((item) => item.checkStatus > ChecklistItemStatus.Unselected))
-    );
-  }, [checklistCategory.items, isEditMode]);
-
   return (
-    <Card pb={1} bgColor="gray.900" my={2} style={{ display: displayMe ? "" : "none" }}>
+    <Card pb={1} bgColor="gray.900" my={2}>
       <Stack direction="row" borderRadius={5} py={0} px={2} alignItems="center">
         <Input
           size="xs"
@@ -79,7 +73,7 @@ export default function CheckCategoryPanel({ checklistCategory }: CheckCategoryP
           fontSize={26}
         />
       </Stack>
-      <Box sx={{ px: 1 }}>{filteredCheckItemLines}</Box>
+      <Box sx={{ px: 1 }}>{itemLines}</Box>
     </Card>
   );
 }
