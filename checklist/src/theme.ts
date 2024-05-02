@@ -10,13 +10,14 @@ const theme = extendTheme(withDefaultColorScheme({ colorScheme: "teal" }), {
       },
     },
   },
-  //   components: {
-  //     Switch: {
-  //       defaultProps: {
-  //         colorScheme: "teal",
-  //       },
-  //     },
-  //   },
+  components: {
+    Button: {
+      baseStyle: {
+        fontWeight: "bold",
+        textTransform: "uppercase",
+      },
+    },
+  },
 });
 
 export default theme;

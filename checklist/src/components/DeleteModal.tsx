@@ -31,19 +31,16 @@ export function DeleteModal() {
   return (
     <>
       <Modal isOpen={!!itemIdToDelete} onClose={() => setItemIdToDelete(0)}>
-        <ModalOverlay />
-        <ModalContent>
-          <ModalHeader>Attention</ModalHeader>
+        <ModalOverlay backdropFilter="blur(1px)" />
+        <ModalContent bgColor="gray.700">
+          <ModalHeader>Suppression d'un article</ModalHeader>
           <ModalCloseButton />
-          <ModalBody>Vous êtes sur de vouloir supprimer cet élément ?</ModalBody>
-
+          <ModalBody>Êtes vous sùr de vouloir supprimer cet article ?</ModalBody>
           <ModalFooter>
-            <Button colorScheme="blue" mr={3} onClick={handleDeleteClick}>
-              OUI
+            <Button colorScheme="red" mr={3} onClick={handleDeleteClick}>
+              Oui
             </Button>
-            <Button variant="ghost" onClick={() => setItemIdToDelete(0)}>
-              ANNULER
-            </Button>
+            <Button onClick={() => setItemIdToDelete(0)}>Annuler</Button>
           </ModalFooter>
         </ModalContent>
       </Modal>
