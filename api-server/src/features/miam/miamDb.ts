@@ -1,6 +1,6 @@
 import sqlite3 from "sqlite3";
 import { RecipeInput, RecipeRow, RecipeRowShort } from "../../../../common/miamTypes";
-import { connectDb, endDb } from "../../lib/db";
+import { buildUpdateQueryParams, connectDb, endDb } from "../../lib/db";
 import { DB_TABLE_RECIPES } from "./miamConstants";
 
 export async function getAllRecipes(): Promise<RecipeRowShort[]> {
@@ -92,33 +92,18 @@ export async function updateOneRecipe(recipeId: number, recipeInput: RecipeInput
   console.log("db.tsx/updateOneRecipe | recipeInput=", !!recipeInput);
   const db = await connectDb();
   return new Promise((resolve, reject) => {
-    let stmt: sqlite3.Statement | undefined;
     try {
-      db.serialize(() => {
-        stmt = db.prepare(
-          `UPDATE ${DB_TABLE_RECIPES} SET  name = ?, ingredients = ?, steps = ?, peopleNumber = ?, imageDataUrl = ? WHERE id=?`,
-        );
-        stmt.run(
-          [
-            recipeInput.name,
-            recipeInput.ingredients,
-            recipeInput.steps,
-            recipeInput.peopleNumber,
-            recipeInput.imageDataUrl,
-            recipeId,
-          ],
-          (err: Error) => {
-            if (err) {
-              return reject(err);
-            }
-            resolve();
-          },
-        );
+      const { queryValues, querySet } = buildUpdateQueryParams(recipeId, recipeInput);
+      db.run(`UPDATE ${DB_TABLE_RECIPES} SET ${querySet}  WHERE id=?`, queryValues, (err: Error) => {
+        if (err) {
+          return reject(err);
+        }
+        resolve();
       });
     } catch (error) {
       reject(error);
     } finally {
-      endDb(db, stmt);
+      endDb(db);
     }
   });
 }

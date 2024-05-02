@@ -41,3 +41,49 @@ export async function endDb(dbToClose?: sqlite3.Database, stmtToFinalize?: sqlit
     dbToClose = undefined;
   }
 }
+
+export function checkId(id: number) {
+  if (!id || isNaN(id)) {
+    throw new Error("Missing id");
+  }
+}
+
+export function buildUpdateQueryParams(id: number, input: Object) {
+  const queryKeys: string[] = [];
+  const queryValues: any[] = [];
+
+  Object.entries(input).forEach(([key, value]) => {
+    if (value == null) {
+      return;
+    }
+    queryKeys.push(`${key}=?`);
+    queryValues.push(value);
+  });
+
+  if (queryKeys.length <= 0) {
+    throw new Error("No values to update");
+  }
+  // Always add the id at the end
+  checkId(id);
+  queryValues.push(id);
+  return { querySet: queryKeys.join(","), queryValues };
+}
+
+export function buildAddQueryParams(input: Object) {
+  const queryKeys: string[] = [];
+  const queryValues: any[] = [];
+
+  Object.entries(input).forEach(([key, value]) => {
+    if (value == null) {
+      return;
+    }
+    queryKeys.push(`${key}`);
+    queryValues.push(value);
+  });
+
+  if (queryKeys.length <= 0) {
+    throw new Error("No values to add");
+  }
+
+  return { queryKeys, queryValues };
+}

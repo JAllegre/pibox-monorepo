@@ -1,6 +1,6 @@
 import sqlite3 from "sqlite3";
 import { ChecklistCategoryInput, ChecklistInput, ChecklistItemInput } from "../../../../common/checklistTypes";
-import { connectDb, endDb } from "../../lib/db";
+import { buildAddQueryParams, buildUpdateQueryParams, checkId, connectDb, endDb } from "../../lib/db";
 import {
   DB_TABLE_CHECKLIST_CATEGORIES,
   DB_TABLE_CHECKLIST_ITEMS,
@@ -15,46 +15,6 @@ export interface ChecklistListRow {
   categoryTitle: string;
   listId: number;
   listTitle: string;
-}
-
-function buildUpdateQueryParams(id: number, input: Object) {
-  const queryKeys: string[] = [];
-  const queryValues: any[] = [];
-
-  Object.entries(input).forEach(([key, value]) => {
-    if (value == null) {
-      return;
-    }
-    queryKeys.push(`${key}=?`);
-    queryValues.push(value);
-  });
-
-  if (queryKeys.length <= 0) {
-    throw new Error("No values to update");
-  }
-  // Always add the id at the end
-  checkId(id);
-  queryValues.push(id);
-  return { querySet: queryKeys.join(","), queryValues };
-}
-
-function buildAddQueryParams(input: Object) {
-  const queryKeys: string[] = [];
-  const queryValues: any[] = [];
-
-  Object.entries(input).forEach(([key, value]) => {
-    if (value == null) {
-      return;
-    }
-    queryKeys.push(`${key}`);
-    queryValues.push(value);
-  });
-
-  if (queryKeys.length <= 0) {
-    throw new Error("No values to add");
-  }
-
-  return { queryKeys, queryValues };
 }
 
 export async function getAllChecklistItems(listId: number): Promise<ChecklistListRow[]> {
@@ -174,12 +134,6 @@ export async function insertOneItem(checklistItemInput: ChecklistItemInput): Pro
   });
 }
 
-function checkId(id: number) {
-  if (!id || isNaN(id)) {
-    throw new Error("Missing id");
-  }
-}
-
 export async function updateOneChecklistItem(itemId: number, itemInput: ChecklistItemInput): Promise<void> {
   console.log("checklistDb.tsx/updateOneChecklistItem | Params=", {
     itemId,
@@ -192,7 +146,6 @@ export async function updateOneChecklistItem(itemId: number, itemInput: Checklis
     try {
       const { queryValues, querySet } = buildUpdateQueryParams(itemId, itemInput);
       db.run(`UPDATE ${DB_TABLE_CHECKLIST_ITEMS} SET ${querySet}  WHERE id=?`, queryValues, (err: Error) => {
-        console.log("SUCCESS");
         if (err) {
           return reject(err);
         }
