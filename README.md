@@ -6,9 +6,13 @@ Mono reposotory to manage all app and service of my home box: miam app, checklis
 
 On a fresh system install , configure letsencrypt SSL certs with cerbot
 
-Install first the docker rproxy container and do the following on it:
+- Remove cerbot lines from rproxy/conf/pibox.hd.free.fr.conf (in order to be able to run without error in HTTP mode)
 
-!!! BE SURE TO BE ON THE RIGHT container (use id instead of name)
+- Run the docker rproxy container (docker compose up)
+
+- Connect to it (docker exec -it <container_id> bash) and do the following on it:
+
+  - !!! BE SURE TO BE ON THE RIGHT container (use id instead of name)
 
 - Run certbot
 
@@ -16,7 +20,7 @@ Install first the docker rproxy container and do the following on it:
 
 This will replace config in .conf file
 
-Copy new conf file into git (rproxy/conf/pibox.hd.free.fr.conf)
+- Copy new conf file into git (rproxy/conf/pibox.hd.free.fr.conf). It should be the same
 
 ## TROUBLESHOOT
 
