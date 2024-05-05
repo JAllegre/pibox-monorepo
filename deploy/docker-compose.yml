@@ -1,5 +1,3 @@
-version: "3.8"
-
 services:
   rproxy:
     container_name: rproxy
