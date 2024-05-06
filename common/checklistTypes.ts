@@ -9,6 +9,7 @@ export interface ChecklistItem {
   categoryId: number;
   checkStatus: ChecklistItemStatus;
   title: string;
+  sortOrder: number;
 }
 
 export type ChecklistItemInput = Omit<ChecklistItem, "id">;

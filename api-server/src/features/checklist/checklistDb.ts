@@ -11,6 +11,7 @@ export interface ChecklistListRow {
   id: number;
   title: string;
   checkStatus: number;
+  sortOrder: number;
   categoryId: number;
   categoryTitle: string;
   listId: number;
@@ -26,6 +27,7 @@ export async function getAllChecklistItems(listId: number): Promise<ChecklistLis
         `SELECT items.id as id, 
           items.title as title, 
           items.checkStatus as checkStatus,
+          items.sortOrder as sortOrder, 
           categories.id as categoryId, 
           categories.title as categoryTitle,
           lists.title as listTitle,

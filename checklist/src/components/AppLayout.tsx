@@ -5,7 +5,7 @@ import { DeleteModal } from "./DeleteModal";
 
 const AppLayout = () => {
   return (
-    <HStack m="auto" w="100%" maxW="2xl" pos="relative">
+    <HStack className="app-layout" m="auto" w="100%" maxW="2xl" pos="relative">
       <ChecklistPanel />
       <BottomBar />
       <DeleteModal />

@@ -4,6 +4,7 @@ import { matchSearch } from "@common/stringUtils";
 import { DisplayMode } from "@src/types";
 import { useChecklistStore } from "@src/utils/ChecklistStore";
 import { useQuery } from "@tanstack/react-query";
+import { sortBy } from "lodash";
 import { FC, useEffect, useMemo } from "react";
 import MyReactQuerySuspense from "../utils/MyReactQuerySuspense";
 import { getChecklist } from "../utils/api";
@@ -35,16 +36,19 @@ const ChecklistPanel: FC = () => {
       data?.checklist?.categories.reduce<ChecklistCategory[]>((filteredCategories, category) => {
         const filteredCategory = { ...category };
 
-        filteredCategory.items = filteredCategory.items.reduce<ChecklistItem[]>((filteredItems, item) => {
-          if (
-            matchSearch(searchFilter, item.title) &&
-            (isEditMode || item.checkStatus > ChecklistItemStatus.Unselected)
-          ) {
-            filteredItems.push({ ...item });
-          }
+        filteredCategory.items = sortBy(filteredCategory.items, ["sortOrder", "id"]).reduce<ChecklistItem[]>(
+          (filteredItems, item) => {
+            if (
+              matchSearch(searchFilter, item.title) &&
+              (isEditMode || item.checkStatus > ChecklistItemStatus.Unselected)
+            ) {
+              filteredItems.push({ ...item });
+            }
 
-          return filteredItems;
-        }, []);
+            return filteredItems;
+          },
+          []
+        );
 
         if (filteredCategory.items.length > 0) {
           filteredCategories.push(filteredCategory);
@@ -55,7 +59,7 @@ const ChecklistPanel: FC = () => {
   }, [data, searchFilter, isEditMode]);
 
   return (
-    <Box bgColor="gray.700" px={2} className="checklist-panel" flexGrow={1}>
+    <Box className="checklist-panel" bgColor="gray.700" px={2} flexGrow={1} pb="60px">
       <MyReactQuerySuspense isPending={isPending} error={error}>
         <HStack justifyContent="space-between" py={2}>
           <Heading as="h1" size="lg">

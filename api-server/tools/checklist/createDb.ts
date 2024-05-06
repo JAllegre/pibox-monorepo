@@ -9,18 +9,7 @@ import {
 import { insertOneCategory, insertOneItem, insertOneList } from "../../src/features/checklist/checklistDb";
 import { connectDb } from "../../src/lib/db";
 import extractedData from "./extractFromSheet.json";
-
-function handleResult(successMessage: string, resolve?: () => void) {
-  return function (err: Error | null) {
-    if (err) {
-      throw err;
-    }
-    if (resolve) {
-      resolve();
-    }
-    console.log(successMessage);
-  };
-}
+import { handleResult } from "./utils";
 
 function dropTables(db: Database): Promise<void> {
   return new Promise((resolve, reject) => {
@@ -97,6 +86,7 @@ async function fillDB() {
         title: item.title,
         categoryId,
         checkStatus: 0,
+        sortOrder: 0,
       });
     }
   }

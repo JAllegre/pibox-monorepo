@@ -38,6 +38,7 @@ checklistRouter.get("/:listId", async (req: Request, res: Response, next: NextFu
         categoryId: row.categoryId,
         checkStatus: row.checkStatus,
         title: row.title,
+        sortOrder: row.sortOrder,
       });
       return acc;
     }, checklist.categories);

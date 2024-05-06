@@ -40,7 +40,17 @@ export default function BottomBar() {
   }, [debouncedSearchTerm, setSearchFilter]);
 
   return (
-    <HStack pos="fixed" w="100%" maxW="2xl" bottom={0} p={2} bgColor="gray.700" gap={5} justify={"space-between"}>
+    <HStack
+      className="bottom-bar"
+      pos="fixed"
+      w="100%"
+      maxW="2xl"
+      bottom={0}
+      p={2}
+      bgColor="gray.700"
+      gap={5}
+      justify={"space-between"}
+    >
       <InputGroup w="auto">
         <InputLeftElement pointerEvents="none">
           <FaMagnifyingGlass />
