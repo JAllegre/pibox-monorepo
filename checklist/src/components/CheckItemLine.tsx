@@ -1,14 +1,14 @@
-import { Box, Card, CardBody, Input, InputGroup, InputRightElement, Stack, Switch } from "@chakra-ui/react";
+import { Box, Card, CardBody, Stack, Switch } from "@chakra-ui/react";
 import { useMutation } from "@tanstack/react-query";
 import { ChangeEvent, useCallback, useEffect, useRef, useState } from "react";
 import { FaArrowAltCircleDown, FaArrowAltCircleUp, FaRegTrashAlt } from "react-icons/fa";
-import { ImCheckmark } from "react-icons/im";
 import { ChecklistItem, ChecklistItemInput, ChecklistItemStatus } from "../../../common/checklistTypes";
 import { DisplayMode } from "../types";
 import { useChecklistStore } from "../utils/ChecklistStore";
 import { updateItem } from "../utils/api";
 import eventMgr from "../utils/eventMgr";
 import { MyIconButton } from "./MyIconButton";
+import ValidatedInput from "./ValidatedInput";
 
 interface CheckItemLineProps {
   checkItem: ChecklistItem;
@@ -18,9 +18,6 @@ interface CheckItemLineProps {
 }
 
 export default function CheckItemLine({ checkItem, isNewItem, isMovedItem, onMove }: CheckItemLineProps) {
-  const [title, setTitle] = useState(checkItem.title);
-  const inputRef = useRef<HTMLInputElement>(null);
-  const [inputEdited, setInputEdited] = useState(false);
   const [isItemChecked, setIsItemChecked] = useState(checkItem.checkStatus > ChecklistItemStatus.Unselected);
   const cardRef = useRef<HTMLDivElement>(null);
   const isEditMode = useChecklistStore((state) => state.displayMode === DisplayMode.Edit);
@@ -50,23 +47,17 @@ export default function CheckItemLine({ checkItem, isNewItem, isMovedItem, onMov
     // reset to the remote state when changed
     setIsItemChecked(checkItem.checkStatus > ChecklistItemStatus.Unselected);
   }, [checkItem.checkStatus]);
-  const handleTitleChange = useCallback(
-    async (event: ChangeEvent<HTMLInputElement>) => {
-      setTitle(event.target.value);
-    },
-    [setTitle]
-  );
 
-  const handleTitleBlur = useCallback(async () => {
-    setInputEdited(false);
-    if (title === checkItem.title) {
-      return;
-    }
-    await updateItemMutation.mutateAsync({
-      title,
-    });
-    eventMgr.dispatch("checklist-refresh");
-  }, [checkItem.title, title, updateItemMutation]);
+  const handleTitleInputValidated = useCallback(
+    async (value: string) => {
+      await updateItemMutation.mutateAsync({
+        title: value,
+      });
+      eventMgr.dispatch("checklist-refresh");
+    },
+
+    [updateItemMutation]
+  );
 
   useEffect(() => {
     if (isNewItem) {
@@ -78,10 +69,6 @@ export default function CheckItemLine({ checkItem, isNewItem, isMovedItem, onMov
     setItemIdToDelete(checkItem.id);
   }, [setItemIdToDelete, checkItem.id]);
 
-  const handleInputDoubleClick = () => {
-    setInputEdited(true);
-  };
-
   const handleUpClick = useCallback(async () => {
     onMove(checkItem.id, true);
   }, [onMove, checkItem.id]);
@@ -89,10 +76,6 @@ export default function CheckItemLine({ checkItem, isNewItem, isMovedItem, onMov
   const handleDownClick = useCallback(async () => {
     onMove(checkItem.id, false);
   }, [onMove, checkItem.id]);
-
-  const handleValidationIconClick = () => {
-    inputRef.current?.blur();
-  };
 
   return (
     <Card
@@ -107,31 +90,12 @@ export default function CheckItemLine({ checkItem, isNewItem, isMovedItem, onMov
           <Box>
             <Switch isChecked={isItemChecked} onChange={handleCheckSwitch} size="md" />
           </Box>
+          <ValidatedInput
+            defaultValue={checkItem.title || ""}
+            placeholder="Entrez un nom"
+            onValidated={handleTitleInputValidated}
+          />
 
-          <InputGroup>
-            <Input
-              ref={inputRef}
-              size="sm"
-              p={1}
-              placeholder="Entrez un nom"
-              defaultValue={checkItem.title || ""}
-              onChange={handleTitleChange}
-              onBlur={handleTitleBlur}
-              readOnly={!isEditMode || !inputEdited}
-              sx={{ border: !isEditMode ? "none" : "" }}
-              flexGrow={1}
-              onDoubleClick={handleInputDoubleClick}
-            />
-            <InputRightElement>
-              <MyIconButton
-                ReactIcon={ImCheckmark}
-                color="green.200"
-                onClick={handleValidationIconClick}
-                display={title !== checkItem.title ? "" : "none"}
-                mb={2}
-              />
-            </InputRightElement>
-          </InputGroup>
           {/* <Box>{checkItem.sortOrder}</Box> */}
           <MyIconButton
             ReactIcon={FaArrowAltCircleUp}

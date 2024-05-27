@@ -1,15 +1,16 @@
-import { Box, HStack, Heading } from "@chakra-ui/react";
-import { ChecklistCategory, ChecklistItem, ChecklistItemStatus } from "@common/checklistTypes";
+import { Box, HStack } from "@chakra-ui/react";
+import { ChecklistCategory, ChecklistInput, ChecklistItem, ChecklistItemStatus } from "@common/checklistTypes";
 import { matchSearch } from "@common/stringUtils";
 import { DisplayMode } from "@src/types";
 import { useChecklistStore } from "@src/utils/ChecklistStore";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { sortBy } from "lodash";
-import { FC, useEffect, useMemo } from "react";
+import { FC, useCallback, useEffect, useMemo } from "react";
 import MyReactQuerySuspense from "../utils/MyReactQuerySuspense";
-import { getChecklist } from "../utils/api";
+import { getChecklist, updateList } from "../utils/api";
 import eventMgr from "../utils/eventMgr";
 import CheckCategoryPanel from "./CheckCategoryPanel";
+import ValidatedInput from "./ValidatedInput";
 
 const ChecklistPanel: FC = () => {
   const isEditMode = useChecklistStore((state) => state.displayMode === DisplayMode.Edit);
@@ -20,6 +21,24 @@ const ChecklistPanel: FC = () => {
     queryKey: ["getChecklist"],
     queryFn: getChecklist,
   });
+
+  const updateListMutation = useMutation({
+    mutationFn: (checklistInput: Partial<ChecklistInput>) => {
+      if (data?.checklist?.id) {
+        return updateList(data?.checklist?.id, checklistInput);
+      }
+      return Promise.reject("No checklist id found");
+    },
+  });
+
+  const handleTitleInputValidated = useCallback(
+    async (value: string) => {
+      await updateListMutation.mutateAsync({ title: value });
+      eventMgr.dispatch("checklist-refresh");
+    },
+
+    [updateListMutation]
+  );
 
   useEffect(() => {
     const cb = eventMgr.addListener("checklist-refresh", () => {
@@ -62,9 +81,14 @@ const ChecklistPanel: FC = () => {
     <Box className="checklist-panel" bgColor="gray.700" px={2} flexGrow={1} pb="60px">
       <MyReactQuerySuspense isPending={isPending} error={error}>
         <HStack justifyContent="space-between" py={2}>
-          <Heading as="h1" size="lg">
-            {data?.checklist?.title || ""}
-          </Heading>
+          <ValidatedInput
+            defaultValue={data?.checklist?.title || ""}
+            placeholder="Nom de la liste"
+            onValidated={handleTitleInputValidated}
+            color="teal.200"
+            fontSize={"2xl"}
+            fontWeight={"bold"}
+          />
         </HStack>
         <ul>
           {filteredCategories.map((checklistCategory) => {

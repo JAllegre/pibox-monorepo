@@ -2,12 +2,13 @@ import express, { NextFunction, Request, Response, Router } from "express";
 import { Checklist } from "../../../../common/checklistTypes";
 import {
   ChecklistListRow,
-  deleteOneChecklistItem,
+  deleteOneItem,
   getAllChecklistItems,
   insertOneCategory,
   insertOneItem,
-  updateOneChecklistCategory,
-  updateOneChecklistItem,
+  updateOneCategory,
+  updateOneItem,
+  updateOneList,
 } from "./checklistDb";
 
 const checklistRouter: Router = express.Router();
@@ -51,6 +52,15 @@ checklistRouter.get("/:listId", async (req: Request, res: Response, next: NextFu
   }
 });
 
+checklistRouter.put(`/:listId`, async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    await updateOneList(parseInt(req.params.listId, 10), req.body);
+    res.json({ message: "List successfully updated" });
+  } catch (err) {
+    next(err);
+  }
+});
+
 checklistRouter.post(`/:listId/items`, async (req: Request, res: Response, next: NextFunction) => {
   try {
     const id = await insertOneItem(req.body);
@@ -62,7 +72,7 @@ checklistRouter.post(`/:listId/items`, async (req: Request, res: Response, next:
 
 checklistRouter.put(`/:listId/items/:itemId`, async (req: Request, res: Response, next: NextFunction) => {
   try {
-    await updateOneChecklistItem(parseInt(req.params.itemId, 10), req.body);
+    await updateOneItem(parseInt(req.params.itemId, 10), req.body);
     res.json({ message: "Item successfully updated" });
   } catch (err) {
     next(err);
@@ -71,7 +81,7 @@ checklistRouter.put(`/:listId/items/:itemId`, async (req: Request, res: Response
 
 checklistRouter.delete(`/:listId/items/:itemId`, async (req: Request, res: Response, next: NextFunction) => {
   try {
-    await deleteOneChecklistItem(parseInt(req.params.itemId, 10));
+    await deleteOneItem(parseInt(req.params.itemId, 10));
     res.json({ message: "Item successfully deleted" });
   } catch (err) {
     next(err);
@@ -89,7 +99,7 @@ checklistRouter.post(`/:listId/categories`, async (req: Request, res: Response, 
 
 checklistRouter.put(`/:listId/categories/:categoryId`, async (req: Request, res: Response, next: NextFunction) => {
   try {
-    await updateOneChecklistCategory(parseInt(req.params.categoryId, 10), req.body);
+    await updateOneCategory(parseInt(req.params.categoryId, 10), req.body);
     res.json({ message: "Category successfully updated" });
   } catch (err) {
     next(err);

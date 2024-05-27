@@ -1,5 +1,6 @@
 import {
   ChecklistCategoryInput,
+  ChecklistInput,
   ChecklistItemInput,
   GetChecklistResponse,
   PostChecklistItemResponse,
@@ -12,9 +13,13 @@ export async function getChecklist(): Promise<GetChecklistResponse> {
   return fetchData(`${baseApiUrl}/0`);
 }
 
+export async function updateList(listId: number, checklistInput: Partial<ChecklistInput>): Promise<void> {
+  return putData(`${baseApiUrl}/${listId}`, checklistInput);
+}
+
 export async function updateCategory(
   categoryId: number,
-  checklistCategoryInput: Partial<ChecklistCategoryInput>,
+  checklistCategoryInput: Partial<ChecklistCategoryInput>
 ): Promise<void> {
   return putData(`${baseApiUrl}/0/categories/${categoryId}`, checklistCategoryInput);
 }

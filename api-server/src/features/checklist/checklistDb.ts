@@ -80,6 +80,28 @@ export async function insertOneList(checklistInput: ChecklistInput): Promise<num
   });
 }
 
+export async function updateOneList(listId: number, listInput: ChecklistInput): Promise<void> {
+  console.log("checklistDb.tsx/updateOneChecklistList | listInput=", listInput);
+
+  const db = await connectDb();
+  return new Promise((resolve, reject) => {
+    try {
+      const { queryValues, querySet } = buildUpdateQueryParams(listId, listInput);
+
+      db.run(`UPDATE ${DB_TABLE_CHECKLIST_LISTS} SET ${querySet} WHERE id=?`, queryValues, (err: Error) => {
+        if (err) {
+          return reject(err);
+        }
+        resolve();
+      });
+    } catch (error) {
+      reject(error);
+    } finally {
+      endDb(db);
+    }
+  });
+}
+
 export async function insertOneCategory(checklistCategoryInput: ChecklistCategoryInput): Promise<number> {
   console.log("checklistDb.tsx/insertOneCategory | checklistCategoryInput=", checklistCategoryInput);
   const db = await connectDb();
@@ -104,6 +126,59 @@ export async function insertOneCategory(checklistCategoryInput: ChecklistCategor
       reject(error);
     } finally {
       endDb(db);
+    }
+  });
+}
+
+export async function updateOneCategory(categoryId: number, categoryInput: ChecklistCategoryInput): Promise<void> {
+  console.log("checklistDb.tsx/updateOneCategory | Params=", {
+    categoryId,
+    categoryInput,
+  });
+
+  const db = await connectDb();
+  return new Promise((resolve, reject) => {
+    try {
+      const { queryValues, querySet } = buildUpdateQueryParams(categoryId, categoryInput);
+
+      db.run(`UPDATE ${DB_TABLE_CHECKLIST_CATEGORIES} SET ${querySet} WHERE id=?`, queryValues, (err: Error) => {
+        if (err) {
+          return reject(err);
+        }
+        resolve();
+      });
+    } catch (error) {
+      reject(error);
+    } finally {
+      endDb(db);
+    }
+  });
+}
+
+export async function deleteOneCategory(categoryId: number): Promise<void> {
+  console.log("checklistDb.tsx/deleteOneCategory | categoryId=", categoryId);
+  checkId(categoryId);
+  const db = await connectDb();
+  return new Promise((resolve, reject) => {
+    let stmt: sqlite3.Statement | undefined;
+    try {
+      db.serialize(() => {
+        db.run(`DELETE FROM ${DB_TABLE_CHECKLIST_ITEMS}  WHERE categoryId=?`, [categoryId]).run(
+          `DELETE FROM ${DB_TABLE_CHECKLIST_CATEGORIES}  WHERE id=?`,
+          [categoryId],
+
+          (err: Error) => {
+            if (err) {
+              return reject(err);
+            }
+            resolve();
+          },
+        );
+      });
+    } catch (error) {
+      reject(error);
+    } finally {
+      endDb(db, stmt);
     }
   });
 }
@@ -136,8 +211,8 @@ export async function insertOneItem(checklistItemInput: ChecklistItemInput): Pro
   });
 }
 
-export async function updateOneChecklistItem(itemId: number, itemInput: ChecklistItemInput): Promise<void> {
-  console.log("checklistDb.tsx/updateOneChecklistItem | Params=", {
+export async function updateOneItem(itemId: number, itemInput: ChecklistItemInput): Promise<void> {
+  console.log("checklistDb.tsx/updateOneItem | Params=", {
     itemId,
     itemInput,
   });
@@ -161,58 +236,8 @@ export async function updateOneChecklistItem(itemId: number, itemInput: Checklis
   });
 }
 
-export async function updateOneChecklistCategory(
-  categoryId: number,
-  categoryInput: ChecklistCategoryInput,
-): Promise<void> {
-  console.log("checklistDb.tsx/updateOneChecklistCategory | Params=", {
-    categoryId,
-    categoryInput,
-  });
-
-  const db = await connectDb();
-  return new Promise((resolve, reject) => {
-    try {
-      const { queryValues, querySet } = buildUpdateQueryParams(categoryId, categoryInput);
-
-      db.run(`UPDATE ${DB_TABLE_CHECKLIST_CATEGORIES} SET ${querySet} WHERE id=?`, queryValues, (err: Error) => {
-        if (err) {
-          return reject(err);
-        }
-        resolve();
-      });
-    } catch (error) {
-      reject(error);
-    } finally {
-      endDb(db);
-    }
-  });
-}
-
-export async function updateOneChecklistList(listId: number, listInput: ChecklistInput): Promise<void> {
-  console.log("checklistDb.tsx/updateOneChecklistList | listInput=", listInput);
-
-  const db = await connectDb();
-  return new Promise((resolve, reject) => {
-    try {
-      const { queryValues, querySet } = buildUpdateQueryParams(listId, listInput);
-
-      db.run(`UPDATE ${DB_TABLE_CHECKLIST_LISTS} SET ${querySet} WHERE id=?`, queryValues, (err: Error) => {
-        if (err) {
-          return reject(err);
-        }
-        resolve();
-      });
-    } catch (error) {
-      reject(error);
-    } finally {
-      endDb(db);
-    }
-  });
-}
-
-export async function deleteOneChecklistItem(itemId: number): Promise<void> {
-  console.log("checklistDb.tsx/deleteOneChecklistItem | itemId=", itemId);
+export async function deleteOneItem(itemId: number): Promise<void> {
+  console.log("checklistDb.tsx/deleteOneItem | itemId=", itemId);
   checkId(itemId);
   const db = await connectDb();
   return new Promise((resolve, reject) => {
@@ -227,34 +252,6 @@ export async function deleteOneChecklistItem(itemId: number): Promise<void> {
       reject(error);
     } finally {
       endDb(db);
-    }
-  });
-}
-
-export async function deleteOneChecklistCategory(categoryId: number): Promise<void> {
-  console.log("checklistDb.tsx/deleteOneChecklistCategory | categoryId=", categoryId);
-  checkId(categoryId);
-  const db = await connectDb();
-  return new Promise((resolve, reject) => {
-    let stmt: sqlite3.Statement | undefined;
-    try {
-      db.serialize(() => {
-        db.run(`DELETE FROM ${DB_TABLE_CHECKLIST_ITEMS}  WHERE categoryId=?`, [categoryId]).run(
-          `DELETE FROM ${DB_TABLE_CHECKLIST_CATEGORIES}  WHERE id=?`,
-          [categoryId],
-
-          (err: Error) => {
-            if (err) {
-              return reject(err);
-            }
-            resolve();
-          },
-        );
-      });
-    } catch (error) {
-      reject(error);
-    } finally {
-      endDb(db, stmt);
     }
   });
 }

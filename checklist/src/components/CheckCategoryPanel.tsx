@@ -1,6 +1,6 @@
-import { Box, Card, Input, Stack } from "@chakra-ui/react";
+import { Box, Card, Stack } from "@chakra-ui/react";
 import { useMutation } from "@tanstack/react-query";
-import React, { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { RiMenuAddLine } from "react-icons/ri";
 import { ChecklistCategory, ChecklistCategoryInput, ChecklistItemStatus } from "../../../common/checklistTypes";
 import { DisplayMode } from "../types";
@@ -9,13 +9,13 @@ import { addItem, updateCategory, updateItem } from "../utils/api";
 import eventMgr from "../utils/eventMgr";
 import CheckItemLine from "./CheckItemLine";
 import { MyIconButton } from "./MyIconButton";
+import ValidatedInput from "./ValidatedInput";
 
 interface CheckCategoryPanelProps {
   checklistCategory: ChecklistCategory;
 }
 
 export default function CheckCategoryPanel({ checklistCategory }: CheckCategoryPanelProps) {
-  const [categoryTitle, setCategoryTitle] = useState(checklistCategory.title);
   const [lastAddedItemId, setLastAddedItemId] = useState<number>(0);
   const [lastModifiedItemId, setLastModifiedItemId] = useState<number>(0);
 
@@ -33,14 +33,14 @@ export default function CheckCategoryPanel({ checklistCategory }: CheckCategoryP
 
   const isEditMode = useChecklistStore((state) => state.displayMode === DisplayMode.Edit);
 
-  const handleCategoryTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setCategoryTitle(e.target.value);
-  };
+  const handleTitleInputValidated = useCallback(
+    async (value: string) => {
+      await updateCategoryMutation.mutateAsync({ title: value });
+      eventMgr.dispatch("checklist-refresh");
+    },
 
-  const handleCategoryTitleBlur = async () => {
-    await updateCategoryMutation.mutateAsync({ title: categoryTitle });
-    eventMgr.dispatch("checklist-refresh");
-  };
+    [updateCategoryMutation]
+  );
 
   const handleAddClick = useCallback(async () => {
     const lastItem = checklistCategory.items[checklistCategory.items.length - 1];
@@ -134,16 +134,10 @@ export default function CheckCategoryPanel({ checklistCategory }: CheckCategoryP
   return (
     <Card className="checklist-category-panel" pb={1} bgColor="gray.900" my={2}>
       <Stack direction="row" borderRadius={5} py={0} px={2} alignItems="center">
-        <Input
-          size="xs"
+        <ValidatedInput
+          defaultValue={checklistCategory.title || ""}
           placeholder="Nom catégorie"
-          value={categoryTitle}
-          onChange={handleCategoryTitleChange}
-          onBlur={handleCategoryTitleBlur}
-          readOnly={!isEditMode}
-          sx={{
-            border: !isEditMode ? "none" : "",
-          }}
+          onValidated={handleTitleInputValidated}
           color="teal.200"
           fontSize={"md"}
         />
