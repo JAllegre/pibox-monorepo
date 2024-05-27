@@ -29,8 +29,18 @@ export default function RecipeEditorWithPassword() {
     setPassword("");
   };
 
-  const handlePasswordInput = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setPassword(e.target.value);
+  const handlePasswordInput = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setPassword(event.target.value);
+  };
+
+  const handlePasswordKeyPress = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === "Enter") {
+      handleIdentify();
+    }
+  };
+
+  const handleLoginClick = () => {
+    handleIdentify();
   };
 
   if (!isIdentified) {
@@ -43,8 +53,9 @@ export default function RecipeEditorWithPassword() {
             value={password}
             onChange={handlePasswordInput}
             autoCapitalize="off"
+            onKeyPress={handlePasswordKeyPress}
           />
-          <Button color="success" onClick={handleIdentify} disabled={isLoading}>
+          <Button color="success" onClick={handleLoginClick} disabled={isLoading}>
             {isLoading && <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />}
             {"S'identifier"}
           </Button>
