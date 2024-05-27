@@ -50,6 +50,12 @@ const ChecklistPanel: FC = () => {
     };
   }, [refetch]);
 
+  useEffect(() => {
+    if (data?.checklist?.title) {
+      document.title = data?.checklist?.title;
+    }
+  }, [data?.checklist?.title]);
+
   const filteredCategories = useMemo(() => {
     return (
       data?.checklist?.categories.reduce<ChecklistCategory[]>((filteredCategories, category) => {
