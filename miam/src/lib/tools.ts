@@ -1,37 +1,17 @@
 import { RecipeKind } from "@common/miamTypes";
-import { CakeSlice, CookingPot, LucideIcon, Salad, Wine } from "lucide-react";
+import { CakeSlice, CookingPot, LucideIcon, Salad, ShieldQuestion, Wine } from "lucide-react";
 
-/**
- * Returns the label corresponding to a RecipeKind.
- * @param kind - The RecipeKind value.
- * @returns The label string.
- */
-export function getLabelFromRecipeKind(kind?: RecipeKind): string {
-  switch (kind) {
-    case RecipeKind.Appetizer:
-      return "Entrée";
-    case RecipeKind.Course:
-      return "Plat";
-    case RecipeKind.Dessert:
-      return "Dessert";
-    case RecipeKind.Drink:
-      return "Boisson";
-    default:
-      return "???";
-  }
-}
+const recipeKindProperties = {
+  [RecipeKind.Appetizer]: { label: "Entrée", color: "cornflowerblue", Icon: Salad },
+  [RecipeKind.Course]: { label: "Plat", color: "purple", Icon: CookingPot },
+  [RecipeKind.Dessert]: { label: "Dessert", color: "orange", Icon: CakeSlice },
+  [RecipeKind.Drink]: { label: "Boisson", color: "green", Icon: Wine },
+};
 
-export function getColorAndIconFromRecipeKind(kind?: RecipeKind): { color: string; Icon: LucideIcon } {
-  switch (kind) {
-    case RecipeKind.Appetizer:
-      return { color: "cornflowerblue", Icon: Salad };
-    case RecipeKind.Course:
-      return { color: "purple", Icon: CookingPot };
-    case RecipeKind.Dessert:
-      return { color: "orange", Icon: CakeSlice };
-    case RecipeKind.Drink:
-      return { color: "green", Icon: Wine };
-    default:
-      return { color: "green", Icon: CookingPot };
+export function getRecipeKindProperties(kind: RecipeKind): { label: string; color: string; Icon: LucideIcon } {
+  if (recipeKindProperties[kind]) {
+    return recipeKindProperties[kind];
   }
+
+  return { label: "??????", color: "red", Icon: ShieldQuestion };
 }

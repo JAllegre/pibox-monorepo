@@ -2,7 +2,7 @@ import { RecipeInput, RecipeKind, RecipeRow } from "@common/miamTypes";
 import { ReloadIcon } from "@radix-ui/react-icons";
 import { addOneRecipe, updateOneRecipe } from "@src/lib/api";
 import convertFileToImageDataUrl from "@src/lib/convertFileToImageDataUrl";
-import { getLabelFromRecipeKind } from "@src/lib/tools";
+import { getRecipeKindProperties } from "@src/lib/tools";
 import { Trash2 } from "lucide-react";
 import { ChangeEvent, useCallback, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -85,7 +85,6 @@ export default function RecipeEditor({ recipe }: RecipeEditorProps) {
     }
   }, [recipe, navigate]);
 
-  console.log("***ju***RecipeEditor.tsx/88", String(currentKind));
   return (
     <main className="py-3">
       <form onSubmit={handleFormSubmit} action="">
@@ -121,7 +120,7 @@ export default function RecipeEditor({ recipe }: RecipeEditorProps) {
                     .filter((kind) => !isNaN(Number(kind)))
                     .map((kind) => (
                       <SelectItem key={String(kind)} value={String(kind)}>
-                        {getLabelFromRecipeKind(kind as RecipeKind)}
+                        {getRecipeKindProperties(kind as RecipeKind).label}
                       </SelectItem>
                     ))}
                 </SelectGroup>
