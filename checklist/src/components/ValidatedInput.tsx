@@ -1,7 +1,7 @@
 import { Input, InputGroup, InputProps, InputRightElement } from "@chakra-ui/react";
 import { DisplayMode } from "@src/types";
 import { useChecklistStore } from "@src/utils/ChecklistStore";
-import { FC, useCallback, useRef, useState } from "react";
+import { ChangeEvent, FC, KeyboardEvent, MouseEvent, useCallback, useRef, useState } from "react";
 import { ImCheckmark } from "react-icons/im";
 import { MyIconButton } from "./MyIconButton";
 
@@ -17,13 +17,17 @@ const ValidatedInput: FC<ValidatedInputProps> = ({ onValidated, ...props }) => {
     inputRef.current?.blur();
   };
 
-  const handleInputKeyUp = (event: React.KeyboardEvent<HTMLInputElement>) => {
+  const handleInputKeyUp = (event: KeyboardEvent<HTMLInputElement>) => {
     if (event.key === "Enter") {
       inputRef.current?.blur();
     }
   };
 
-  const handleInputDoubleClick = () => {
+  const handleInputDoubleClick = (event: MouseEvent<HTMLInputElement>) => {
+    window.getSelection()?.empty();
+    if (event?.currentTarget?.value?.length) {
+      inputRef.current?.setSelectionRange(event.currentTarget.value.length, event.currentTarget.value.length);
+    }
     setInputEdited(true);
   };
 
@@ -36,7 +40,7 @@ const ValidatedInput: FC<ValidatedInputProps> = ({ onValidated, ...props }) => {
     onValidated(currentValue || "");
   }, [currentValue, onValidated, props.defaultValue]);
 
-  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
     setCurrentValue(event.target.value);
   };
 
