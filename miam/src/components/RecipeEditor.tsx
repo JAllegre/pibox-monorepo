@@ -33,13 +33,13 @@ interface RecipeEditorProps {
 export default function RecipeEditor({ recipe }: RecipeEditorProps) {
   const [isLoading, setIsLoading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const [newImageDataUrl, setNewImageDataUrl] = useState<string>(recipe?.imageDataUrl || "");
-  const [currentKind, setCurrentKind] = useState<RecipeKind>(RecipeKind.Course);
+  const [currentImageDataUrl, setCurrentImageDataUrl] = useState<string>(recipe?.imageDataUrl || "");
+  const [currentKind, setCurrentKind] = useState<RecipeKind>(recipe?.kind || RecipeKind.Course);
   const navigate = useNavigate();
 
   const handleFileChange = useCallback(async (e: ChangeEvent<HTMLInputElement>) => {
     const imageDataUrl = await convertFileToImageDataUrl(e.target.files?.[0]);
-    setNewImageDataUrl(imageDataUrl);
+    setCurrentImageDataUrl(imageDataUrl);
   }, []);
 
   const handleSelectKindChange = useCallback((kind: string) => {
@@ -70,14 +70,14 @@ export default function RecipeEditor({ recipe }: RecipeEditorProps) {
   };
 
   const handleDeleteImageClick = useCallback(() => {
-    setNewImageDataUrl("");
+    setCurrentImageDataUrl("");
     if (fileInputRef?.current) {
       fileInputRef.current.value = "";
     }
   }, []);
 
   const handleResetClick = useCallback(() => {
-    setNewImageDataUrl("");
+    setCurrentImageDataUrl("");
     if (recipe) {
       navigate(`${Paths.Recipes}/${recipe.id}`);
     } else {
@@ -85,6 +85,7 @@ export default function RecipeEditor({ recipe }: RecipeEditorProps) {
     }
   }, [recipe, navigate]);
 
+  console.log("***ju***RecipeEditor.tsx/88", String(currentKind));
   return (
     <main className="py-3">
       <form onSubmit={handleFormSubmit} action="">
@@ -178,7 +179,7 @@ export default function RecipeEditor({ recipe }: RecipeEditorProps) {
           Image:
         </Label>
         <div className="flex gap-3">
-          {newImageDataUrl && <img src={newImageDataUrl} alt="recipe" className="w-[150px] h-[150px]" />}
+          {currentImageDataUrl && <img src={currentImageDataUrl} alt="recipe" className="w-[50%]" />}
 
           <div className="flex flex-col gap-2 items-start">
             <Input
@@ -189,14 +190,14 @@ export default function RecipeEditor({ recipe }: RecipeEditorProps) {
               accept="image/png, image/jpeg"
               onChange={handleFileChange}
             />
-            {newImageDataUrl && (
+            {currentImageDataUrl && (
               <Button size="icon" onClick={handleDeleteImageClick}>
                 <Trash2 />
               </Button>
             )}
           </div>
 
-          <input type="hidden" id="imageDataUrl" name="imageDataUrl" defaultValue={newImageDataUrl} />
+          <input type="hidden" id="imageDataUrl" name="imageDataUrl" defaultValue={currentImageDataUrl} />
         </div>
 
         <div className="flex gap-4 pt-5">
