@@ -1,4 +1,4 @@
-import { Box, Card, CardBody, Stack, Switch } from "@chakra-ui/react";
+import { Box, Card, CardBody, HStack, Stack, Switch } from "@chakra-ui/react";
 import { useMutation } from "@tanstack/react-query";
 import { ChangeEvent, useCallback, useEffect, useRef, useState } from "react";
 import { FaArrowAltCircleDown, FaArrowAltCircleUp, FaRegTrashAlt } from "react-icons/fa";
@@ -97,27 +97,29 @@ export default function CheckItemLine({ checkItem, isNewItem, isMovedItem, onMov
           />
 
           {/* <Box>{checkItem.sortOrder}</Box> */}
-          <MyIconButton
-            ReactIcon={FaArrowAltCircleUp}
-            color="blue.400"
-            display={isEditMode ? "" : "none"}
-            onClick={handleUpClick}
-            fontSize={20}
-          />
-          <MyIconButton
-            ReactIcon={FaArrowAltCircleDown}
-            color="blue.400"
-            display={isEditMode ? "" : "none"}
-            onClick={handleDownClick}
-            fontSize={20}
-          />
-          <MyIconButton
-            ReactIcon={FaRegTrashAlt}
-            color="red.400"
-            display={isEditMode ? "" : "none"}
-            onClick={handleDeleteClick}
-            fontSize={20}
-          />
+          <HStack>
+            <MyIconButton
+              ReactIcon={FaArrowAltCircleUp}
+              color="blue.400"
+              display={isEditMode ? "" : "none"}
+              onClick={handleUpClick}
+              fontSize={20}
+            />
+            <MyIconButton
+              ReactIcon={FaArrowAltCircleDown}
+              color="blue.400"
+              display={isEditMode ? "" : "none"}
+              onClick={handleDownClick}
+              fontSize={20}
+            />
+            <MyIconButton
+              ReactIcon={FaRegTrashAlt}
+              color="red.400"
+              display={isEditMode ? "" : "none"}
+              onClick={handleDeleteClick}
+              fontSize={20}
+            />
+          </HStack>
         </Stack>
       </CardBody>
     </Card>

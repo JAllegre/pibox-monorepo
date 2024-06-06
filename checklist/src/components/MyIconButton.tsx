@@ -8,7 +8,6 @@ interface MyIconButtonProps extends BoxProps {
 export function MyIconButton({ ReactIcon, ...props }: MyIconButtonProps) {
   return (
     <Box
-      p={1}
       sx={{
         "&:hover": {
           opacity: "0.6",

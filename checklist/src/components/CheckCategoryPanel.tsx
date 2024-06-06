@@ -132,14 +132,15 @@ export default function CheckCategoryPanel({ checklistCategory }: CheckCategoryP
   });
 
   return (
-    <Card className="checklist-category-panel" pb={1} bgColor="gray.900" my={2}>
+    <Card className="checklist-category-panel" pb={1} bgColor="gray.700" my={2}>
       <Stack direction="row" borderRadius={5} py={0} px={2} alignItems="center">
         <ValidatedInput
           defaultValue={checklistCategory.title || ""}
           placeholder="Nom catégorie"
           onValidated={handleTitleInputValidated}
           color="teal.200"
-          fontSize={"md"}
+          fontSize={"sm"}
+          py={0}
         />
         <MyIconButton
           ReactIcon={RiMenuAddLine}
