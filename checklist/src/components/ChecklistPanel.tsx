@@ -1,5 +1,5 @@
 import { Box, HStack } from "@chakra-ui/react";
-import { ChecklistCategory, ChecklistInput, ChecklistItem, ChecklistItemStatus } from "@common/checklistTypes";
+import { ChecklistCategory, ChecklistInput, ChecklistItem } from "@common/checklistTypes";
 import { matchSearch } from "@common/stringUtils";
 import { DisplayMode } from "@src/types";
 import { useChecklistStore } from "@src/utils/ChecklistStore";
@@ -63,10 +63,7 @@ const ChecklistPanel: FC = () => {
 
         filteredCategory.items = sortBy(filteredCategory.items, ["sortOrder", "id"]).reduce<ChecklistItem[]>(
           (filteredItems, item) => {
-            if (
-              matchSearch(searchFilter, item.title) &&
-              (isEditMode || item.checkStatus > ChecklistItemStatus.Unselected)
-            ) {
+            if (matchSearch(searchFilter, item.title) && (isEditMode || item.checked)) {
               filteredItems.push({ ...item });
             }
 

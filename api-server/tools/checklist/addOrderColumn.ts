@@ -19,7 +19,7 @@ function addColumn(db: Database): Promise<void> {
 interface ChecklistListRow {
   id: number;
   title: string;
-  checkStatus: number;
+  checked: number;
   sortOrder: number;
   categoryId: number;
 }

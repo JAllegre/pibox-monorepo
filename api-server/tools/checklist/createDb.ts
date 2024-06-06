@@ -59,7 +59,7 @@ function createTables(db: Database): Promise<void> {
           id INTEGER PRIMARY KEY,
           categoryId INTEGER ,
           title TEXT,
-          checkStatus INTEGER,
+          checked INTEGER,
           FOREIGN KEY(categoryId) REFERENCES ${DB_TABLE_CHECKLIST_CATEGORIES}(id)
         )`,
             handleResult(`Created ${DB_TABLE_CHECKLIST_ITEMS} table`, resolve),
@@ -85,7 +85,7 @@ async function fillDB() {
       await insertOneItem({
         title: item.title,
         categoryId,
-        checkStatus: 0,
+        checked: 0,
         sortOrder: 0,
       });
     }

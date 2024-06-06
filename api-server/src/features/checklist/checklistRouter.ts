@@ -37,7 +37,7 @@ checklistRouter.get("/:listId", async (req: Request, res: Response, next: NextFu
       category.items.push({
         id: row.id,
         categoryId: row.categoryId,
-        checkStatus: row.checkStatus,
+        checked: row.checked,
         title: row.title,
         sortOrder: row.sortOrder,
       });

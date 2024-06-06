@@ -1,13 +1,12 @@
 export enum ChecklistItemStatus {
-  Unselected = 0,
-  SelectedUnchecked = 1,
-  SelectedChecked = 2,
+  Unchecked = 0,
+  Checked = 1,
 }
 
 export interface ChecklistItem {
   id: number;
   categoryId: number;
-  checkStatus: ChecklistItemStatus;
+  checked: ChecklistItemStatus;
   title: string;
   sortOrder: number;
 }

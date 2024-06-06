@@ -10,7 +10,7 @@ import {
 export interface ChecklistListRow {
   id: number;
   title: string;
-  checkStatus: number;
+  checked: number;
   sortOrder: number;
   categoryId: number;
   categoryTitle: string;
@@ -26,7 +26,7 @@ export async function getAllChecklistItems(listId: number): Promise<ChecklistLis
       db.all<ChecklistListRow>(
         `SELECT items.id as id, 
           items.title as title, 
-          items.checkStatus as checkStatus,
+          items.checked as checked,
           items.sortOrder as sortOrder, 
           categories.id as categoryId, 
           categories.title as categoryTitle,

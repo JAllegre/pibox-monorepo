@@ -46,7 +46,7 @@ export default function CheckCategoryPanel({ checklistCategory }: CheckCategoryP
     const lastItem = checklistCategory.items[checklistCategory.items.length - 1];
     const sortOrder = lastItem?.sortOrder + 10 || 50;
     const { id } = await addItem({
-      checkStatus: ChecklistItemStatus.SelectedChecked,
+      checked: ChecklistItemStatus.Checked,
       categoryId: checklistCategory.id,
       title: "",
       sortOrder,

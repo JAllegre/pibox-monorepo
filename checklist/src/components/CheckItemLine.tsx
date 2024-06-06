@@ -2,7 +2,7 @@ import { Box, Card, CardBody, Stack, Switch } from "@chakra-ui/react";
 import { useMutation } from "@tanstack/react-query";
 import { ChangeEvent, useCallback, useEffect, useRef, useState } from "react";
 import { FaArrowAltCircleDown, FaArrowAltCircleUp, FaRegTrashAlt } from "react-icons/fa";
-import { ChecklistItem, ChecklistItemInput, ChecklistItemStatus } from "../../../common/checklistTypes";
+import { ChecklistItem, ChecklistItemInput } from "../../../common/checklistTypes";
 import { DisplayMode } from "../types";
 import { useChecklistStore } from "../utils/ChecklistStore";
 import { updateItem } from "../utils/api";
@@ -18,7 +18,7 @@ interface CheckItemLineProps {
 }
 
 export default function CheckItemLine({ checkItem, isNewItem, isMovedItem, onMove }: CheckItemLineProps) {
-  const [isItemChecked, setIsItemChecked] = useState(checkItem.checkStatus > ChecklistItemStatus.Unselected);
+  const [isItemChecked, setIsItemChecked] = useState(!!checkItem.checked);
   const cardRef = useRef<HTMLDivElement>(null);
   const isEditMode = useChecklistStore((state) => state.displayMode === DisplayMode.Edit);
   const setItemIdToDelete = useChecklistStore((state) => state.setItemIdToDelete);
@@ -35,7 +35,7 @@ export default function CheckItemLine({ checkItem, isNewItem, isMovedItem, onMov
     setTimeout(() => {
       updateItemMutation
         .mutateAsync({
-          checkStatus: event.target.checked ? 2 : 0,
+          checked: event.target.checked ? 1 : 0,
         })
         .then(() => {
           eventMgr.dispatch("checklist-refresh");
@@ -45,8 +45,8 @@ export default function CheckItemLine({ checkItem, isNewItem, isMovedItem, onMov
 
   useEffect(() => {
     // reset to the remote state when changed
-    setIsItemChecked(checkItem.checkStatus > ChecklistItemStatus.Unselected);
-  }, [checkItem.checkStatus]);
+    setIsItemChecked(!!checkItem.checked);
+  }, [checkItem.checked]);
 
   const handleTitleInputValidated = useCallback(
     async (value: string) => {
