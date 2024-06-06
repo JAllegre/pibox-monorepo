@@ -7,6 +7,10 @@ import { Button } from "./ui/button";
 
 // Display a line of text
 function Line({ text }: { text: string }) {
+  //if no text (means line break) set a non-breaking space to for line to be displayed
+  if (!text.trim() || text.trim() === ".") {
+    return <li className="pl-2" dangerouslySetInnerHTML={{ __html: "&nbsp" }} />;
+  }
   return <li className="pl-2">{text}</li>;
 }
 
