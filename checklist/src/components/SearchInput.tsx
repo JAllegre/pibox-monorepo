@@ -1,4 +1,4 @@
-import { Input, InputGroup, InputLeftElement, InputRightElement } from "@chakra-ui/react";
+import { Input, InputGroup, InputRightElement } from "@chakra-ui/react";
 import { useChecklistStore } from "@src/utils/ChecklistStore";
 import { useDebounce } from "@uidotdev/usehooks";
 import { ChangeEvent, useCallback, useEffect, useState } from "react";
@@ -31,17 +31,29 @@ export default function SearchInput() {
 
   return (
     <InputGroup w={160}>
-      <InputLeftElement pointerEvents="none">
-        <FaMagnifyingGlass />
-      </InputLeftElement>
-      <Input placeholder="Filtrer" color="teal.200" value={searchTerm} onChange={handleSearchFilterChange} maxW={200} />
-      <InputRightElement>
-        <MyIconButton
-          ReactIcon={ImCross}
-          color="red.200"
-          display={searchTerm ? "" : "none"}
-          onClick={handleSearchFilterClear}
-        />
+      <Input
+        placeholder="Filtrer..."
+        color="teal.200"
+        value={searchTerm}
+        onChange={handleSearchFilterChange}
+        maxW={200}
+        pl={2}
+      />
+      <InputRightElement {...(!searchTerm && { pointerEvents: "none" })}>
+        {searchTerm ? (
+          <MyIconButton
+            ReactIcon={ImCross}
+            color="red.200"
+            // display={searchTerm ? "" : "none"}
+            onClick={handleSearchFilterClear}
+          />
+        ) : (
+          <MyIconButton
+            ReactIcon={FaMagnifyingGlass}
+            // display={searchTerm ? "" : "none"}
+            onClick={() => {}}
+          />
+        )}
       </InputRightElement>
     </InputGroup>
   );
