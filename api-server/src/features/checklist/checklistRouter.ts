@@ -43,6 +43,7 @@ checklistRouter.get("/:listId", async (req: Request, res: Response, next: NextFu
           listId: row.listId,
           title: row.categoryTitle,
           items: [],
+          sortOrder: row.categorySortOrder,
         };
         acc.push(category);
       }

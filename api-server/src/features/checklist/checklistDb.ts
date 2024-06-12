@@ -14,6 +14,7 @@ export interface ChecklistListRow {
   sortOrder: number;
   categoryId: number;
   categoryTitle: string;
+  categorySortOrder: number;
   listId: number;
   listTitle: string;
 }
@@ -31,7 +32,8 @@ export async function getAllChecklistItems(listId: number): Promise<ChecklistLis
           categories.id as categoryId, 
           categories.title as categoryTitle,
           lists.title as listTitle,
-          lists.id as listId
+          lists.id as listId,
+          categories.sortOrder as categorySortOrder
         FROM ${DB_TABLE_CHECKLIST_ITEMS} items
         INNER JOIN ${DB_TABLE_CHECKLIST_CATEGORIES} categories
         ON items.categoryId=categories.id

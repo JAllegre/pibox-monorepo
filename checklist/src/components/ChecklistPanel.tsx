@@ -65,9 +65,9 @@ const ChecklistPanel: FC = () => {
     }
   }, [data?.checklist?.title]);
 
-  const filteredCategories = useMemo(() => {
-    return (
-      data?.checklist?.categories.reduce<ChecklistCategory[]>((filteredCategories, category) => {
+  const sortedAndFilteredCategories = useMemo(() => {
+    const filteredCategories =
+      data?.checklist?.categories.reduce<ChecklistCategory[]>((currentFilteredCategories, category) => {
         const filteredCategory = { ...category };
 
         filteredCategory.items = sortBy(filteredCategory.items, ["sortOrder", "id"]).reduce<ChecklistItem[]>(
@@ -81,12 +81,13 @@ const ChecklistPanel: FC = () => {
           []
         );
 
-        if (isEditMode || filteredCategory.items.length > 0) {
-          filteredCategories.push(filteredCategory);
+        if (filteredCategory.items.length > 0 || (isEditMode && !searchFilter)) {
+          currentFilteredCategories.push(filteredCategory);
         }
-        return filteredCategories;
-      }, []) || []
-    );
+        return currentFilteredCategories;
+      }, []) || [];
+
+    return sortBy(filteredCategories, ["sortOrder", "id"]);
   }, [data, searchFilter, isEditMode]);
 
   return (
@@ -116,8 +117,8 @@ const ChecklistPanel: FC = () => {
           </HStack>
         </Box>
         <List py="80px">
-          {filteredCategories.map((checklistCategory) => {
-            return <CheckCategoryPanel key={checklistCategory.id} checklistCategory={checklistCategory} />;
+          {sortedAndFilteredCategories.map((category) => {
+            return <CheckCategoryPanel key={category.id} checklistCategory={category} />;
           })}
         </List>
       </MyReactQuerySuspense>

@@ -18,6 +18,7 @@ export interface ChecklistCategory {
   listId: number;
   title: string;
   items: ChecklistItem[];
+  sortOrder: number;
 }
 export type ChecklistCategoryInput = Omit<ChecklistCategory, "items" | "id">;
 

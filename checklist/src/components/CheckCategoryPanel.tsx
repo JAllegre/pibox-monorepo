@@ -148,6 +148,7 @@ export default function CheckCategoryPanel({ checklistCategory }: CheckCategoryP
           fontSize={"sm"}
           py={0}
         />
+        {/* <Box>{checklistCategory.sortOrder}</Box> */}
         <MyIconButton
           ReactIcon={RiMenuAddLine}
           color="teal.300"
