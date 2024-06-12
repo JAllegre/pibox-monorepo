@@ -6,7 +6,7 @@ import { useChecklistStore } from "@src/utils/ChecklistStore";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { sortBy } from "lodash";
 import { FC, useCallback, useEffect, useMemo } from "react";
-import { FaEdit } from "react-icons/fa";
+import { FaEdit, FaEye } from "react-icons/fa";
 import MyReactQuerySuspense from "../utils/MyReactQuerySuspense";
 import { getChecklist, updateList } from "../utils/api";
 import eventMgr from "../utils/eventMgr";
@@ -111,8 +111,8 @@ const ChecklistPanel: FC = () => {
             fontWeight={"bold"}
           />
           <MyIconButton
-            ReactIcon={FaEdit}
-            color={isEditMode ? "teal.300" : "gray.600"}
+            title={isEditMode ? "Mode Vue" : "Mode Edition"}
+            ReactIcon={isEditMode ? FaEye : FaEdit}
             onClick={handleEditModeClick}
             fontSize={30}
           />
