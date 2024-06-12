@@ -13,9 +13,21 @@ import {
 
 const checklistRouter: Router = express.Router();
 
+function grabRequestParameters(req: Request) {
+  return {
+    listId: req.params?.listId != null ? parseInt(req.params.listId, 10) : undefined,
+    categoryId: req.params?.categoryId != null ? parseInt(req.params.categoryId, 10) : undefined,
+    itemId: req.params?.itemId != null ? parseInt(req.params.itemId, 10) : undefined,
+  };
+}
+
 checklistRouter.get("/:listId", async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const rows: ChecklistListRow[] = await getAllChecklistItems(Number(req.params.listId));
+    const { listId } = grabRequestParameters(req);
+    if (listId == undefined) {
+      throw new Error("No listId provided");
+    }
+    const rows: ChecklistListRow[] = await getAllChecklistItems(listId);
 
     const checklist: Checklist = {
       id: rows?.[0]?.listId || 0,
@@ -54,7 +66,11 @@ checklistRouter.get("/:listId", async (req: Request, res: Response, next: NextFu
 
 checklistRouter.put(`/:listId`, async (req: Request, res: Response, next: NextFunction) => {
   try {
-    await updateOneList(parseInt(req.params.listId, 10), req.body);
+    const { listId } = grabRequestParameters(req);
+    if (listId == undefined) {
+      throw new Error("No listId provided");
+    }
+    await updateOneList(listId, req.body);
     res.json({ message: "List successfully updated" });
   } catch (err) {
     next(err);
@@ -72,7 +88,11 @@ checklistRouter.post(`/:listId/items`, async (req: Request, res: Response, next:
 
 checklistRouter.put(`/:listId/items/:itemId`, async (req: Request, res: Response, next: NextFunction) => {
   try {
-    await updateOneItem(parseInt(req.params.itemId, 10), req.body);
+    const { itemId } = grabRequestParameters(req);
+    if (itemId == undefined) {
+      throw new Error("No itemId provided");
+    }
+    await updateOneItem(itemId, req.body);
     res.json({ message: "Item successfully updated" });
   } catch (err) {
     next(err);
@@ -81,7 +101,11 @@ checklistRouter.put(`/:listId/items/:itemId`, async (req: Request, res: Response
 
 checklistRouter.delete(`/:listId/items/:itemId`, async (req: Request, res: Response, next: NextFunction) => {
   try {
-    await deleteOneItem(parseInt(req.params.itemId, 10));
+    const { itemId } = grabRequestParameters(req);
+    if (!itemId) {
+      throw new Error("No itemId provided");
+    }
+    await deleteOneItem(itemId);
     res.json({ message: "Item successfully deleted" });
   } catch (err) {
     next(err);
@@ -99,7 +123,11 @@ checklistRouter.post(`/:listId/categories`, async (req: Request, res: Response, 
 
 checklistRouter.put(`/:listId/categories/:categoryId`, async (req: Request, res: Response, next: NextFunction) => {
   try {
-    await updateOneCategory(parseInt(req.params.categoryId, 10), req.body);
+    const { categoryId } = grabRequestParameters(req);
+    if (categoryId == undefined) {
+      throw new Error("No categoryId provided");
+    }
+    await updateOneCategory(categoryId, req.body);
     res.json({ message: "Category successfully updated" });
   } catch (err) {
     next(err);

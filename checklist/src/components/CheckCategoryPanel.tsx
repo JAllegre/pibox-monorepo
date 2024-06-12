@@ -43,8 +43,14 @@ export default function CheckCategoryPanel({ checklistCategory }: CheckCategoryP
   );
 
   const handleAddClick = useCallback(async () => {
-    const lastItem = checklistCategory.items[checklistCategory.items.length - 1];
-    const sortOrder = lastItem?.sortOrder + 10 || 50;
+    const maxSortOrder = checklistCategory.items.reduce((max, item) => {
+      if (item.sortOrder > max) {
+        max = item.sortOrder;
+      }
+      return max;
+    }, 0);
+
+    const sortOrder = maxSortOrder ? maxSortOrder + 10 : checklistCategory.items.length * 10000;
     const { id } = await addItem({
       checked: ChecklistItemStatus.Checked,
       categoryId: checklistCategory.id,

@@ -7,6 +7,7 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import { sortBy } from "lodash";
 import { FC, useCallback, useEffect, useMemo } from "react";
 import { FaEdit, FaEye } from "react-icons/fa";
+import { FaFolderPlus } from "react-icons/fa6";
 import MyReactQuerySuspense from "../utils/MyReactQuerySuspense";
 import { getChecklist, updateList } from "../utils/api";
 import eventMgr from "../utils/eventMgr";
@@ -29,7 +30,7 @@ const ChecklistPanel: FC = () => {
   const updateListMutation = useMutation({
     mutationFn: (checklistInput: Partial<ChecklistInput>) => {
       if (data?.checklist?.id) {
-        return updateList(data?.checklist?.id, checklistInput);
+        return updateList(data.checklist.id, checklistInput);
       }
       return Promise.reject("No checklist id found");
     },
@@ -80,7 +81,7 @@ const ChecklistPanel: FC = () => {
           []
         );
 
-        if (filteredCategory.items.length > 0) {
+        if (isEditMode || filteredCategory.items.length > 0) {
           filteredCategories.push(filteredCategory);
         }
         return filteredCategories;
@@ -91,34 +92,30 @@ const ChecklistPanel: FC = () => {
   return (
     <Box className="checklist-panel" p={0} flexGrow={1} bgColor="gray.900">
       <MyReactQuerySuspense isPending={isPending} error={error}>
-        <HStack
-          justifyContent="space-between"
-          py={1}
-          px={1}
-          gap={4}
-          position={"fixed"}
-          w="100%"
-          maxW="2xl"
-          bgColor="gray.900"
-          sx={{ zIndex: 100, top: 0 }}
-        >
-          <ValidatedInput
-            defaultValue={data?.checklist?.title || ""}
-            placeholder="Nom de la liste"
-            onValidated={handleTitleInputValidated}
-            color="teal.200"
-            fontSize={"2xl"}
-            fontWeight={"bold"}
-          />
-          <MyIconButton
-            title={isEditMode ? "Mode Vue" : "Mode Edition"}
-            ReactIcon={isEditMode ? FaEye : FaEdit}
-            onClick={handleEditModeClick}
-            fontSize={30}
-          />
-          <SearchInput />
-        </HStack>
-        <List py="44px">
+        <Box position={"fixed"} w="100%" maxW="2xl" bgColor="gray.900" sx={{ zIndex: 100, top: 0 }}>
+          <HStack>
+            <ValidatedInput
+              defaultValue={data?.checklist?.title || ""}
+              placeholder="Nom de la liste"
+              onValidated={handleTitleInputValidated}
+              color="teal.200"
+              fontSize={"2xl"}
+              fontWeight={"bold"}
+            />
+          </HStack>
+          <HStack justifyContent="space-between" py={1} px={1} gap={4}>
+            <MyIconButton
+              title={isEditMode ? "Mode Vue" : "Mode Edition"}
+              ReactIcon={isEditMode ? FaEye : FaEdit}
+              onClick={handleEditModeClick}
+              fontSize={30}
+            />
+
+            <SearchInput />
+            <MyIconButton title={"Ajouter une catégorie"} ReactIcon={FaFolderPlus} onClick={() => {}} fontSize={26} />
+          </HStack>
+        </Box>
+        <List py="80px">
           {filteredCategories.map((checklistCategory) => {
             return <CheckCategoryPanel key={checklistCategory.id} checklistCategory={checklistCategory} />;
           })}

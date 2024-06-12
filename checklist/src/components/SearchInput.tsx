@@ -30,7 +30,7 @@ export default function SearchInput() {
   }, [debouncedSearchTerm, setSearchFilter]);
 
   return (
-    <InputGroup w={160}>
+    <InputGroup w={200}>
       <Input
         placeholder="Filtrer..."
         color="teal.200"
