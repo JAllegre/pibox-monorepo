@@ -34,7 +34,7 @@ export default function Navbar() {
       <Link to={Paths.Recipes} onClick={handleLogoClick}>
         <div className="flex items-center justify-start">
           <Utensils size="18" strokeWidth="3" className="text-primary-700" />
-          <div className="font-bold text-2xl pl-2 text-primary-700">miam miam</div>
+          <div className="font-bold text-xl md:text-2xl pl-2 text-primary-700">miam miam</div>
         </div>
       </Link>
 
@@ -42,10 +42,10 @@ export default function Navbar() {
         <Input
           id="search"
           type="search"
-          placeholder="Rechercher une recette"
+          placeholder="Chercher une recette"
           value={searchText}
           onChange={handleChangeSearchText}
-          className="w-[190px]"
+          className="w-[170px] md:w-[200px]"
         />
       </div>
     </nav>
