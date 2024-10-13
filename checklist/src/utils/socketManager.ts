@@ -1,14 +1,12 @@
 import { io } from "socket.io-client";
 import { CHECKLIST_WS_EVENT_REFRESHED, CHECKLIST_WS_NAMESPACE } from "../../../common/checklistConstants";
+import { WS_API_PATH } from "../../../common/constants";
 import eventMgr, { EventType } from "./eventMgr";
 
-const wsUrl = `${import.meta.env.VITE_API_HOST}${CHECKLIST_WS_NAMESPACE}`;
-
 function init() {
-  console.log("socketManager.init - Connecting to", wsUrl);
-  const socket = io(wsUrl, { path: "/api/socket.io" });
+  console.log("socketManager.init - Connecting to", import.meta.env.VITE_API_HOST, WS_API_PATH, CHECKLIST_WS_NAMESPACE);
+  const socket = io(`${import.meta.env.VITE_API_HOST}${CHECKLIST_WS_NAMESPACE}`, { path: WS_API_PATH });
 
-  console.log(wsUrl);
   socket.on("connect", () => {
     console.log("socketManager.init.on.connect - Connected to", socket.id);
   });

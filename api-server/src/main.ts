@@ -2,9 +2,11 @@ import bodyParser from "body-parser";
 import cors from "cors";
 import express, { NextFunction, Request, Response } from "express";
 import morgan from "morgan";
+import { CHECKLIST_WS_NAMESPACE } from "../../common/checklistConstants";
+import { API_PATH } from "../../common/constants";
 import checklistRouter from "./features/checklist/checklistRouter";
 import miamRouter from "./features/miam/miamRouter";
-import socketManager from "./lib/socketManager";
+import { initWebSocketServer } from "./lib/socketManager";
 
 const PORT = process.env.PORT || 3000;
 
@@ -22,8 +24,8 @@ app.get("/", (_req: Request, res: Response) => {
 });
 
 // ROUTERS
-app.use(["/api/miam/", "/miam"], miamRouter);
-app.use(["/api/checklists", "/checklists"], checklistRouter);
+app.use([`${API_PATH}/miam`, "/miam"], miamRouter);
+app.use([`${API_PATH}/checklists`, "/checklists"], checklistRouter);
 
 // ERROR MANAGEMENT
 app.use((_req: Request, res: Response) => {
@@ -40,7 +42,7 @@ const server = app.listen(PORT, () => {
   console.log(`Server listening on port ${PORT}`);
 });
 
-socketManager.init(server);
+initWebSocketServer(server, CHECKLIST_WS_NAMESPACE);
 
 // KILL SIGNALS
 function shutDown() {

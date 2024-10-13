@@ -1,7 +1,7 @@
 import express, { NextFunction, Request, Response, Router } from "express";
 import { CHECKLIST_WS_EVENT_REFRESHED, CHECKLIST_WS_NAMESPACE } from "../../../../common/checklistConstants";
 import { Checklist } from "../../../../common/checklistTypes";
-import socketManager from "../../lib/socketManager";
+import { emitToWebSocketClient } from "../../lib/socketManager";
 import {
   ChecklistListRow,
   deleteOneItem,
@@ -26,7 +26,7 @@ function grabRequestParameters(req: Request) {
 checklistRouter.use((req, resp, next) => {
   if (["PUT", "POST", "DELETE", "PATCH"].includes(req.method)) {
     resp.on("finish", () => {
-      socketManager.emitToNamespace(CHECKLIST_WS_NAMESPACE, CHECKLIST_WS_EVENT_REFRESHED);
+      emitToWebSocketClient(CHECKLIST_WS_NAMESPACE, CHECKLIST_WS_EVENT_REFRESHED);
     });
   }
   next();
