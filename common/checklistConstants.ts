@@ -1,2 +1,2 @@
-export const CHECKLIST_WS_NAMESPACE = "/checklist";
-export const CHECKLIST_WS_EVENT_REFRESHED = "data:checklist:refreshed";
+export const CHECKLIST_WS_NAMESPACE = "/chklst";
+export const CHECKLIST_WS_EVENT_REFRESHED = "chklst:refreshed";

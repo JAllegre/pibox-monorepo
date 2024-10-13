@@ -22,8 +22,8 @@ app.get("/", (_req: Request, res: Response) => {
 });
 
 // ROUTERS
-app.use("/api/miam/", miamRouter);
-app.use("/api/checklists", checklistRouter);
+app.use(["/api/miam/", "/miam"], miamRouter);
+app.use(["/api/checklists", "/checklists"], checklistRouter);
 
 // ERROR MANAGEMENT
 app.use((_req: Request, res: Response) => {
