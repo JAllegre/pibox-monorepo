@@ -93,7 +93,7 @@ function extractRecipesData(recipePath: string, kind: RecipeKind) {
 
 try {
   const saltyRecipes = extractRecipesData("./tools/RecettesSalées.docx.html", RecipeKind.Course);
-  //console.log("saltyRecipes", saltyRecipes);
+
   const sweetRecipes = extractRecipesData("./tools/RecettesSucrées.docx.html", RecipeKind.Dessert);
 
   const drinkRecipes = extractRecipesData("./tools/RecettesBoissons.docx.html", RecipeKind.Drink);

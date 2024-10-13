@@ -10,7 +10,6 @@ import {
 } from "@chakra-ui/react";
 import { useChecklistStore } from "@src/utils/ChecklistStore";
 import { removeItem } from "@src/utils/api";
-import eventMgr from "@src/utils/eventMgr";
 import { useMutation } from "@tanstack/react-query";
 import { useCallback } from "react";
 
@@ -25,7 +24,6 @@ export function DeleteModal() {
   const handleDeleteClick = useCallback(async () => {
     setItemIdToDelete(0);
     await removeItemMutation.mutateAsync(itemIdToDelete);
-    eventMgr.dispatch("checklist-refresh");
   }, [itemIdToDelete, removeItemMutation, setItemIdToDelete]);
 
   return (

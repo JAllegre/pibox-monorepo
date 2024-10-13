@@ -1,14 +1,14 @@
 import { Input, InputGroup, InputProps, InputRightElement } from "@chakra-ui/react";
 import { DisplayMode } from "@src/types";
 import { useChecklistStore } from "@src/utils/ChecklistStore";
-import { ChangeEvent, FC, KeyboardEvent, MouseEvent, useCallback, useRef, useState } from "react";
+import { ChangeEvent, FC, KeyboardEvent, MouseEvent, useCallback, useEffect, useRef, useState } from "react";
 import { ImCheckmark } from "react-icons/im";
 import { MyIconButton } from "./MyIconButton";
 
-type ValidatedInputProps = InputProps & { onValidated: (value: string) => void };
+type ValidatedInputProps = InputProps & { onValidated: (value: string) => void; remoteValue: string };
 
-const ValidatedInput: FC<ValidatedInputProps> = ({ onValidated, ...props }) => {
-  const [currentValue, setCurrentValue] = useState(String(props.defaultValue));
+const ValidatedInput: FC<ValidatedInputProps> = ({ onValidated, remoteValue, ...props }) => {
+  const [value, setValue] = useState(remoteValue || "");
   const [inputEdited, setInputEdited] = useState(false);
   const isEditMode = useChecklistStore((state) => state.displayMode === DisplayMode.Edit);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -34,15 +34,19 @@ const ValidatedInput: FC<ValidatedInputProps> = ({ onValidated, ...props }) => {
   const handleTitleBlur = useCallback(async () => {
     setInputEdited(false);
 
-    if (props.defaultValue === currentValue) {
+    if (remoteValue === value) {
       return;
     }
-    onValidated(currentValue || "");
-  }, [currentValue, onValidated, props.defaultValue]);
+    onValidated(value || "");
+  }, [value, onValidated, remoteValue]);
 
   const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
-    setCurrentValue(event.target.value);
+    setValue(event.target.value);
   };
+
+  useEffect(() => {
+    setValue(remoteValue || "");
+  }, [remoteValue]);
 
   return (
     <InputGroup>
@@ -50,13 +54,14 @@ const ValidatedInput: FC<ValidatedInputProps> = ({ onValidated, ...props }) => {
         ref={inputRef}
         size="sm"
         p={1}
-        readOnly={!isEditMode || !inputEdited}
-        sx={{ border: !isEditMode ? "none" : "" }}
+        readOnly={!inputEdited}
+        sx={{ border: !inputEdited ? "none" : "" }}
         flexGrow={1}
         onDoubleClick={handleInputDoubleClick}
         onBlur={handleTitleBlur}
         onKeyUp={handleInputKeyUp}
         onChange={handleInputChange}
+        value={value}
         {...props}
       />
       <InputRightElement>
@@ -64,7 +69,7 @@ const ValidatedInput: FC<ValidatedInputProps> = ({ onValidated, ...props }) => {
           ReactIcon={ImCheckmark}
           color="green.200"
           onClick={handleValidationIconClick}
-          display={props.defaultValue !== currentValue ? "" : "none"}
+          display={remoteValue !== value ? "" : "none"}
           mb={2}
         />
       </InputRightElement>

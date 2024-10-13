@@ -1,4 +1,6 @@
-type EventType = "checklist-refresh" | "checklist-update";
+export enum EventType {
+  Refresh = "checklist-refresh",
+}
 
 const eventTarget = new EventTarget();
 
@@ -15,6 +17,6 @@ function removeListener(eventType: EventType, callback: EventListener) {
   eventTarget.removeEventListener(eventType, callback);
 }
 
-const eventMgr = { addListener, dispatch, removeListener };
+const eventMgr = { addListener, removeListener, dispatch };
 
 export default eventMgr;

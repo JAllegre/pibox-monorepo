@@ -41,7 +41,6 @@ async function ask() {
   });
   rl.question(`SQL: `, (sql) => {
     sql = sql || "SELECT * from checklistItems";
-    console.log(``);
     rl.close();
     query(sql).then(() => {
       ask();

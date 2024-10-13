@@ -10,7 +10,7 @@ import { FaEdit, FaEye } from "react-icons/fa";
 import { FaFolderPlus } from "react-icons/fa6";
 import MyReactQuerySuspense from "../utils/MyReactQuerySuspense";
 import { getChecklist, updateList } from "../utils/api";
-import eventMgr from "../utils/eventMgr";
+import eventMgr, { EventType } from "../utils/eventMgr";
 import CheckCategoryPanel from "./CheckCategoryPanel";
 import { MyIconButton } from "./MyIconButton";
 import SearchInput from "./SearchInput";
@@ -39,7 +39,6 @@ const ChecklistPanel: FC = () => {
   const handleTitleInputValidated = useCallback(
     async (value: string) => {
       await updateListMutation.mutateAsync({ title: value });
-      eventMgr.dispatch("checklist-refresh");
     },
 
     [updateListMutation]
@@ -50,12 +49,12 @@ const ChecklistPanel: FC = () => {
   }, [setDisplayMode, isEditMode]);
 
   useEffect(() => {
-    const cb = eventMgr.addListener("checklist-refresh", () => {
+    const cb = eventMgr.addListener(EventType.Refresh, () => {
       refetch();
     });
 
     return () => {
-      eventMgr.removeListener("checklist-refresh", cb);
+      eventMgr.removeListener(EventType.Refresh, cb);
     };
   }, [refetch]);
 
@@ -96,7 +95,7 @@ const ChecklistPanel: FC = () => {
         <Box position={"fixed"} w="100%" maxW="2xl" bgColor="gray.900" sx={{ zIndex: 100, top: 0 }}>
           <HStack>
             <ValidatedInput
-              defaultValue={data?.checklist?.title || ""}
+              remoteValue={data?.checklist?.title || ""}
               placeholder="Nom de la liste"
               onValidated={handleTitleInputValidated}
               color="teal.200"

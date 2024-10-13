@@ -4,6 +4,7 @@ import express, { NextFunction, Request, Response } from "express";
 import morgan from "morgan";
 import checklistRouter from "./features/checklist/checklistRouter";
 import miamRouter from "./features/miam/miamRouter";
+import socketManager from "./lib/socketManager";
 
 const PORT = process.env.PORT || 3000;
 
@@ -38,6 +39,8 @@ app.use(function (err: Error, req: Request, res: Response, next: NextFunction) {
 const server = app.listen(PORT, () => {
   console.log(`Server listening on port ${PORT}`);
 });
+
+socketManager.init(server);
 
 // KILL SIGNALS
 function shutDown() {

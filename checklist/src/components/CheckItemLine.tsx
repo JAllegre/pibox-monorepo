@@ -6,7 +6,6 @@ import { ChecklistItem, ChecklistItemInput } from "../../../common/checklistType
 import { DisplayMode } from "../types";
 import { useChecklistStore } from "../utils/ChecklistStore";
 import { updateItem } from "../utils/api";
-import eventMgr from "../utils/eventMgr";
 import { MyIconButton } from "./MyIconButton";
 import ValidatedInput from "./ValidatedInput";
 
@@ -33,13 +32,9 @@ export default function CheckItemLine({ checkItem, isNewItem, isMovedItem, onMov
     // Want to update the local state immediately
     setIsItemChecked(event.target.checked);
     setTimeout(() => {
-      updateItemMutation
-        .mutateAsync({
-          checked: event.target.checked ? 1 : 0,
-        })
-        .then(() => {
-          eventMgr.dispatch("checklist-refresh");
-        });
+      updateItemMutation.mutateAsync({
+        checked: event.target.checked ? 1 : 0,
+      });
     }, 1);
   };
 
@@ -53,7 +48,6 @@ export default function CheckItemLine({ checkItem, isNewItem, isMovedItem, onMov
       await updateItemMutation.mutateAsync({
         title: value,
       });
-      eventMgr.dispatch("checklist-refresh");
     },
 
     [updateItemMutation]
@@ -91,11 +85,10 @@ export default function CheckItemLine({ checkItem, isNewItem, isMovedItem, onMov
             <Switch isChecked={isItemChecked} onChange={handleCheckSwitch} size="md" />
           </Box>
           <ValidatedInput
-            defaultValue={checkItem.title || ""}
-            placeholder="Entrez un nom"
+            placeholder="Entrez un titre"
             onValidated={handleTitleInputValidated}
+            remoteValue={checkItem.title}
           />
-
           {/* <Box>{checkItem.sortOrder}</Box> */}
           <HStack>
             <MyIconButton

@@ -6,7 +6,6 @@ import { ChecklistCategory, ChecklistCategoryInput, ChecklistItemStatus } from "
 import { DisplayMode } from "../types";
 import { useChecklistStore } from "../utils/ChecklistStore";
 import { addItem, updateCategory, updateItem } from "../utils/api";
-import eventMgr from "../utils/eventMgr";
 import CheckItemLine from "./CheckItemLine";
 import { MyIconButton } from "./MyIconButton";
 import ValidatedInput from "./ValidatedInput";
@@ -36,7 +35,6 @@ export default function CheckCategoryPanel({ checklistCategory }: CheckCategoryP
   const handleTitleInputValidated = useCallback(
     async (value: string) => {
       await updateCategoryMutation.mutateAsync({ title: value });
-      eventMgr.dispatch("checklist-refresh");
     },
 
     [updateCategoryMutation]
@@ -57,7 +55,6 @@ export default function CheckCategoryPanel({ checklistCategory }: CheckCategoryP
       title: "",
       sortOrder,
     });
-    eventMgr.dispatch("checklist-refresh");
     setLastAddedItemId(id);
   }, [checklistCategory.id, checklistCategory.items]);
 
@@ -94,7 +91,6 @@ export default function CheckCategoryPanel({ checklistCategory }: CheckCategoryP
       }
       setLastModifiedItemId(itemId);
       await updateItemMutation.mutateAsync({ itemId, sortOrder: newOrder });
-      eventMgr.dispatch("checklist-refresh");
     },
     [checklistCategory.items, updateItemMutation]
   );
@@ -141,7 +137,7 @@ export default function CheckCategoryPanel({ checklistCategory }: CheckCategoryP
     <Card className="checklist-category-panel" pb={1} bgColor="gray.700" my={2}>
       <Stack direction="row" borderRadius={5} py={0} px={2} alignItems="center">
         <ValidatedInput
-          defaultValue={checklistCategory.title || ""}
+          remoteValue={checklistCategory.title || ""}
           placeholder="Nom catégorie"
           onValidated={handleTitleInputValidated}
           color="teal.200"

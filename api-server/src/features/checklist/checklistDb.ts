@@ -46,7 +46,6 @@ export async function getAllChecklistItems(listId: number): Promise<ChecklistLis
           if (err) {
             return reject(err);
           }
-          console.info("listId", rows?.length);
           resolve(rows);
         },
       );
