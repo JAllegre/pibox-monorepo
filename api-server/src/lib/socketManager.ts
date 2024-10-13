@@ -10,6 +10,7 @@ function emitToNamespace(nameSpace: string, eventName: string) {
 
 function init(server: http.Server) {
   io = new Server(server, {
+    path: "/api/socket.io",
     cors: {
       origin: "*", // TODO: Set correct cors
     },

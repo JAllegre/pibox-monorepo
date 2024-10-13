@@ -2,11 +2,11 @@ import { io } from "socket.io-client";
 import { CHECKLIST_WS_EVENT_REFRESHED, CHECKLIST_WS_NAMESPACE } from "../../../common/checklistConstants";
 import eventMgr, { EventType } from "./eventMgr";
 
-const wsUrl = `${import.meta.env.VITE_API_HOST}/api${CHECKLIST_WS_NAMESPACE}`;
+const wsUrl = `${import.meta.env.VITE_API_HOST}${CHECKLIST_WS_NAMESPACE}`;
 
 function init() {
   console.log("socketManager.init - Connecting to", wsUrl);
-  const socket = io(wsUrl);
+  const socket = io(wsUrl, { path: "/api/socket.io" });
 
   console.log(wsUrl);
   socket.on("connect", () => {
