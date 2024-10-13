@@ -1,6 +1,4 @@
 import { Input, InputGroup, InputProps, InputRightElement } from "@chakra-ui/react";
-import { DisplayMode } from "@src/types";
-import { useChecklistStore } from "@src/utils/ChecklistStore";
 import { ChangeEvent, FC, KeyboardEvent, MouseEvent, useCallback, useEffect, useRef, useState } from "react";
 import { ImCheckmark } from "react-icons/im";
 import { MyIconButton } from "./MyIconButton";
@@ -10,7 +8,6 @@ type ValidatedInputProps = InputProps & { onValidated: (value: string) => void; 
 const ValidatedInput: FC<ValidatedInputProps> = ({ onValidated, remoteValue, ...props }) => {
   const [value, setValue] = useState(remoteValue || "");
   const [inputEdited, setInputEdited] = useState(false);
-  const isEditMode = useChecklistStore((state) => state.displayMode === DisplayMode.Edit);
   const inputRef = useRef<HTMLInputElement>(null);
 
   const handleValidationIconClick = () => {
