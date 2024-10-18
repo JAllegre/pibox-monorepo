@@ -25,20 +25,22 @@ export async function getAllChecklistItems(listId: number): Promise<ChecklistLis
   return new Promise((resolve, reject) => {
     try {
       db.all<ChecklistListRow>(
-        `SELECT items.id as id, 
-          items.title as title, 
+        `SELECT
+          items.id as id,
+          items.title as title,
           items.checked as checked,
-          items.sortOrder as sortOrder, 
-          categories.id as categoryId, 
+          items.sortOrder as sortOrder,
+          categories.id as categoryId,
           categories.title as categoryTitle,
           lists.title as listTitle,
           lists.id as listId,
           categories.sortOrder as categorySortOrder
-        FROM ${DB_TABLE_CHECKLIST_ITEMS} items
-        INNER JOIN ${DB_TABLE_CHECKLIST_CATEGORIES} categories
-        ON items.categoryId=categories.id
-        INNER JOIN ${DB_TABLE_CHECKLIST_LISTS} lists
-        ON categories.listId=lists.id
+          FROM  ${DB_TABLE_CHECKLIST_CATEGORIES} categories
+          LEFT OUTER JOIN ${DB_TABLE_CHECKLIST_ITEMS} items
+          ON categories.id=items.categoryId
+          LEFT OUTER JOIN ${DB_TABLE_CHECKLIST_LISTS} lists
+          ON categories.listId=lists.id
+          ORDER BY categories.sortOrder
         ;`,
         //WHERE lists.id=${listId}
 
@@ -110,19 +112,16 @@ export async function insertOneCategory(checklistCategoryInput: ChecklistCategor
     try {
       const { queryValues, queryKeys } = buildAddQueryParams(checklistCategoryInput);
 
-      db.run(
-        `INSERT INTO ${DB_TABLE_CHECKLIST_CATEGORIES} (${queryKeys.join(
-          ",",
-        )})  VALUES (${queryKeys.map(() => "?").join(",")})`,
-        queryValues,
-        function (err: Error) {
-          if (err) {
-            return reject(err);
-          }
-          // @ts-ignore
-          resolve(this?.lastID);
-        },
-      );
+      const q = `INSERT INTO ${DB_TABLE_CHECKLIST_CATEGORIES} (${queryKeys.join(
+        ",",
+      )})  VALUES (${queryKeys.map(() => "?").join(",")})`;
+      db.run(q, queryValues, function (err: Error) {
+        if (err) {
+          return reject(err);
+        }
+        // @ts-ignore
+        resolve(this?.lastID);
+      });
     } catch (error) {
       reject(error);
     } finally {

@@ -126,8 +126,8 @@ checklistRouter.delete(`/:listId/items/:itemId`, async (req: Request, res: Respo
 
 checklistRouter.post(`/:listId/categories`, async (req: Request, res: Response, next: NextFunction) => {
   try {
-    await insertOneCategory(req.body);
-    res.json({ message: "Category successfully added" });
+    const id = await insertOneCategory(req.body);
+    res.json({ message: "Category successfully added", id });
   } catch (err) {
     next(err);
   }

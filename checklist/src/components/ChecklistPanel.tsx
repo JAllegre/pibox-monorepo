@@ -1,5 +1,5 @@
 import { Box, HStack, List } from "@chakra-ui/react";
-import { ChecklistCategory, ChecklistInput, ChecklistItem } from "@common/checklistTypes";
+import { ChecklistCategory, ChecklistCategoryInput, ChecklistInput, ChecklistItem } from "@common/checklistTypes";
 import { matchSearch } from "@common/stringUtils";
 import { DisplayMode } from "@src/types";
 import { useChecklistStore } from "@src/utils/ChecklistStore";
@@ -9,7 +9,7 @@ import { FC, useCallback, useEffect, useMemo } from "react";
 import { FaEdit, FaEye } from "react-icons/fa";
 import { FaFolderPlus } from "react-icons/fa6";
 import MyReactQuerySuspense from "../utils/MyReactQuerySuspense";
-import { getChecklist, updateList } from "../utils/api";
+import { addCategory, getChecklist, updateList } from "../utils/api";
 import eventMgr, { EventType } from "../utils/eventMgr";
 import CheckCategoryPanel from "./CheckCategoryPanel";
 import { MyIconButton } from "./MyIconButton";
@@ -36,6 +36,15 @@ const ChecklistPanel: FC = () => {
     },
   });
 
+  const addCategoryMutation = useMutation({
+    mutationFn: (checklistCategoryInput: ChecklistCategoryInput) => {
+      if (data?.checklist?.id) {
+        return addCategory(data.checklist.id, checklistCategoryInput);
+      }
+      return Promise.reject("No checklist id found");
+    },
+  });
+
   const handleTitleInputValidated = useCallback(
     async (value: string) => {
       await updateListMutation.mutateAsync({ title: value });
@@ -47,6 +56,15 @@ const ChecklistPanel: FC = () => {
   const handleEditModeClick = useCallback(() => {
     setDisplayMode(isEditMode ? DisplayMode.View : DisplayMode.Edit);
   }, [setDisplayMode, isEditMode]);
+
+  const handleAddACategoryClick = useCallback(async () => {
+    const newSortOrder = data?.checklist?.categories.reduce((acc, cat) => Math.max(acc, cat.sortOrder), 0);
+    await addCategoryMutation.mutateAsync({
+      listId: data?.checklist?.id || 0,
+      title: "Nouvelle catégorie",
+      sortOrder: newSortOrder ? newSortOrder + 10000 : 0,
+    });
+  }, [addCategoryMutation, data?.checklist?.categories, data?.checklist?.id]);
 
   useEffect(() => {
     const cb = eventMgr.addListener(EventType.Refresh, () => {
@@ -112,7 +130,12 @@ const ChecklistPanel: FC = () => {
             />
 
             <SearchInput />
-            <MyIconButton title={"Ajouter une catégorie"} ReactIcon={FaFolderPlus} onClick={() => {}} fontSize={26} />
+            <MyIconButton
+              title={"Ajouter une catégorie"}
+              ReactIcon={FaFolderPlus}
+              onClick={handleAddACategoryClick}
+              fontSize={26}
+            />
           </HStack>
         </Box>
         <List py="80px">

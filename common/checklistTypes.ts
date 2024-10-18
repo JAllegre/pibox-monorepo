@@ -22,6 +22,11 @@ export interface ChecklistCategory {
 }
 export type ChecklistCategoryInput = Omit<ChecklistCategory, "items" | "id">;
 
+export interface PostChecklistCategoryResponse {
+  message: string;
+  id: number;
+}
+
 export interface Checklist {
   id: number;
   title: string;
