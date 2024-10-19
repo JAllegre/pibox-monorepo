@@ -2,10 +2,10 @@ import { Box, HStack, List } from "@chakra-ui/react";
 import { ChecklistCategory, ChecklistCategoryInput, ChecklistInput, ChecklistItem } from "@common/checklistTypes";
 import { matchSearch } from "@common/stringUtils";
 import { DisplayMode } from "@src/types";
-import { useChecklistStore } from "@src/utils/ChecklistStore";
+import { useChecklistStore, usePersistChecklistStore } from "@src/utils/ChecklistStore";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { sortBy } from "lodash";
-import { FC, memo, useCallback, useEffect, useMemo, useState } from "react";
+import { FC, memo, useCallback, useEffect, useMemo } from "react";
 import { FaEdit, FaEye } from "react-icons/fa";
 import { FaFolderPlus } from "react-icons/fa6";
 import MyReactQuerySuspense from "../utils/MyReactQuerySuspense";
@@ -17,8 +17,8 @@ import SearchInput from "./SearchInput";
 import ValidatedInput from "./ValidatedInput";
 
 const ChecklistPanel: FC = () => {
-  const [displayMode, setDisplayMode] = useState(DisplayMode.Edit);
-
+  const displayMode = usePersistChecklistStore((state) => state.displayMode);
+  const setDisplayMode = usePersistChecklistStore((state) => state.setDisplayMode);
   const searchFilter = useChecklistStore((state) => state.searchFilter);
 
   const { isPending, error, data, refetch } = useQuery({
@@ -106,6 +106,7 @@ const ChecklistPanel: FC = () => {
   }, [data?.checklist?.categories, searchFilter]);
 
   const isEditMode = displayMode === DisplayMode.Edit;
+
   return (
     <Box className={`checklist-panel ${isEditMode ? "mode-edit" : "view-mode"}`} p={0} flexGrow={1} bgColor="gray.900">
       <MyReactQuerySuspense isPending={isPending} error={error}>

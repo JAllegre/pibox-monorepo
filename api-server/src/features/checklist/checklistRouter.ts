@@ -58,13 +58,17 @@ checklistRouter.get("/:listId", async (req: Request, res: Response, next: NextFu
         };
         acc.push(category);
       }
-      category.items.push({
-        id: row.id,
-        categoryId: row.categoryId,
-        checked: row.checked,
-        title: row.title,
-        sortOrder: row.sortOrder,
-      });
+      if (row.id) {
+        // Can occur due to OUTER JOIN
+        category.items.push({
+          id: row.id,
+          categoryId: row.categoryId,
+          checked: row.checked,
+          title: row.title,
+          sortOrder: row.sortOrder,
+        });
+      }
+
       return acc;
     }, checklist.categories);
 

@@ -4,10 +4,8 @@
       display: none;
     }
   }
-}
 
-.checklist-panel {
-  .checklist-category-panel.hide {
+  .checklist-category-panel.empty {
     display: none;
   }
 }

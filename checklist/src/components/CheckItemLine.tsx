@@ -8,21 +8,21 @@ import { updateItem } from "../utils/api";
 import "./CheckItemLine.scss";
 import MyIconButton from "./MyIconButton";
 import ValidatedInput from "./ValidatedInput";
-interface CheckItemLineProps {
-  checkItem: ChecklistItem;
-  isNewItem?: boolean;
-  isMovedItem?: boolean;
-  onMove: (itemId: number, isMovedUp: boolean) => void;
-}
 
-function CheckItemLine({ checkItem, isNewItem, isMovedItem, onMove }: CheckItemLineProps) {
-  const [isItemChecked, setIsItemChecked] = useState(!!checkItem.checked);
+type CheckItemLineProps = Pick<ChecklistItem, "id" | "checked" | "title"> & {
+  isNewItem?: boolean;
+  isModifiedItem?: boolean;
+  onMove: (itemId: number, isMovedUp: boolean) => void;
+};
+
+function CheckItemLine({ id, checked, title, isNewItem, isModifiedItem, onMove }: CheckItemLineProps) {
+  const [isItemChecked, setIsItemChecked] = useState(!!checked);
   const cardRef = useRef<HTMLDivElement>(null);
   const setItemIdToDelete = useChecklistStore((state) => state.setItemIdToDelete);
 
   const updateItemMutation = useMutation({
     mutationFn: (checklistCategoryInput: Partial<ChecklistItemInput>) => {
-      return updateItem(checkItem.id, checklistCategoryInput);
+      return updateItem(id, checklistCategoryInput);
     },
   });
 
@@ -38,8 +38,8 @@ function CheckItemLine({ checkItem, isNewItem, isMovedItem, onMove }: CheckItemL
 
   useEffect(() => {
     // reset to the remote state when changed
-    setIsItemChecked(!!checkItem.checked);
-  }, [checkItem.checked]);
+    setIsItemChecked(!!checked);
+  }, [checked]);
 
   const handleTitleInputValidated = useCallback(
     async (value: string) => {
@@ -58,23 +58,23 @@ function CheckItemLine({ checkItem, isNewItem, isMovedItem, onMove }: CheckItemL
   }, [isNewItem]);
 
   const handleDeleteClick = useCallback(async () => {
-    setItemIdToDelete(checkItem.id);
-  }, [setItemIdToDelete, checkItem.id]);
+    setItemIdToDelete(id);
+  }, [setItemIdToDelete, id]);
 
   const handleUpClick = useCallback(async () => {
-    onMove(checkItem.id, true);
-  }, [onMove, checkItem.id]);
+    onMove(id, true);
+  }, [onMove, id]);
 
   const handleDownClick = useCallback(async () => {
-    onMove(checkItem.id, false);
-  }, [onMove, checkItem.id]);
+    onMove(id, false);
+  }, [onMove, id]);
 
   return (
     <Card
       ref={cardRef}
       my="1"
       className={`checklist-line ${isItemChecked ? "checked" : ""}`}
-      bgColor={isNewItem || isMovedItem ? "teal.700" : "gray.600"}
+      bgColor={isNewItem || isModifiedItem ? "teal.700" : "gray.600"}
       color="teal.50"
     >
       <CardBody px={2} py={1}>
@@ -82,11 +82,7 @@ function CheckItemLine({ checkItem, isNewItem, isMovedItem, onMove }: CheckItemL
           <Box>
             <Switch isChecked={isItemChecked} onChange={handleCheckSwitch} size="md" />
           </Box>
-          <ValidatedInput
-            placeholder="Entrez un titre"
-            onValidated={handleTitleInputValidated}
-            remoteValue={checkItem.title}
-          />
+          <ValidatedInput placeholder="Entrez un titre" onValidated={handleTitleInputValidated} remoteValue={title} />
           {/* <Box>{checkItem.sortOrder}</Box> */}
           <HStack>
             <MyIconButton ReactIcon={FaArrowAltCircleUp} color="blue.400" onClick={handleUpClick} fontSize={20} />

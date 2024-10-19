@@ -14,7 +14,7 @@ interface CheckCategoryPanelProps {
 
 function CheckCategoryPanel({ checklistCategory }: CheckCategoryPanelProps) {
   const [lastAddedItemId, setLastAddedItemId] = useState<number>(0);
-  const [lastModifiedItemId, setLastModifiedItemId] = useState<number>(0);
+  const [lastMovedItemId, setLastMovedItemId] = useState<number>(0);
 
   const updateCategoryMutation = useMutation({
     mutationFn: (checklistCategoryInput: Partial<ChecklistCategoryInput>) => {
@@ -85,7 +85,7 @@ function CheckCategoryPanel({ checklistCategory }: CheckCategoryPanelProps) {
           newOrder = (itemAfter.sortOrder + itemAfterAfter.sortOrder) / 2;
         }
       }
-      setLastModifiedItemId(itemId);
+      setLastMovedItemId(itemId);
       await updateItemMutation.mutateAsync({ itemId, sortOrder: newOrder });
     },
     [checklistCategory.items, updateItemMutation]
@@ -106,37 +106,45 @@ function CheckCategoryPanel({ checklistCategory }: CheckCategoryPanelProps) {
 
   useEffect(() => {
     let tt: number = 0;
-    if (lastModifiedItemId) {
+    if (lastMovedItemId) {
       tt = window.setTimeout(() => {
-        setLastModifiedItemId(0);
+        setLastMovedItemId(0);
       }, 5000);
     }
 
     return () => {
       clearTimeout(tt);
     };
-  }, [lastAddedItemId, lastModifiedItemId]);
+  }, [lastMovedItemId]);
 
   const itemLines = useMemo(() => {
     return checklistCategory.items?.map((checkItem) => {
       return (
         <CheckItemLine
-          key={checkItem.id}
-          checkItem={checkItem}
+          key={"" + checkItem.id + ""}
+          id={checkItem.id}
+          title={checkItem.title}
+          checked={checkItem.checked}
           isNewItem={checkItem.id === lastAddedItemId}
-          isMovedItem={checkItem.id === lastModifiedItemId}
+          isModifiedItem={checkItem.id === lastMovedItemId}
           onMove={handleMoveItem}
         />
       );
     });
-  }, [checklistCategory.items, handleMoveItem, lastAddedItemId, lastModifiedItemId]);
+  }, [checklistCategory.items, handleMoveItem, lastAddedItemId, lastMovedItemId]);
 
-  const isHidden = useMemo(() => {
+  // console.log(
+  //   "@@@@@@ju@@@@@CheckCategoryPanel.tsx/136",
+  //   checklistCategory?.id,
+  //   checklistCategory?.title,
+  //   checklistCategory.items[0]
+  // );
+  const isEmpty = useMemo(() => {
     return !checklistCategory.items.some((i) => i.checked);
   }, [checklistCategory?.items]);
 
   return (
-    <Card className={`checklist-category-panel ${isHidden ? "hide" : ""}`} pb={1} bgColor="gray.700" my={2}>
+    <Card className={`checklist-category-panel ${isEmpty ? "empty" : ""}`} pb={1} bgColor="gray.700" my={2}>
       <Stack direction="row" borderRadius={5} py={0} px={2} alignItems="center">
         <ValidatedInput
           remoteValue={checklistCategory.title || ""}
