@@ -1,7 +1,7 @@
 import { Input, InputGroup, InputProps, InputRightElement } from "@chakra-ui/react";
-import { ChangeEvent, FC, KeyboardEvent, MouseEvent, useCallback, useEffect, useRef, useState } from "react";
+import { ChangeEvent, FC, KeyboardEvent, memo, MouseEvent, useCallback, useEffect, useRef, useState } from "react";
 import { ImCheckmark } from "react-icons/im";
-import { MyIconButton } from "./MyIconButton";
+import MyIconButton from "./MyIconButton";
 
 type ValidatedInputProps = InputProps & { onValidated: (value: string) => void; remoteValue: string };
 
@@ -74,4 +74,4 @@ const ValidatedInput: FC<ValidatedInputProps> = ({ onValidated, remoteValue, ...
   );
 };
 
-export default ValidatedInput;
+export default memo(ValidatedInput);

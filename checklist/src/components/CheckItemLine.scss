@@ -1,0 +1,9 @@
+.checklist-panel.view-mode {
+  .checklist-line:not(.checked) {
+    display: none;
+
+    .my-icon-button {
+      display: none;
+    }
+  }
+}

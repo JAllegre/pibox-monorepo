@@ -1,20 +1,18 @@
 import { Box, Card, Stack } from "@chakra-ui/react";
 import { useMutation } from "@tanstack/react-query";
-import { useCallback, useEffect, useState } from "react";
+import { memo, useCallback, useEffect, useMemo, useState } from "react";
 import { RiMenuAddLine } from "react-icons/ri";
 import { ChecklistCategory, ChecklistCategoryInput, ChecklistItemStatus } from "../../../common/checklistTypes";
-import { DisplayMode } from "../types";
-import { useChecklistStore } from "../utils/ChecklistStore";
 import { addItem, updateCategory, updateItem } from "../utils/api";
+import "./CheckCategoryPanel.scss";
 import CheckItemLine from "./CheckItemLine";
-import { MyIconButton } from "./MyIconButton";
+import MyIconButton from "./MyIconButton";
 import ValidatedInput from "./ValidatedInput";
-
 interface CheckCategoryPanelProps {
   checklistCategory: ChecklistCategory;
 }
 
-export default function CheckCategoryPanel({ checklistCategory }: CheckCategoryPanelProps) {
+function CheckCategoryPanel({ checklistCategory }: CheckCategoryPanelProps) {
   const [lastAddedItemId, setLastAddedItemId] = useState<number>(0);
   const [lastModifiedItemId, setLastModifiedItemId] = useState<number>(0);
 
@@ -29,8 +27,6 @@ export default function CheckCategoryPanel({ checklistCategory }: CheckCategoryP
       return updateItem(itemId, { sortOrder });
     },
   });
-
-  const isEditMode = useChecklistStore((state) => state.displayMode === DisplayMode.Edit);
 
   const handleTitleInputValidated = useCallback(
     async (value: string) => {
@@ -121,20 +117,26 @@ export default function CheckCategoryPanel({ checklistCategory }: CheckCategoryP
     };
   }, [lastAddedItemId, lastModifiedItemId]);
 
-  const itemLines = checklistCategory.items?.map((checkItem) => {
-    return (
-      <CheckItemLine
-        key={checkItem.id}
-        checkItem={checkItem}
-        isNewItem={checkItem.id === lastAddedItemId}
-        isMovedItem={checkItem.id === lastModifiedItemId}
-        onMove={handleMoveItem}
-      />
-    );
-  });
+  const itemLines = useMemo(() => {
+    return checklistCategory.items?.map((checkItem) => {
+      return (
+        <CheckItemLine
+          key={checkItem.id}
+          checkItem={checkItem}
+          isNewItem={checkItem.id === lastAddedItemId}
+          isMovedItem={checkItem.id === lastModifiedItemId}
+          onMove={handleMoveItem}
+        />
+      );
+    });
+  }, [checklistCategory.items, handleMoveItem, lastAddedItemId, lastModifiedItemId]);
+
+  const isHidden = useMemo(() => {
+    return !checklistCategory.items.some((i) => i.checked);
+  }, [checklistCategory?.items]);
 
   return (
-    <Card className="checklist-category-panel" pb={1} bgColor="gray.700" my={2}>
+    <Card className={`checklist-category-panel ${isHidden ? "hide" : ""}`} pb={1} bgColor="gray.700" my={2}>
       <Stack direction="row" borderRadius={5} py={0} px={2} alignItems="center">
         <ValidatedInput
           remoteValue={checklistCategory.title || ""}
@@ -145,15 +147,11 @@ export default function CheckCategoryPanel({ checklistCategory }: CheckCategoryP
           py={0}
         />
         {/* <Box>{checklistCategory.sortOrder}</Box> */}
-        <MyIconButton
-          ReactIcon={RiMenuAddLine}
-          color="teal.300"
-          display={isEditMode ? "" : "none"}
-          onClick={handleAddClick}
-          fontSize={26}
-        />
+        <MyIconButton ReactIcon={RiMenuAddLine} color="teal.300" onClick={handleAddClick} fontSize={26} />
       </Stack>
       <Box sx={{ px: 1 }}>{itemLines}</Box>
     </Card>
   );
 }
+
+export default memo(CheckCategoryPanel);

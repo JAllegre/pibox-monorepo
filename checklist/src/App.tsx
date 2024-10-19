@@ -13,7 +13,6 @@ function App() {
     if (isMountedRef.current) {
       return;
     }
-    console.log("***ju***App.tsx/16", "");
     isMountedRef.current = true;
     socketManager.init();
   }, []);

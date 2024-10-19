@@ -1,12 +1,12 @@
 import { Input, InputGroup, InputRightElement } from "@chakra-ui/react";
 import { useChecklistStore } from "@src/utils/ChecklistStore";
 import { useDebounce } from "@uidotdev/usehooks";
-import { ChangeEvent, useCallback, useEffect, useState } from "react";
+import { ChangeEvent, memo, useCallback, useEffect, useState } from "react";
 import { FaMagnifyingGlass } from "react-icons/fa6";
 import { ImCross } from "react-icons/im";
-import { MyIconButton } from "./MyIconButton";
+import MyIconButton from "./MyIconButton";
 
-export default function SearchInput() {
+function SearchInput() {
   const [searchTerm, setSearchTerm] = useState("");
   const setSearchFilter = useChecklistStore((state) => state.setSearchFilter);
   const debouncedSearchTerm = useDebounce(searchTerm, 200);
@@ -58,3 +58,5 @@ export default function SearchInput() {
     </InputGroup>
   );
 }
+
+export default memo(SearchInput);

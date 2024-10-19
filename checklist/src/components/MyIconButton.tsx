@@ -1,13 +1,15 @@
 import { Box, BoxProps } from "@chakra-ui/react";
+import { memo } from "react";
 import { IconType } from "react-icons";
 
 interface MyIconButtonProps extends BoxProps {
   ReactIcon: IconType;
 }
 
-export function MyIconButton({ ReactIcon, ...props }: MyIconButtonProps) {
+function MyIconButton({ ReactIcon, ...props }: MyIconButtonProps) {
   return (
     <Box
+      className="my-icon-button"
       sx={{
         "&:hover": {
           opacity: "0.6",
@@ -20,3 +22,5 @@ export function MyIconButton({ ReactIcon, ...props }: MyIconButtonProps) {
     </Box>
   );
 }
+
+export default memo(MyIconButton);

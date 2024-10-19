@@ -1,0 +1,13 @@
+.checklist-panel.view-mode {
+  .checklist-category-panel {
+    .my-icon-button {
+      display: none;
+    }
+  }
+}
+
+.checklist-panel {
+  .checklist-category-panel.hide {
+    display: none;
+  }
+}

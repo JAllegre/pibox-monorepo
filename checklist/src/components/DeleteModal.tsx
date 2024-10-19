@@ -11,9 +11,9 @@ import {
 import { useChecklistStore } from "@src/utils/ChecklistStore";
 import { removeItem } from "@src/utils/api";
 import { useMutation } from "@tanstack/react-query";
-import { useCallback } from "react";
+import { memo, useCallback } from "react";
 
-export function DeleteModal() {
+function DeleteModal() {
   const itemIdToDelete = useChecklistStore((state) => state.itemIdToDelete);
   const setItemIdToDelete = useChecklistStore((state) => state.setItemIdToDelete);
   const removeItemMutation = useMutation({
@@ -45,3 +45,5 @@ export function DeleteModal() {
     </>
   );
 }
+
+export default memo(DeleteModal);

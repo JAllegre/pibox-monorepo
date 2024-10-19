@@ -1,6 +1,7 @@
 import { HStack } from "@chakra-ui/react";
+import { memo } from "react";
 import ChecklistPanel from "./ChecklistPanel";
-import { DeleteModal } from "./DeleteModal";
+import DeleteModal from "./DeleteModal";
 
 const AppLayout = () => {
   return (
@@ -11,4 +12,4 @@ const AppLayout = () => {
   );
 };
 
-export default AppLayout;
+export default memo(AppLayout);
