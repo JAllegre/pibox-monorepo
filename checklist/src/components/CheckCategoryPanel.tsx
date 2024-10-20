@@ -1,4 +1,6 @@
 import { Box, Card, Stack } from "@chakra-ui/react";
+import { DisplayMode } from "@src/types";
+import { useChecklistStore, usePersistChecklistStore } from "@src/utils/ChecklistStore";
 import { useMutation } from "@tanstack/react-query";
 import { memo, useCallback, useEffect, useMemo, useState } from "react";
 import { RiMenuAddLine } from "react-icons/ri";
@@ -13,8 +15,10 @@ interface CheckCategoryPanelProps {
 }
 
 function CheckCategoryPanel({ checklistCategory }: CheckCategoryPanelProps) {
+  const displayMode = usePersistChecklistStore((state) => state.displayMode);
   const [lastAddedItemId, setLastAddedItemId] = useState<number>(0);
   const [lastMovedItemId, setLastMovedItemId] = useState<number>(0);
+  const searchFilter = useChecklistStore((state) => state.searchFilter);
 
   const updateCategoryMutation = useMutation({
     mutationFn: (checklistCategoryInput: Partial<ChecklistCategoryInput>) => {
@@ -133,18 +137,14 @@ function CheckCategoryPanel({ checklistCategory }: CheckCategoryPanelProps) {
     });
   }, [checklistCategory.items, handleMoveItem, lastAddedItemId, lastMovedItemId]);
 
-  // console.log(
-  //   "@@@@@@ju@@@@@CheckCategoryPanel.tsx/136",
-  //   checklistCategory?.id,
-  //   checklistCategory?.title,
-  //   checklistCategory.items[0]
-  // );
-  const isEmpty = useMemo(() => {
+  const hasNoCheckedItems = useMemo(() => {
     return !checklistCategory.items.some((i) => i.checked);
   }, [checklistCategory?.items]);
 
+  const isHidden = displayMode === DisplayMode.View ? hasNoCheckedItems : !checklistCategory?.items?.length;
+
   return (
-    <Card className={`checklist-category-panel ${isEmpty ? "empty" : ""}`} pb={1} bgColor="gray.700" my={2}>
+    <Card className={`checklist-category-panel ${isHidden ? "hidden" : ""}`} pb={1} bgColor="gray.700" my={2}>
       <Stack direction="row" borderRadius={5} py={0} px={2} alignItems="center">
         <ValidatedInput
           remoteValue={checklistCategory.title || ""}
