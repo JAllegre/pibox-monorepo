@@ -1,4 +1,5 @@
 import { Box, Card, CardBody, HStack, Stack, Switch } from "@chakra-ui/react";
+import eventMgr, { EventType } from "@src/utils/eventMgr";
 import { useMutation } from "@tanstack/react-query";
 import { ChangeEvent, memo, useCallback, useEffect, useRef, useState } from "react";
 import { FaArrowAltCircleDown, FaArrowAltCircleUp, FaRegTrashAlt } from "react-icons/fa";
@@ -9,13 +10,11 @@ import "./CheckItemLine.scss";
 import MyIconButton from "./MyIconButton";
 import ValidatedInput from "./ValidatedInput";
 
-type CheckItemLineProps = Pick<ChecklistItem, "id" | "checked" | "title"> & {
+type CheckItemLineProps = Pick<ChecklistItem, "id" | "checked" | "title" | "sortOrder"> & {
   isNewItem?: boolean;
-  isModifiedItem?: boolean;
-  onMove: (itemId: number, isMovedUp: boolean) => void;
 };
 
-function CheckItemLine({ id, checked, title, isNewItem, isModifiedItem, onMove }: CheckItemLineProps) {
+function CheckItemLine({ id, checked, title, sortOrder, isNewItem }: CheckItemLineProps) {
   const [isItemChecked, setIsItemChecked] = useState(!!checked);
   const cardRef = useRef<HTMLDivElement>(null);
   const setItemIdToDelete = useChecklistStore((state) => state.setItemIdToDelete);
@@ -57,24 +56,42 @@ function CheckItemLine({ id, checked, title, isNewItem, isModifiedItem, onMove }
     }
   }, [isNewItem]);
 
+  const [hasMoved, setHasMoved] = useState(false);
+  const prevSortOrderRef = useRef<number>(0);
+
+  useEffect(() => {
+    let tt: number = 0;
+    if (prevSortOrderRef.current && sortOrder && sortOrder !== prevSortOrderRef.current) {
+      setHasMoved(true);
+      tt = window.setTimeout(() => {
+        setHasMoved(false);
+      }, 5000);
+    }
+    prevSortOrderRef.current = sortOrder;
+
+    return () => {
+      clearTimeout(tt);
+    };
+  }, [sortOrder]);
+
   const handleDeleteClick = useCallback(async () => {
     setItemIdToDelete(id);
   }, [setItemIdToDelete, id]);
 
   const handleUpClick = useCallback(async () => {
-    onMove(id, true);
-  }, [onMove, id]);
+    eventMgr.dispatch(EventType.MoveItem, { id, isUp: true });
+  }, [id]);
 
   const handleDownClick = useCallback(async () => {
-    onMove(id, false);
-  }, [onMove, id]);
+    eventMgr.dispatch(EventType.MoveItem, { id, isUp: false });
+  }, [id]);
 
   return (
     <Card
       ref={cardRef}
       my="1"
       className={`checklist-line ${isItemChecked ? "checked" : ""}`}
-      bgColor={isNewItem || isModifiedItem ? "teal.700" : "gray.600"}
+      bgColor={isNewItem || hasMoved ? "teal.700" : "gray.600"}
       color="teal.50"
     >
       <CardBody px={2} py={1}>

@@ -1,11 +1,18 @@
 export enum EventType {
   Refresh = "checklist-refresh",
+  MoveItem = "checklist-move-item",
 }
+export interface CustomEventDetailsMoveItem {
+  id: number;
+  isUp: boolean;
+}
+
+export type CustomEventDetails = CustomEventDetailsMoveItem;
 
 const eventTarget = new EventTarget();
 
-function dispatch(eventType: EventType) {
-  eventTarget.dispatchEvent(new Event(eventType));
+function dispatch(eventType: EventType, detail?: CustomEventDetails) {
+  eventTarget.dispatchEvent(new CustomEvent(eventType, { detail }));
 }
 
 function addListener(eventType: EventType, callback: EventListener): EventListener {
