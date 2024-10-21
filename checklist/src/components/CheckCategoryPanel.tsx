@@ -1,6 +1,6 @@
 import { Box, Card, Stack } from "@chakra-ui/react";
 import { DisplayMode } from "@src/types";
-import { usePersistChecklistStore } from "@src/utils/ChecklistStore";
+import { useChecklistStore, usePersistChecklistStore } from "@src/utils/ChecklistStore";
 import { useMutation } from "@tanstack/react-query";
 import { memo, useCallback, useEffect, useMemo, useState } from "react";
 import { RiMenuAddLine } from "react-icons/ri";
@@ -17,10 +17,12 @@ interface CheckCategoryPanelProps {
 function CheckCategoryPanel({ checklistCategory }: CheckCategoryPanelProps) {
   const displayMode = usePersistChecklistStore((state) => state.displayMode);
   const [lastAddedItemId, setLastAddedItemId] = useState<number>(0);
+  const currentListId = useChecklistStore((state) => state.currentListId);
+  const searchFilter = useChecklistStore((state) => state.searchFilter);
 
   const updateCategoryMutation = useMutation({
     mutationFn: (checklistCategoryInput: Partial<ChecklistCategoryInput>) => {
-      return updateCategory(checklistCategory.id, checklistCategoryInput);
+      return updateCategory(currentListId, checklistCategory.id, checklistCategoryInput);
     },
   });
 
@@ -41,14 +43,14 @@ function CheckCategoryPanel({ checklistCategory }: CheckCategoryPanelProps) {
     }, 0);
 
     const sortOrder = maxSortOrder ? maxSortOrder + 10 : checklistCategory.items.length * 10000;
-    const { id } = await addItem({
+    const { id } = await addItem(currentListId, {
       checked: ChecklistItemStatus.Checked,
       categoryId: checklistCategory.id,
       title: "",
       sortOrder,
     });
     setLastAddedItemId(id);
-  }, [checklistCategory.id, checklistCategory.items]);
+  }, [checklistCategory.id, checklistCategory.items, currentListId]);
 
   useEffect(() => {
     let tt: number = 0;
@@ -82,7 +84,8 @@ function CheckCategoryPanel({ checklistCategory }: CheckCategoryPanelProps) {
     return !checklistCategory.items.some((i) => i.checked);
   }, [checklistCategory?.items]);
 
-  const isHidden = displayMode === DisplayMode.View ? hasNoCheckedItems : !checklistCategory?.items?.length;
+  const isHidden =
+    displayMode === DisplayMode.View ? hasNoCheckedItems : !checklistCategory?.items?.length && searchFilter;
 
   return (
     <Card className={`checklist-category-panel ${isHidden ? "hidden" : ""}`} pb={1} bgColor="gray.700" my={2}>

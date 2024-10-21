@@ -10,8 +10,8 @@ import { del, fetchData, postData, putData } from "../../../common/clientApi";
 
 const baseApiUrl = `${import.meta.env.VITE_API_HOST || ""}/api/checklists`;
 
-export async function getChecklist(): Promise<GetChecklistResponse> {
-  return fetchData(`${baseApiUrl}/0`);
+export async function getChecklist(listId: number): Promise<GetChecklistResponse> {
+  return fetchData(`${baseApiUrl}/${listId}`);
 }
 
 export async function updateList(listId: number, checklistInput: Partial<ChecklistInput>): Promise<void> {
@@ -26,20 +26,28 @@ export async function addCategory(
 }
 
 export async function updateCategory(
+  listId: number,
   categoryId: number,
   checklistCategoryInput: Partial<ChecklistCategoryInput>
 ): Promise<void> {
-  return putData(`${baseApiUrl}/0/categories/${categoryId}`, checklistCategoryInput);
+  return putData(`${baseApiUrl}/${listId}/categories/${categoryId}`, checklistCategoryInput);
 }
 
-export async function addItem(checklistItemInput: ChecklistItemInput): Promise<PostChecklistItemResponse> {
-  return postData(`${baseApiUrl}/0/items`, checklistItemInput);
+export async function addItem(
+  listId: number,
+  checklistItemInput: ChecklistItemInput
+): Promise<PostChecklistItemResponse> {
+  return postData(`${baseApiUrl}/${listId}/items`, checklistItemInput);
 }
 
-export async function updateItem(itemId: number, checklistItemInput: Partial<ChecklistItemInput>): Promise<void> {
-  return putData(`${baseApiUrl}/0/items/${itemId}`, checklistItemInput);
+export async function updateItem(
+  listId: number,
+  itemId: number,
+  checklistItemInput: Partial<ChecklistItemInput>
+): Promise<void> {
+  return putData(`${baseApiUrl}/${listId}/items/${itemId}`, checklistItemInput);
 }
 
-export async function removeItem(itemId: number): Promise<void> {
-  return del(`${baseApiUrl}/0/items/${itemId}`);
+export async function removeItem(listId: number, itemId: number): Promise<void> {
+  return del(`${baseApiUrl}/${listId}/items/${itemId}`);
 }

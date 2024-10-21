@@ -26,10 +26,11 @@ const ChecklistPanel: FC = () => {
   const displayMode = usePersistChecklistStore((state) => state.displayMode);
   const setDisplayMode = usePersistChecklistStore((state) => state.setDisplayMode);
   const searchFilter = useChecklistStore((state) => state.searchFilter);
+  const currentListId = useChecklistStore((state) => state.currentListId);
 
   const { isPending, error, data, refetch } = useQuery({
     queryKey: ["getChecklist"],
-    queryFn: getChecklist,
+    queryFn: () => getChecklist(currentListId),
   });
 
   const updateListMutation = useMutation({
@@ -52,13 +53,16 @@ const ChecklistPanel: FC = () => {
 
   const updateItemMutation = useMutation({
     mutationFn: ({
-      id,
+      itemId,
       checklistCategoryInput,
     }: {
-      id: number;
+      itemId: number;
       checklistCategoryInput: Partial<ChecklistItemInput>;
     }) => {
-      return updateItem(id, checklistCategoryInput);
+      if (data?.checklist?.id) {
+        return updateItem(data.checklist.id, itemId, checklistCategoryInput);
+      }
+      return Promise.reject("No checklist id found");
     },
   });
 
@@ -133,7 +137,6 @@ const ChecklistPanel: FC = () => {
       if (!checklistCategory) {
         return;
       }
-      console.log("@@@@@@ju@@@@@ChecklistPanel.tsx/128", "START MOVE", itemId, isMovedUp, checklistCategory);
       if (itemIndex === -1) {
         console.error("CheckCategoryPanel.tsx", "handleMoveItem", "item not found");
         return;
@@ -144,7 +147,6 @@ const ChecklistPanel: FC = () => {
 
       if (isMovedUp) {
         if (itemIndex === 0) {
-          console.log("@@@@@@ju@@@@@ChecklistPanel.tsx/158", "OUT UP");
           return;
         }
         const itemBefore = checklistCategory.items[itemIndex - 1];
@@ -160,7 +162,6 @@ const ChecklistPanel: FC = () => {
         }
       } else {
         if (itemIndex >= checklistCategory.items.length - 1) {
-          console.log("@@@@@@ju@@@@@ChecklistPanel.tsx/158", "OUT DOWN");
           return;
         }
         const itemAfter = checklistCategory.items[itemIndex + 1];
@@ -175,9 +176,8 @@ const ChecklistPanel: FC = () => {
           }
         }
       }
-      console.log("@@@@@@ju@@@@@ChecklistPanel.tsx/143", checklistCategory.items[itemIndex].sortOrder, "->", newOrder);
       // setLastMovedItemId(itemId);
-      await updateItemMutation.mutateAsync({ id: itemId, checklistCategoryInput: { sortOrder: newOrder } });
+      await updateItemMutation.mutateAsync({ itemId: itemId, checklistCategoryInput: { sortOrder: newOrder } });
     },
     [sortedAndFilteredCategories, updateItemMutation]
   );

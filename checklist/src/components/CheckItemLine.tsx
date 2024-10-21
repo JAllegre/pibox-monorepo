@@ -18,10 +18,11 @@ function CheckItemLine({ id, checked, title, sortOrder, isNewItem }: CheckItemLi
   const [isItemChecked, setIsItemChecked] = useState(!!checked);
   const cardRef = useRef<HTMLDivElement>(null);
   const setItemIdToDelete = useChecklistStore((state) => state.setItemIdToDelete);
+  const currentListId = useChecklistStore((state) => state.currentListId);
 
   const updateItemMutation = useMutation({
     mutationFn: (checklistCategoryInput: Partial<ChecklistItemInput>) => {
-      return updateItem(id, checklistCategoryInput);
+      return updateItem(currentListId, id, checklistCategoryInput);
     },
   });
 

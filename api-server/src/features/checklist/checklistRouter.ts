@@ -35,6 +35,7 @@ checklistRouter.use((req, resp, next) => {
 checklistRouter.get("/:listId", async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { listId } = grabRequestParameters(req);
+
     if (listId == undefined) {
       throw new Error("No listId provided");
     }
@@ -83,9 +84,11 @@ checklistRouter.get("/:listId", async (req: Request, res: Response, next: NextFu
 checklistRouter.put(`/:listId`, async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { listId } = grabRequestParameters(req);
+
     if (listId == undefined) {
       throw new Error("No listId provided");
     }
+
     await updateOneList(listId, req.body);
     res.json({ message: "List successfully updated" });
   } catch (err) {
@@ -95,6 +98,11 @@ checklistRouter.put(`/:listId`, async (req: Request, res: Response, next: NextFu
 
 checklistRouter.post(`/:listId/items`, async (req: Request, res: Response, next: NextFunction) => {
   try {
+    const { listId } = grabRequestParameters(req);
+
+    if (listId == undefined) {
+      throw new Error("No listId provided");
+    }
     const id = await insertOneItem(req.body);
     res.json({ message: "Item successfully added", id });
   } catch (err) {
@@ -104,7 +112,12 @@ checklistRouter.post(`/:listId/items`, async (req: Request, res: Response, next:
 
 checklistRouter.put(`/:listId/items/:itemId`, async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const { itemId } = grabRequestParameters(req);
+    const { itemId, listId } = grabRequestParameters(req);
+
+    if (listId == undefined) {
+      throw new Error("No listId provided");
+    }
+
     if (itemId == undefined) {
       throw new Error("No itemId provided");
     }
@@ -117,7 +130,11 @@ checklistRouter.put(`/:listId/items/:itemId`, async (req: Request, res: Response
 
 checklistRouter.delete(`/:listId/items/:itemId`, async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const { itemId } = grabRequestParameters(req);
+    const { itemId, listId } = grabRequestParameters(req);
+
+    if (listId == undefined) {
+      throw new Error("No listId provided");
+    }
     if (!itemId) {
       throw new Error("No itemId provided");
     }
@@ -130,6 +147,12 @@ checklistRouter.delete(`/:listId/items/:itemId`, async (req: Request, res: Respo
 
 checklistRouter.post(`/:listId/categories`, async (req: Request, res: Response, next: NextFunction) => {
   try {
+    const { listId } = grabRequestParameters(req);
+
+    if (listId == undefined) {
+      throw new Error("No listId provided");
+    }
+
     const id = await insertOneCategory(req.body);
     res.json({ message: "Category successfully added", id });
   } catch (err) {
@@ -139,7 +162,12 @@ checklistRouter.post(`/:listId/categories`, async (req: Request, res: Response, 
 
 checklistRouter.put(`/:listId/categories/:categoryId`, async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const { categoryId } = grabRequestParameters(req);
+    const { categoryId, listId } = grabRequestParameters(req);
+
+    if (listId == undefined) {
+      throw new Error("No listId provided");
+    }
+
     if (categoryId == undefined) {
       throw new Error("No categoryId provided");
     }

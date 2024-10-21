@@ -16,9 +16,11 @@ import { memo, useCallback } from "react";
 function DeleteModal() {
   const itemIdToDelete = useChecklistStore((state) => state.itemIdToDelete);
   const setItemIdToDelete = useChecklistStore((state) => state.setItemIdToDelete);
+  const currentListId = useChecklistStore((state) => state.currentListId);
+
   const removeItemMutation = useMutation({
     mutationFn: (itemId: number) => {
-      return removeItem(itemId);
+      return removeItem(currentListId, itemId);
     },
   });
   const handleDeleteClick = useCallback(async () => {
