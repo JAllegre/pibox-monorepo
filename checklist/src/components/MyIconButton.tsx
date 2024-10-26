@@ -15,6 +15,7 @@ function MyIconButton({ ReactIcon, ...props }: MyIconButtonProps) {
           opacity: "0.6",
         },
       }}
+      color="teal.300"
       cursor="pointer"
       {...props}
     >

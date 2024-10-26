@@ -81,7 +81,25 @@ export async function getAllChecklistItems(listId: number): Promise<ChecklistIte
           if (err) {
             return reject(err);
           }
-          resolve(rows);
+
+          if (rows?.length) {
+            return resolve(rows);
+          }
+
+          db.all<ChecklistItemsRow>(
+            `SELECT
+                lists.title as listTitle,
+                lists.id as listId
+                FROM ${DB_TABLE_CHECKLIST_LISTS} lists
+                WHERE lists.id=${listId}
+              ;`,
+            (err2, rows2) => {
+              if (err2) {
+                return reject(err2);
+              }
+              return resolve(rows2);
+            },
+          );
         },
       );
     } catch (error) {

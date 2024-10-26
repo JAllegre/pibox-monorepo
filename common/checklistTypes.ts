@@ -50,3 +50,8 @@ export interface PostChecklistItemResponse {
   message: string;
   id: number;
 }
+
+export interface PostChecklistListResponse {
+  message: string;
+  id: number;
+}

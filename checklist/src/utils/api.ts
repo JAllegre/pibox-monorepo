@@ -6,6 +6,7 @@ import {
   GetChecklistsResponse,
   PostChecklistCategoryResponse,
   PostChecklistItemResponse,
+  PostChecklistListResponse,
 } from "../../../common/checklistTypes";
 import { del, fetchData, postData, putData } from "../../../common/clientApi";
 
@@ -17,6 +18,10 @@ export async function getChecklists(): Promise<GetChecklistsResponse> {
 
 export async function getChecklist(listId: number): Promise<GetChecklistResponse> {
   return fetchData(`${baseApiUrl}/${listId}`);
+}
+
+export async function addList(checklistItemInput: ChecklistInput): Promise<PostChecklistListResponse> {
+  return postData(`${baseApiUrl}`, checklistItemInput);
 }
 
 export async function updateList(listId: number, checklistInput: Partial<ChecklistInput>): Promise<void> {

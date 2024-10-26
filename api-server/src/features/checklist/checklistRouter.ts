@@ -11,6 +11,7 @@ import {
   getAllChecklistLists,
   insertOneCategory,
   insertOneItem,
+  insertOneList,
   updateOneCategory,
   updateOneItem,
   updateOneList,
@@ -46,15 +47,24 @@ checklistRouter.get("/", async (_req: Request, res: Response, next: NextFunction
   }
 });
 
+checklistRouter.post(`/`, async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const id = await insertOneList(req.body);
+    res.json({ message: "List successfully added", id });
+  } catch (err) {
+    next(err);
+  }
+});
+
 checklistRouter.get("/:listId", async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { listId } = grabRequestParameters(req);
 
-    if (listId == undefined) {
+    if (listId === undefined) {
       throw new Error("No listId provided");
     }
     const rows: ChecklistItemsRow[] = await getAllChecklistItems(listId);
-    if (!rows?.length) {
+    if (!rows) {
       throw new AppError("Unable to get list rows", 404);
     }
 
@@ -63,10 +73,10 @@ checklistRouter.get("/:listId", async (req: Request, res: Response, next: NextFu
       title: rows[0].listTitle,
       categories: [],
     };
-
+    console.log("***ju***checklistRouter.ts/76", checklist);
     rows.reduce((acc, row) => {
       let category = acc.find((c) => c.id === row.categoryId);
-      if (!category) {
+      if (!category && row.categoryId) {
         category = {
           id: row.categoryId,
           listId: row.listId,
@@ -76,7 +86,7 @@ checklistRouter.get("/:listId", async (req: Request, res: Response, next: NextFu
         };
         acc.push(category);
       }
-      if (row.id) {
+      if (row.id && category) {
         // Can occur due to OUTER JOIN
         category.items.push({
           id: row.id,
@@ -89,7 +99,7 @@ checklistRouter.get("/:listId", async (req: Request, res: Response, next: NextFu
 
       return acc;
     }, checklist.categories);
-
+    console.log("***ju***checklistRouter.ts/76", checklist);
     res.json({
       checklist,
     });
