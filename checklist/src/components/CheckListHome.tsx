@@ -1,6 +1,6 @@
 import { Box, HStack, List, ListItem } from "@chakra-ui/react";
 import { ChecklistListInput } from "@common/checklistTypes";
-import { CHECKLIST_BASE_ROUTE } from "@src/AppRouter";
+import { buildLinkPath } from "@src/AppRouter";
 import { addList, getChecklists } from "@src/utils/api";
 import MyReactQuerySuspense from "@src/utils/MyReactQuerySuspense";
 import { useMutation, useQuery } from "@tanstack/react-query";
@@ -40,7 +40,7 @@ const CheckListHome = () => {
           {data?.checklists
             ? data.checklists.map((checkList) => (
                 <ListItem key={checkList.id} bgColor={"teal.600"} color="teal.50" my="10px" borderRadius="6px">
-                  <Link to={`/${CHECKLIST_BASE_ROUTE}/${checkList.id}`}>
+                  <Link to={`${buildLinkPath(String(checkList.id))}`}>
                     <Box py="6px" px="10px">
                       {checkList.title}
                     </Box>

@@ -7,7 +7,7 @@ import {
   ChecklistListInput,
 } from "@common/checklistTypes";
 import { matchSearch } from "@common/stringUtils";
-import { CHECKLIST_BASE_ROUTE } from "@src/AppRouter";
+import { buildLinkPath } from "@src/AppRouter";
 import { DisplayMode } from "@src/types";
 import { useChecklistStore, usePersistChecklistStore } from "@src/utils/ChecklistStore";
 import { useMutation, useQuery } from "@tanstack/react-query";
@@ -208,7 +208,7 @@ const ChecklistPanel: FC = () => {
         <Box position={"fixed"} w="100%" maxW="2xl" bgColor="gray.900" sx={{ zIndex: 100, top: 0 }}>
           <HStack alignItems="center">
             <Box pt="5px">
-              <Link to={`/${CHECKLIST_BASE_ROUTE}`}>
+              <Link to={buildLinkPath()}>
                 <IoIosArrowDropleftCircle fontSize="30px" />
               </Link>
             </Box>
