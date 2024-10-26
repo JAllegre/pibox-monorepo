@@ -2,11 +2,12 @@ import { Box, HStack, List } from "@chakra-ui/react";
 import {
   ChecklistCategory,
   ChecklistCategoryInput,
-  ChecklistInput,
   ChecklistItem,
   ChecklistItemInput,
+  ChecklistListInput,
 } from "@common/checklistTypes";
 import { matchSearch } from "@common/stringUtils";
+import { CHECKLIST_BASE_ROUTE } from "@src/AppRouter";
 import { DisplayMode } from "@src/types";
 import { useChecklistStore, usePersistChecklistStore } from "@src/utils/ChecklistStore";
 import { useMutation, useQuery } from "@tanstack/react-query";
@@ -14,7 +15,8 @@ import { sortBy } from "lodash";
 import { FC, memo, useCallback, useEffect, useMemo } from "react";
 import { FaEdit, FaEye } from "react-icons/fa";
 import { FaFolderPlus } from "react-icons/fa6";
-import { useParams } from "react-router-dom";
+import { IoIosArrowDropleftCircle } from "react-icons/io";
+import { Link, useParams } from "react-router-dom";
 import MyReactQuerySuspense from "../utils/MyReactQuerySuspense";
 import { addCategory, getChecklist, updateItem, updateList } from "../utils/api";
 import eventMgr, { CustomEventDetailsMoveItem, EventType } from "../utils/eventMgr";
@@ -37,7 +39,7 @@ const ChecklistPanel: FC = () => {
   });
 
   const updateListMutation = useMutation({
-    mutationFn: (checklistInput: Partial<ChecklistInput>) => {
+    mutationFn: (checklistInput: Partial<ChecklistListInput>) => {
       if (data?.checklist?.id) {
         return updateList(data.checklist.id, checklistInput);
       }
@@ -204,7 +206,12 @@ const ChecklistPanel: FC = () => {
     <Box className={`checklist-panel ${isEditMode ? "mode-edit" : "view-mode"}`} p={0} flexGrow={1} bgColor="gray.900">
       <MyReactQuerySuspense isPending={isPending} error={error}>
         <Box position={"fixed"} w="100%" maxW="2xl" bgColor="gray.900" sx={{ zIndex: 100, top: 0 }}>
-          <HStack>
+          <HStack alignItems="center">
+            <Box pt="5px">
+              <Link to={`/${CHECKLIST_BASE_ROUTE}`}>
+                <IoIosArrowDropleftCircle fontSize="30px" />
+              </Link>
+            </Box>
             <ValidatedInput
               remoteValue={data?.checklist?.title || ""}
               placeholder="Nom de la liste"

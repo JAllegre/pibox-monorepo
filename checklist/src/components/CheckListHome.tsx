@@ -1,5 +1,5 @@
 import { Box, HStack, List, ListItem } from "@chakra-ui/react";
-import { ChecklistInput } from "@common/checklistTypes";
+import { ChecklistListInput } from "@common/checklistTypes";
 import { CHECKLIST_BASE_ROUTE } from "@src/AppRouter";
 import { addList, getChecklists } from "@src/utils/api";
 import MyReactQuerySuspense from "@src/utils/MyReactQuerySuspense";
@@ -17,7 +17,7 @@ const CheckListHome = () => {
   });
 
   const addListMutation = useMutation({
-    mutationFn: (checklistListInput: ChecklistInput) => {
+    mutationFn: (checklistListInput: ChecklistListInput) => {
       return addList(checklistListInput);
     },
   });
@@ -28,23 +28,29 @@ const CheckListHome = () => {
   }, [addListMutation, refetch]);
 
   return (
-    <MyReactQuerySuspense isPending={isPending} error={error}>
-      <Box className="checklist-home" flex={1}>
+    <Box className="checklist-home" flex={1}>
+      <MyReactQuerySuspense isPending={isPending} error={error}>
         <HStack justifyContent="space-between">
-          <Box>Mes Listes</Box>
+          <Box fontSize={"2xl"} fontWeight={"bold"}>
+            Mes Listes
+          </Box>
           <MyIconButton ReactIcon={FaPlusCircle} onClick={handleAddClick} fontSize={26} />
         </HStack>
         <List>
           {data?.checklists
             ? data.checklists.map((checkList) => (
-                <ListItem key={checkList.id}>
-                  <Link to={`${CHECKLIST_BASE_ROUTE}/${checkList.id}`}>{checkList.title}</Link>
+                <ListItem key={checkList.id} bgColor={"teal.600"} color="teal.50" my="10px" borderRadius="6px">
+                  <Link to={`/${CHECKLIST_BASE_ROUTE}/${checkList.id}`}>
+                    <Box py="6px" px="10px">
+                      {checkList.title}
+                    </Box>
+                  </Link>
                 </ListItem>
               ))
             : "Pas de liste"}
         </List>
-      </Box>
-    </MyReactQuerySuspense>
+      </MyReactQuerySuspense>
+    </Box>
   );
 };
 

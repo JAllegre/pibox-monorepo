@@ -21,11 +21,11 @@ const ValidatedInput: FC<ValidatedInputProps> = ({ onValidated, remoteValue, ...
   };
 
   const handleInputDoubleClick = (event: MouseEvent<HTMLInputElement>) => {
+    setInputEdited(true);
     window.getSelection()?.empty();
     if (event?.currentTarget?.value?.length) {
       inputRef.current?.setSelectionRange(event.currentTarget.value.length, event.currentTarget.value.length);
     }
-    setInputEdited(true);
   };
 
   const handleTitleBlur = useCallback(async () => {

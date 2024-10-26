@@ -1,5 +1,5 @@
 import sqlite3 from "sqlite3";
-import { ChecklistCategoryInput, ChecklistInput, ChecklistItemInput } from "../../../../common/checklistTypes";
+import { ChecklistCategoryInput, ChecklistItemInput, ChecklistListInput } from "../../../../common/checklistTypes";
 import { buildAddQueryParams, buildUpdateQueryParams, checkId, connectDb, endDb } from "../../lib/db";
 import {
   DB_TABLE_CHECKLIST_CATEGORIES,
@@ -110,7 +110,7 @@ export async function getAllChecklistItems(listId: number): Promise<ChecklistIte
   });
 }
 
-export async function insertOneList(checklistInput: ChecklistInput): Promise<number> {
+export async function insertOneList(checklistInput: ChecklistListInput): Promise<number> {
   console.log("checklistDb.tsx/insertOneList | checklistInput=", !!checklistInput);
   const db = await connectDb();
   return new Promise((resolve, reject) => {
@@ -134,7 +134,7 @@ export async function insertOneList(checklistInput: ChecklistInput): Promise<num
   });
 }
 
-export async function updateOneList(listId: number, listInput: ChecklistInput): Promise<void> {
+export async function updateOneList(listId: number, listInput: ChecklistListInput): Promise<void> {
   console.log("checklistDb.tsx/updateOneChecklistList | listInput=", listInput);
 
   const db = await connectDb();

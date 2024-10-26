@@ -13,6 +13,11 @@ export interface ChecklistItem {
 
 export type ChecklistItemInput = Omit<ChecklistItem, "id">;
 
+export interface ChecklistPostItemResponse {
+  message: string;
+  id: number;
+}
+
 export interface ChecklistCategory {
   id: number;
   listId: number;
@@ -20,35 +25,32 @@ export interface ChecklistCategory {
   items: ChecklistItem[];
   sortOrder: number;
 }
+
 export type ChecklistCategoryInput = Omit<ChecklistCategory, "items" | "id">;
 
-export interface PostChecklistCategoryResponse {
+export interface ChecklistPostCategoryResponse {
   message: string;
   id: number;
 }
 
-export interface Checklist {
+export interface ChecklistList {
   id: number;
   title: string;
   categories: ChecklistCategory[];
 }
-export type ChecklistInput = Omit<Checklist, "id" | "categories">;
 
-export interface ChecklistShort {
+export type ChecklistListInput = Omit<ChecklistList, "id" | "categories">;
+
+export interface ChecklistListShort {
   id: number;
   title: string;
 }
-export interface GetChecklistsResponse {
-  checklists: ChecklistShort[];
+export interface ChecklistsGetListsResponse {
+  checklists: ChecklistListShort[];
 }
 
-export interface GetChecklistResponse {
-  checklist: Checklist;
-}
-
-export interface PostChecklistItemResponse {
-  message: string;
-  id: number;
+export interface ChecklistGetListResponse {
+  checklist: ChecklistList;
 }
 
 export interface PostChecklistListResponse {

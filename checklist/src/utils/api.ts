@@ -1,37 +1,37 @@
 import {
   ChecklistCategoryInput,
-  ChecklistInput,
+  ChecklistGetListResponse,
   ChecklistItemInput,
-  GetChecklistResponse,
-  GetChecklistsResponse,
-  PostChecklistCategoryResponse,
-  PostChecklistItemResponse,
+  ChecklistListInput,
+  ChecklistPostCategoryResponse,
+  ChecklistPostItemResponse,
+  ChecklistsGetListsResponse,
   PostChecklistListResponse,
 } from "../../../common/checklistTypes";
 import { del, fetchData, postData, putData } from "../../../common/clientApi";
 
 const baseApiUrl = `${import.meta.env.VITE_API_HOST || ""}/api/checklists`;
 
-export async function getChecklists(): Promise<GetChecklistsResponse> {
+export async function getChecklists(): Promise<ChecklistsGetListsResponse> {
   return fetchData(`${baseApiUrl}/`);
 }
 
-export async function getChecklist(listId: number): Promise<GetChecklistResponse> {
+export async function getChecklist(listId: number): Promise<ChecklistGetListResponse> {
   return fetchData(`${baseApiUrl}/${listId}`);
 }
 
-export async function addList(checklistItemInput: ChecklistInput): Promise<PostChecklistListResponse> {
+export async function addList(checklistItemInput: ChecklistListInput): Promise<PostChecklistListResponse> {
   return postData(`${baseApiUrl}`, checklistItemInput);
 }
 
-export async function updateList(listId: number, checklistInput: Partial<ChecklistInput>): Promise<void> {
+export async function updateList(listId: number, checklistInput: Partial<ChecklistListInput>): Promise<void> {
   return putData(`${baseApiUrl}/${listId}`, checklistInput);
 }
 
 export async function addCategory(
   listId: number,
   checklistCategoryInput: ChecklistCategoryInput
-): Promise<PostChecklistCategoryResponse> {
+): Promise<ChecklistPostCategoryResponse> {
   return postData(`${baseApiUrl}/${listId}/categories`, checklistCategoryInput);
 }
 
@@ -46,7 +46,7 @@ export async function updateCategory(
 export async function addItem(
   listId: number,
   checklistItemInput: ChecklistItemInput
-): Promise<PostChecklistItemResponse> {
+): Promise<ChecklistPostItemResponse> {
   return postData(`${baseApiUrl}/${listId}/items`, checklistItemInput);
 }
 

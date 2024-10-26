@@ -1,6 +1,6 @@
 import express, { NextFunction, Request, Response, Router } from "express";
 import { CHECKLIST_WS_EVENT_REFRESHED, CHECKLIST_WS_NAMESPACE } from "../../../../common/checklistConstants";
-import { Checklist } from "../../../../common/checklistTypes";
+import { ChecklistList } from "../../../../common/checklistTypes";
 import AppError from "../../lib/AppError";
 import { emitToWebSocketClient } from "../../lib/socketManager";
 import {
@@ -68,12 +68,11 @@ checklistRouter.get("/:listId", async (req: Request, res: Response, next: NextFu
       throw new AppError("Unable to get list rows", 404);
     }
 
-    const checklist: Checklist = {
+    const checklist: ChecklistList = {
       id: rows[0].listId,
       title: rows[0].listTitle,
       categories: [],
     };
-    console.log("***ju***checklistRouter.ts/76", checklist);
     rows.reduce((acc, row) => {
       let category = acc.find((c) => c.id === row.categoryId);
       if (!category && row.categoryId) {
@@ -99,7 +98,6 @@ checklistRouter.get("/:listId", async (req: Request, res: Response, next: NextFu
 
       return acc;
     }, checklist.categories);
-    console.log("***ju***checklistRouter.ts/76", checklist);
     res.json({
       checklist,
     });
