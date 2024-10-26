@@ -42,9 +42,9 @@ function SearchInput() {
       />
       <InputRightElement {...(!searchTerm && { pointerEvents: "none" })}>
         {searchTerm ? (
-          <MyIconButton ReactIcon={ImCross} onClick={handleSearchFilterClear} />
+          <MyIconButton ReactIcon={ImCross} onClick={handleSearchFilterClear} style={{ padding: "15px" }} />
         ) : (
-          <MyIconButton ReactIcon={FaMagnifyingGlass} onClick={() => {}} />
+          <MyIconButton ReactIcon={FaMagnifyingGlass} onClick={undefined} />
         )}
       </InputRightElement>
     </InputGroup>
