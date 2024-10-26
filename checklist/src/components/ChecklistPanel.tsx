@@ -14,10 +14,12 @@ import { sortBy } from "lodash";
 import { FC, memo, useCallback, useEffect, useMemo } from "react";
 import { FaEdit, FaEye } from "react-icons/fa";
 import { FaFolderPlus } from "react-icons/fa6";
+import { useParams } from "react-router-dom";
 import MyReactQuerySuspense from "../utils/MyReactQuerySuspense";
 import { addCategory, getChecklist, updateItem, updateList } from "../utils/api";
 import eventMgr, { CustomEventDetailsMoveItem, EventType } from "../utils/eventMgr";
 import CheckCategoryPanel from "./CheckCategoryPanel";
+import DeleteModal from "./DeleteModal";
 import MyIconButton from "./MyIconButton";
 import SearchInput from "./SearchInput";
 import ValidatedInput from "./ValidatedInput";
@@ -26,11 +28,12 @@ const ChecklistPanel: FC = () => {
   const displayMode = usePersistChecklistStore((state) => state.displayMode);
   const setDisplayMode = usePersistChecklistStore((state) => state.setDisplayMode);
   const searchFilter = useChecklistStore((state) => state.searchFilter);
-  const currentListId = useChecklistStore((state) => state.currentListId);
+  const { lId } = useParams();
+  const listId = Number(lId);
 
   const { isPending, error, data, refetch } = useQuery({
     queryKey: ["getChecklist"],
-    queryFn: () => getChecklist(currentListId),
+    queryFn: () => getChecklist(listId),
   });
 
   const updateListMutation = useMutation({
@@ -138,7 +141,7 @@ const ChecklistPanel: FC = () => {
         return;
       }
       if (itemIndex === -1) {
-        console.error("CheckCategoryPanel.tsx", "handleMoveItem", "item not found");
+        console.error("CheckListPanel.tsx", "handleMoveItem", "item not found");
         return;
       }
 
@@ -230,10 +233,11 @@ const ChecklistPanel: FC = () => {
         </Box>
         <List py="80px">
           {sortedAndFilteredCategories.map((category) => {
-            return <CheckCategoryPanel key={category.id} checklistCategory={category} />;
+            return <CheckCategoryPanel key={category.id} checklistCategory={category} listId={listId} />;
           })}
         </List>
       </MyReactQuerySuspense>
+      <DeleteModal listId={listId} />
     </Box>
   );
 };

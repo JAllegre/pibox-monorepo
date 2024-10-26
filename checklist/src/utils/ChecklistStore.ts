@@ -4,7 +4,6 @@ import { create } from "zustand";
 import { devtools, persist } from "zustand/middleware";
 
 interface ChecklistState {
-  currentListId: number;
   searchFilter: string;
   setSearchFilter: (newSearchFilter: string) => void;
   itemIdToDelete: number;
@@ -14,7 +13,6 @@ interface ChecklistState {
 export const useChecklistStore = create<ChecklistState>()(
   devtools(
     (set) => ({
-      currentListId: 1,
       searchFilter: "",
       setSearchFilter: (newSearchFilter) => set(() => ({ searchFilter: newSearchFilter })),
       itemIdToDelete: 0,

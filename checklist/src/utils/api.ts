@@ -3,12 +3,17 @@ import {
   ChecklistInput,
   ChecklistItemInput,
   GetChecklistResponse,
+  GetChecklistsResponse,
   PostChecklistCategoryResponse,
   PostChecklistItemResponse,
 } from "../../../common/checklistTypes";
 import { del, fetchData, postData, putData } from "../../../common/clientApi";
 
 const baseApiUrl = `${import.meta.env.VITE_API_HOST || ""}/api/checklists`;
+
+export async function getChecklists(): Promise<GetChecklistsResponse> {
+  return fetchData(`${baseApiUrl}/`);
+}
 
 export async function getChecklist(listId: number): Promise<GetChecklistResponse> {
   return fetchData(`${baseApiUrl}/${listId}`);

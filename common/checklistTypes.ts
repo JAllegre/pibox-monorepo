@@ -34,6 +34,14 @@ export interface Checklist {
 }
 export type ChecklistInput = Omit<Checklist, "id" | "categories">;
 
+export interface ChecklistShort {
+  id: number;
+  title: string;
+}
+export interface GetChecklistsResponse {
+  checklists: ChecklistShort[];
+}
+
 export interface GetChecklistResponse {
   checklist: Checklist;
 }

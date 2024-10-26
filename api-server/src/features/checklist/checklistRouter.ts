@@ -1,11 +1,14 @@
 import express, { NextFunction, Request, Response, Router } from "express";
 import { CHECKLIST_WS_EVENT_REFRESHED, CHECKLIST_WS_NAMESPACE } from "../../../../common/checklistConstants";
 import { Checklist } from "../../../../common/checklistTypes";
+import AppError from "../../lib/AppError";
 import { emitToWebSocketClient } from "../../lib/socketManager";
 import {
-  ChecklistListRow,
+  ChecklistItemsRow,
+  ChecklistListsRow,
   deleteOneItem,
   getAllChecklistItems,
+  getAllChecklistLists,
   insertOneCategory,
   insertOneItem,
   updateOneCategory,
@@ -32,6 +35,17 @@ checklistRouter.use((req, resp, next) => {
   next();
 });
 
+checklistRouter.get("/", async (_req: Request, res: Response, next: NextFunction) => {
+  try {
+    const rows: ChecklistListsRow[] = await getAllChecklistLists();
+    res.json({
+      checklists: rows || [],
+    });
+  } catch (err) {
+    next(err);
+  }
+});
+
 checklistRouter.get("/:listId", async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { listId } = grabRequestParameters(req);
@@ -39,11 +53,14 @@ checklistRouter.get("/:listId", async (req: Request, res: Response, next: NextFu
     if (listId == undefined) {
       throw new Error("No listId provided");
     }
-    const rows: ChecklistListRow[] = await getAllChecklistItems(listId);
+    const rows: ChecklistItemsRow[] = await getAllChecklistItems(listId);
+    if (!rows?.length) {
+      throw new AppError("Unable to get list rows", 404);
+    }
 
     const checklist: Checklist = {
-      id: rows?.[0]?.listId || 0,
-      title: rows?.[0]?.listTitle || "Test Checklist",
+      id: rows[0].listId,
+      title: rows[0].listTitle,
       categories: [],
     };
 

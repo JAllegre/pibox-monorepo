@@ -12,17 +12,17 @@ import ValidatedInput from "./ValidatedInput";
 
 type CheckItemLineProps = Pick<ChecklistItem, "id" | "checked" | "title" | "sortOrder"> & {
   isNewItem?: boolean;
+  listId: number;
 };
 
-function CheckItemLine({ id, checked, title, sortOrder, isNewItem }: CheckItemLineProps) {
+function CheckItemLine({ id, checked, title, sortOrder, isNewItem, listId }: CheckItemLineProps) {
   const [isItemChecked, setIsItemChecked] = useState(!!checked);
   const cardRef = useRef<HTMLDivElement>(null);
   const setItemIdToDelete = useChecklistStore((state) => state.setItemIdToDelete);
-  const currentListId = useChecklistStore((state) => state.currentListId);
 
   const updateItemMutation = useMutation({
     mutationFn: (checklistCategoryInput: Partial<ChecklistItemInput>) => {
-      return updateItem(currentListId, id, checklistCategoryInput);
+      return updateItem(listId, id, checklistCategoryInput);
     },
   });
 

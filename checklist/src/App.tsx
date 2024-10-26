@@ -1,7 +1,7 @@
 import { ChakraProvider } from "@chakra-ui/react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useEffect, useRef } from "react";
-import AppLayout from "./components/AppLayout";
+import AppRouter from "./AppRouter";
 import theme from "./theme";
 import socketManager from "./utils/socketManager";
 
@@ -19,7 +19,7 @@ function App() {
   return (
     <ChakraProvider theme={theme}>
       <QueryClientProvider client={queryClient}>
-        <AppLayout />
+        <AppRouter />
       </QueryClientProvider>
     </ChakraProvider>
   );

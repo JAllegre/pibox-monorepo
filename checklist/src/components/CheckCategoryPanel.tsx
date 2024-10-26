@@ -10,19 +10,20 @@ import "./CheckCategoryPanel.scss";
 import CheckItemLine from "./CheckItemLine";
 import MyIconButton from "./MyIconButton";
 import ValidatedInput from "./ValidatedInput";
+
 interface CheckCategoryPanelProps {
   checklistCategory: ChecklistCategory;
+  listId: number;
 }
 
-function CheckCategoryPanel({ checklistCategory }: CheckCategoryPanelProps) {
+function CheckCategoryPanel({ checklistCategory, listId }: CheckCategoryPanelProps) {
   const displayMode = usePersistChecklistStore((state) => state.displayMode);
   const [lastAddedItemId, setLastAddedItemId] = useState<number>(0);
-  const currentListId = useChecklistStore((state) => state.currentListId);
   const searchFilter = useChecklistStore((state) => state.searchFilter);
 
   const updateCategoryMutation = useMutation({
     mutationFn: (checklistCategoryInput: Partial<ChecklistCategoryInput>) => {
-      return updateCategory(currentListId, checklistCategory.id, checklistCategoryInput);
+      return updateCategory(listId, checklistCategory.id, checklistCategoryInput);
     },
   });
 
@@ -43,14 +44,14 @@ function CheckCategoryPanel({ checklistCategory }: CheckCategoryPanelProps) {
     }, 0);
 
     const sortOrder = maxSortOrder ? maxSortOrder + 10 : checklistCategory.items.length * 10000;
-    const { id } = await addItem(currentListId, {
+    const { id } = await addItem(listId, {
       checked: ChecklistItemStatus.Checked,
       categoryId: checklistCategory.id,
       title: "",
       sortOrder,
     });
     setLastAddedItemId(id);
-  }, [checklistCategory.id, checklistCategory.items, currentListId]);
+  }, [checklistCategory.id, checklistCategory.items, listId]);
 
   useEffect(() => {
     let tt: number = 0;
@@ -75,6 +76,7 @@ function CheckCategoryPanel({ checklistCategory }: CheckCategoryPanelProps) {
           checked={checkItem.checked}
           sortOrder={checkItem.sortOrder}
           isNewItem={checkItem.id === lastAddedItemId}
+          listId={listId}
         />
       );
     });

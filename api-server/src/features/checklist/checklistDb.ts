@@ -7,7 +7,12 @@ import {
   DB_TABLE_CHECKLIST_LISTS,
 } from "./checklistConstants";
 
-export interface ChecklistListRow {
+export interface ChecklistListsRow {
+  id: number;
+  title: string;
+}
+
+export interface ChecklistItemsRow {
   id: number;
   title: string;
   checked: number;
@@ -19,12 +24,40 @@ export interface ChecklistListRow {
   listTitle: string;
 }
 
-export async function getAllChecklistItems(listId: number): Promise<ChecklistListRow[]> {
+export async function getAllChecklistLists(): Promise<ChecklistListsRow[]> {
   const db = await connectDb();
 
   return new Promise((resolve, reject) => {
     try {
-      db.all<ChecklistListRow>(
+      db.all<ChecklistListsRow>(
+        `SELECT
+          lists.title as title,
+          lists.id as id
+          FROM  ${DB_TABLE_CHECKLIST_LISTS} lists
+          ORDER BY lists.title
+        ;`,
+
+        (err, rows) => {
+          if (err) {
+            return reject(err);
+          }
+          resolve(rows);
+        },
+      );
+    } catch (error) {
+      reject(error);
+    } finally {
+      endDb(db);
+    }
+  });
+}
+
+export async function getAllChecklistItems(listId: number): Promise<ChecklistItemsRow[]> {
+  const db = await connectDb();
+
+  return new Promise((resolve, reject) => {
+    try {
+      db.all<ChecklistItemsRow>(
         `SELECT
           items.id as id,
           items.title as title,
@@ -40,9 +73,9 @@ export async function getAllChecklistItems(listId: number): Promise<ChecklistLis
           ON categories.id=items.categoryId
           LEFT OUTER JOIN ${DB_TABLE_CHECKLIST_LISTS} lists
           ON categories.listId=lists.id
+          WHERE lists.id=${listId}
           ORDER BY categories.sortOrder
         ;`,
-        //WHERE lists.id=${listId}
 
         (err, rows) => {
           if (err) {

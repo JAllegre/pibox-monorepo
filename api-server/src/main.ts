@@ -1,11 +1,13 @@
 import bodyParser from "body-parser";
 import cors from "cors";
 import express, { NextFunction, Request, Response } from "express";
+import http from "http";
 import morgan from "morgan";
 import { CHECKLIST_WS_NAMESPACE } from "../../common/checklistConstants";
 import { API_PATH } from "../../common/constants";
 import checklistRouter from "./features/checklist/checklistRouter";
 import miamRouter from "./features/miam/miamRouter";
+import AppError from "./lib/AppError";
 import { initWebSocketServer } from "./lib/socketManager";
 
 const PORT = process.env.PORT || 3000;
@@ -32,9 +34,10 @@ app.use((_req: Request, res: Response) => {
   res.status(404).json({ message: "404 Not found" });
 });
 
-app.use(function (err: Error, req: Request, res: Response, next: NextFunction) {
-  console.error("Got an unexpected error", err);
-  res.status(500).json({ message: "500 Internal Server Error" });
+app.use(function (err: Error | AppError, req: Request, res: Response, next: NextFunction) {
+  console.error(err);
+  const httpCode = err instanceof AppError ? err.httpCode || 500 : 500;
+  res.status(httpCode).json({ message: http.STATUS_CODES[httpCode] });
 });
 
 // START SERVER

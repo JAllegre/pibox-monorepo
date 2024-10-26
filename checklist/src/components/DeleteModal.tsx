@@ -12,15 +12,17 @@ import { useChecklistStore } from "@src/utils/ChecklistStore";
 import { removeItem } from "@src/utils/api";
 import { useMutation } from "@tanstack/react-query";
 import { memo, useCallback } from "react";
+interface DeleteModalProps {
+  listId: number;
+}
 
-function DeleteModal() {
+function DeleteModal({ listId }: DeleteModalProps) {
   const itemIdToDelete = useChecklistStore((state) => state.itemIdToDelete);
   const setItemIdToDelete = useChecklistStore((state) => state.setItemIdToDelete);
-  const currentListId = useChecklistStore((state) => state.currentListId);
 
   const removeItemMutation = useMutation({
     mutationFn: (itemId: number) => {
-      return removeItem(currentListId, itemId);
+      return removeItem(listId, itemId);
     },
   });
   const handleDeleteClick = useCallback(async () => {
