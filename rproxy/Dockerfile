@@ -1,12 +1,14 @@
 FROM nginx:latest
 
-RUN apt-get update -y && apt-get install -y nano cron python3-certbot-nginx
+RUN apt-get update -y && apt-get install -y nano cron python3-certbot-nginx procps
 
 COPY rproxy-cron /etc/cron.d/rproxy-cron
 
-RUN crontab /etc/cron.d/rproxy-cron
+COPY entrypoint-wrapper.sh /entrypoint-wrapper.sh
 
-RUN update-rc.d cron defaults
+RUN chmod +x /entrypoint-wrapper.sh
+
+RUN crontab /etc/cron.d/rproxy-cron
 
 COPY common/locations.conf /etc/nginx/common/locations.conf
 
@@ -20,8 +22,9 @@ COPY conf/default.conf /etc/nginx/conf.d/default.conf
 COPY conf/pibox.hd.free.fr.conf /etc/nginx/conf.d/pibox.hd.free.fr.conf
 
 
-
-
+# Overwrite the nginx ENTRYPOINT/CMD directive to allow run also cron
+ENTRYPOINT ["/entrypoint-wrapper.sh"]
+CMD ["nginx", "-g", "daemon off;"]
 
 
 

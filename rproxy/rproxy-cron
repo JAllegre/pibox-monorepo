@@ -1,1 +1,2 @@
 0 0,12 * * * certbot renew -q 
+* * * * * echo "coucou2" >> /root/pipo.txt
