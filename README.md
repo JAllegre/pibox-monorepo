@@ -22,11 +22,3 @@ This will replace config in .conf file
 
 - Copy new conf file into git (rproxy/conf/pibox.hd.free.fr.conf). It should be the same
 
-## LETSENCRYPT CERTS RENEWAL
-On a fresh install we need to add a cron task on the host machine to renew certificates that are shared with the rproxy container
-
-- Install certbot on the host machine(pi) witj nginx plugin
-```sh sudo apt-get install certbot python3-certbot-nginx```
-
-- Add a task in the crontab (/etc/crontab) to renew certs (/etc/letsencrypt is shared between host and container to be persistent)
-```0 0,12 * * * root sleep 1111 && certbot renew -q```
