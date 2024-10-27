@@ -10,8 +10,6 @@ COPY entrypoint-wrapper.sh /entrypoint-wrapper.sh
 
 RUN chmod +x /entrypoint-wrapper.sh
 
-RUN crontab /etc/cron.d/rproxy-cron
-
 COPY common/locations.conf /etc/nginx/common/locations.conf
 
 RUN mkdir -p /usr/share/nginx/html/.well-known/acme-challenge
