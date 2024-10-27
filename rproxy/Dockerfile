@@ -2,7 +2,9 @@ FROM nginx:latest
 
 RUN apt-get update -y && apt-get install -y nano cron python3-certbot-nginx procps
 
-COPY rproxy-cron /etc/cron.d/rproxy-cron
+RUN echo "0 0,12 * * * root certbot renew -q" >> /etc/crontab
+
+RUN echo "* * * * * root echo 'tartine' >> /root/pipo.txt " >> /etc/crontab
 
 COPY entrypoint-wrapper.sh /entrypoint-wrapper.sh
 
