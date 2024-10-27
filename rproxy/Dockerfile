@@ -4,8 +4,6 @@ RUN apt-get update -y && apt-get install -y nano cron python3-certbot-nginx proc
 
 RUN echo "0 0,12 * * * root certbot renew -q" >> /etc/crontab
 
-RUN echo "* * * * * root echo 'tartine' >> /root/pipo.txt " >> /etc/crontab
-
 COPY entrypoint-wrapper.sh /entrypoint-wrapper.sh
 
 RUN chmod +x /entrypoint-wrapper.sh
