@@ -6,6 +6,7 @@ import { emitToWebSocketClient } from "../../lib/socketManager";
 import {
   ChecklistItemsRow,
   ChecklistListsRow,
+  deleteOneCategory,
   deleteOneItem,
   getAllChecklistItems,
   getAllChecklistLists,
@@ -190,12 +191,13 @@ checklistRouter.put(`/:listId/categories/:categoryId`, async (req: Request, res:
     const { categoryId, listId } = grabRequestParameters(req);
 
     if (listId == undefined) {
-      throw new Error("No listId provided");
+      throw new AppError("No listId provided", 400);
     }
 
     if (categoryId == undefined) {
-      throw new Error("No categoryId provided");
+      throw new AppError("No categoryId provided", 400);
     }
+
     await updateOneCategory(categoryId, req.body);
     res.json({ message: "Category successfully updated" });
   } catch (err) {
@@ -203,4 +205,22 @@ checklistRouter.put(`/:listId/categories/:categoryId`, async (req: Request, res:
   }
 });
 
+checklistRouter.delete(`/:listId/categories/:categoryId`, async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const { listId, categoryId } = grabRequestParameters(req);
+
+    if (listId == undefined) {
+      throw new AppError("No listId provided", 400);
+    }
+
+    if (categoryId == undefined) {
+      throw new AppError("No categoryId provided", 400);
+    }
+
+    const id = await deleteOneCategory(categoryId);
+    res.json({ message: "Category successfully deleted", id });
+  } catch (err) {
+    next(err);
+  }
+});
 export default checklistRouter;

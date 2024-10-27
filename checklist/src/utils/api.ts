@@ -43,6 +43,10 @@ export async function updateCategory(
   return putData(`${baseApiUrl}/${listId}/categories/${categoryId}`, checklistCategoryInput);
 }
 
+export async function removeCategory(listId: number, categoryId: number): Promise<void> {
+  return del(`${baseApiUrl}/${listId}/categories/${categoryId}`);
+}
+
 export async function addItem(
   listId: number,
   checklistItemInput: ChecklistItemInput

@@ -3,11 +3,13 @@ import { DisplayMode } from "@src/types";
 import { useChecklistStore, usePersistChecklistStore } from "@src/utils/ChecklistStore";
 import { useMutation } from "@tanstack/react-query";
 import { memo, useCallback, useEffect, useMemo, useState } from "react";
+import { FaRegTrashAlt } from "react-icons/fa";
 import { RiMenuAddLine } from "react-icons/ri";
 import { ChecklistCategory, ChecklistCategoryInput, ChecklistItemStatus } from "../../../common/checklistTypes";
 import { addItem, updateCategory } from "../utils/api";
 import "./CheckCategoryPanel.scss";
 import CheckItemLine from "./CheckItemLine";
+import DeleteCategoryModal from "./DeleteCategoryModal";
 import MyIconButton from "./MyIconButton";
 import ValidatedInput from "./ValidatedInput";
 
@@ -20,6 +22,7 @@ function CheckCategoryPanel({ checklistCategory, listId }: CheckCategoryPanelPro
   const displayMode = usePersistChecklistStore((state) => state.displayMode);
   const [lastAddedItemId, setLastAddedItemId] = useState<number>(0);
   const searchFilter = useChecklistStore((state) => state.searchFilter);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
 
   const updateCategoryMutation = useMutation({
     mutationFn: (checklistCategoryInput: Partial<ChecklistCategoryInput>) => {
@@ -53,6 +56,14 @@ function CheckCategoryPanel({ checklistCategory, listId }: CheckCategoryPanelPro
     setLastAddedItemId(id);
   }, [checklistCategory.id, checklistCategory.items, listId]);
 
+  const handleDeleteClick = useCallback(() => {
+    setShowDeleteModal(true);
+  }, []);
+
+  const onCloseDeleteModal = useCallback(() => {
+    setShowDeleteModal(false);
+  }, []);
+
   useEffect(() => {
     let tt: number = 0;
     if (lastAddedItemId) {
@@ -80,7 +91,7 @@ function CheckCategoryPanel({ checklistCategory, listId }: CheckCategoryPanelPro
         />
       );
     });
-  }, [checklistCategory.items, lastAddedItemId]);
+  }, [checklistCategory.items, lastAddedItemId, listId]);
 
   const hasNoCheckedItems = useMemo(() => {
     return !checklistCategory.items.some((i) => i.checked);
@@ -90,21 +101,29 @@ function CheckCategoryPanel({ checklistCategory, listId }: CheckCategoryPanelPro
     displayMode === DisplayMode.View ? hasNoCheckedItems : !checklistCategory?.items?.length && searchFilter;
 
   return (
-    <Card className={`checklist-category-panel ${isHidden ? "hidden" : ""}`} pb={1} bgColor="gray.700" my={2}>
-      <Stack direction="row" borderRadius={5} py={0} px={2} alignItems="center">
-        <ValidatedInput
-          remoteValue={checklistCategory.title || ""}
-          placeholder="Nom catégorie"
-          onValidated={handleTitleInputValidated}
-          color="teal.200"
-          fontSize={"sm"}
-          py={0}
-        />
-        {/* <Box>{checklistCategory.sortOrder}</Box> */}
-        <MyIconButton ReactIcon={RiMenuAddLine} color="teal.300" onClick={handleAddClick} fontSize={26} />
-      </Stack>
-      <Box sx={{ px: 1 }}>{itemLines}</Box>
-    </Card>
+    <>
+      <Card className={`checklist-category-panel ${isHidden ? "hidden" : ""}`} pb={1} bgColor="gray.700" my={2}>
+        <Stack direction="row" borderRadius={5} py={0} px={2} alignItems="center">
+          <ValidatedInput
+            remoteValue={checklistCategory.title || ""}
+            placeholder="Nom catégorie"
+            onValidated={handleTitleInputValidated}
+            color="teal.200"
+            fontSize={"sm"}
+            py={0}
+          />
+          {/* <Box>{checklistCategory.sortOrder}</Box> */}
+          <MyIconButton ReactIcon={RiMenuAddLine} color="teal.300" onClick={handleAddClick} fontSize={26} />
+          <MyIconButton ReactIcon={FaRegTrashAlt} color="red.400" onClick={handleDeleteClick} fontSize={20} />
+        </Stack>
+        <Box sx={{ px: 1 }}>{itemLines}</Box>
+      </Card>
+      <DeleteCategoryModal
+        listId={listId}
+        categoryId={showDeleteModal ? checklistCategory.id : 0}
+        onClose={onCloseDeleteModal}
+      />
+    </>
   );
 }
 
