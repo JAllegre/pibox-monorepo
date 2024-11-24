@@ -16,13 +16,15 @@ import ValidatedInput from "./ValidatedInput";
 interface CheckCategoryPanelProps {
   checklistCategory: ChecklistCategory;
   listId: number;
+  idx: number;
 }
 
-function CheckCategoryPanel({ checklistCategory, listId }: CheckCategoryPanelProps) {
+function CheckCategoryPanel({ checklistCategory, listId, idx }: CheckCategoryPanelProps) {
   const displayMode = usePersistChecklistStore((state) => state.displayMode);
   const [lastAddedItemId, setLastAddedItemId] = useState<number>(0);
   const searchFilter = useChecklistStore((state) => state.searchFilter);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [deferredItems, setDeferredItems] = useState<JSX.Element[]>([]);
 
   const updateCategoryMutation = useMutation({
     mutationFn: (checklistCategoryInput: Partial<ChecklistCategoryInput>) => {
@@ -77,8 +79,8 @@ function CheckCategoryPanel({ checklistCategory, listId }: CheckCategoryPanelPro
     };
   }, [lastAddedItemId]);
 
-  const itemLines = useMemo(() => {
-    return checklistCategory.items?.map((checkItem) => {
+  useEffect(() => {
+    const temp = checklistCategory.items?.map((checkItem) => {
       return (
         <CheckItemLine
           key={checkItem.id}
@@ -91,7 +93,15 @@ function CheckCategoryPanel({ checklistCategory, listId }: CheckCategoryPanelPro
         />
       );
     });
-  }, [checklistCategory.items, lastAddedItemId, listId]);
+
+    const tt = setTimeout(() => {
+      setDeferredItems(temp);
+    }, idx * 50);
+
+    return () => {
+      clearTimeout(tt);
+    };
+  }, [checklistCategory.items, idx, lastAddedItemId, listId]);
 
   const hasNoCheckedItems = useMemo(() => {
     return !checklistCategory.items.some((i) => i.checked);
@@ -112,11 +122,10 @@ function CheckCategoryPanel({ checklistCategory, listId }: CheckCategoryPanelPro
             fontSize={"sm"}
             py={0}
           />
-          {/* <Box>{checklistCategory.sortOrder}</Box> */}
           <MyIconButton ReactIcon={RiMenuAddLine} color="teal.300" onClick={handleAddClick} fontSize={26} />
           <MyIconButton ReactIcon={FaRegTrashAlt} color="red.400" onClick={handleDeleteClick} fontSize={20} />
         </Stack>
-        <Box sx={{ px: 1 }}>{itemLines}</Box>
+        <Box sx={{ px: 1 }}>{deferredItems}</Box>
       </Card>
       <DeleteCategoryModal
         listId={listId}

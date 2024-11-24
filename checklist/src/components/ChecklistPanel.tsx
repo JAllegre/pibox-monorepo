@@ -239,8 +239,8 @@ const ChecklistPanel: FC = () => {
           </HStack>
         </Box>
         <List py="80px">
-          {sortedAndFilteredCategories.map((category) => {
-            return <CheckCategoryPanel key={category.id} checklistCategory={category} listId={listId} />;
+          {sortedAndFilteredCategories.map((category, idx) => {
+            return <CheckCategoryPanel key={category.id} idx={idx} checklistCategory={category} listId={listId} />;
           })}
         </List>
       </MyReactQuerySuspense>
