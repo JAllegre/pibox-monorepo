@@ -7,3 +7,42 @@
     }
   }
 }
+
+.checklist-line {
+  padding: 4px 2px;
+  .checklist-line-inner {
+    background-color: var(--chakra-colors-gray-600);
+    border-radius: 8px;
+    padding: 10px 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    .checklist-line-left {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      color: white;
+      input[type="checkbox"] {
+        width: 25px;
+        height: 25px;
+      }
+    }
+    .checklist-line-right {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      .icon-button {
+        color: var(--chakra-colors-blue-400);
+        font-size: 20px;
+        cursor: pointer;
+        &.icon-button-danger {
+          color: var(--chakra-colors-red-400);
+        }
+        &:hover {
+          opacity: 0.5;
+        }
+      }
+    }
+  }
+}

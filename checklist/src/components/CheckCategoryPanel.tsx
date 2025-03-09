@@ -19,13 +19,11 @@ interface CheckCategoryPanelProps {
   idx: number;
 }
 
-function CheckCategoryPanel({ checklistCategory, listId, idx }: CheckCategoryPanelProps) {
+function CheckCategoryPanel({ checklistCategory, listId }: CheckCategoryPanelProps) {
   const displayMode = usePersistChecklistStore((state) => state.displayMode);
   const [lastAddedItemId, setLastAddedItemId] = useState<number>(0);
   const searchFilter = useChecklistStore((state) => state.searchFilter);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const [deferredItems, setDeferredItems] = useState<JSX.Element[]>([]);
-
   const updateCategoryMutation = useMutation({
     mutationFn: (checklistCategoryInput: Partial<ChecklistCategoryInput>) => {
       return updateCategory(listId, checklistCategory.id, checklistCategoryInput);
@@ -79,30 +77,6 @@ function CheckCategoryPanel({ checklistCategory, listId, idx }: CheckCategoryPan
     };
   }, [lastAddedItemId]);
 
-  useEffect(() => {
-    const temp = checklistCategory.items?.map((checkItem) => {
-      return (
-        <CheckItemLine
-          key={checkItem.id}
-          id={checkItem.id}
-          title={checkItem.title}
-          checked={checkItem.checked}
-          sortOrder={checkItem.sortOrder}
-          isNewItem={checkItem.id === lastAddedItemId}
-          listId={listId}
-        />
-      );
-    });
-
-    const tt = setTimeout(() => {
-      setDeferredItems(temp);
-    }, idx * 50);
-
-    return () => {
-      clearTimeout(tt);
-    };
-  }, [checklistCategory.items, idx, lastAddedItemId, listId]);
-
   const hasNoCheckedItems = useMemo(() => {
     return !checklistCategory.items.some((i) => i.checked);
   }, [checklistCategory?.items]);
@@ -125,7 +99,21 @@ function CheckCategoryPanel({ checklistCategory, listId, idx }: CheckCategoryPan
           <MyIconButton ReactIcon={RiMenuAddLine} color="teal.300" onClick={handleAddClick} fontSize={26} />
           <MyIconButton ReactIcon={FaRegTrashAlt} color="red.400" onClick={handleDeleteClick} fontSize={20} />
         </Stack>
-        <Box sx={{ px: 1 }}>{deferredItems}</Box>
+        <Box sx={{ px: 1 }}>
+          {checklistCategory.items?.map((item) => {
+            return (
+              <CheckItemLine
+                key={item.id}
+                id={item.id}
+                checked={item.checked}
+                title={item.title}
+                sortOrder={item.sortOrder}
+                isNewItem={item.id === lastAddedItemId}
+                listId={listId}
+              />
+            );
+          })}
+        </Box>
       </Card>
       <DeleteCategoryModal
         listId={listId}
