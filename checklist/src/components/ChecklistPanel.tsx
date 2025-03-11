@@ -21,6 +21,7 @@ import MyReactQuerySuspense from "../utils/MyReactQuerySuspense";
 import { addCategory, getChecklist, updateItem, updateList } from "../utils/api";
 import eventMgr, { CustomEventDetailsMoveItem, EventType } from "../utils/eventMgr";
 import CheckCategoryPanel from "./CheckCategoryPanel";
+import "./ChecklistPanel.scss";
 import DeleteModal from "./DeleteModal";
 import MyIconButton from "./MyIconButton";
 import SearchInput from "./SearchInput";
@@ -205,8 +206,15 @@ const ChecklistPanel: FC = () => {
   return (
     <Box className={`checklist-panel ${isEditMode ? "mode-edit" : "view-mode"}`} p={0} flexGrow={1} bgColor="gray.900">
       <MyReactQuerySuspense isPending={isPending} error={error}>
-        <Box position={"fixed"} w="100%" maxW="2xl" bgColor="gray.900" sx={{ zIndex: 100, top: 0 }}>
-          <HStack alignItems="center">
+        <Box
+          className="check-header"
+          position={"fixed"}
+          w="100%"
+          maxW="2xl"
+          bgColor="gray.900"
+          sx={{ zIndex: 100, top: 0 }}
+        >
+          <HStack alignItems="center" px={1}>
             <Box pt="5px">
               <Link to={buildLinkPath()}>
                 <IoIosArrowDropleftCircle fontSize="30px" />
@@ -216,12 +224,9 @@ const ChecklistPanel: FC = () => {
               remoteValue={data?.checklist?.title || ""}
               placeholder="Nom de la liste"
               onValidated={handleTitleInputValidated}
-              color="teal.200"
-              fontSize={"2xl"}
-              fontWeight={"bold"}
             />
           </HStack>
-          <HStack justifyContent="space-between" py={1} px={1} gap={4}>
+          <HStack justifyContent="space-between" py={1} px={2} gap={4}>
             <MyIconButton
               title={isEditMode ? "Mode Vue" : "Mode Edition"}
               ReactIcon={isEditMode ? FaEye : FaEdit}

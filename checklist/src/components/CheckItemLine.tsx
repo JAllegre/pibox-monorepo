@@ -6,6 +6,7 @@ import { useMutation } from "@tanstack/react-query";
 import { ChangeEvent, memo, useCallback, useEffect, useRef, useState } from "react";
 import { FaArrowAltCircleDown, FaArrowAltCircleUp, FaRegTrashAlt } from "react-icons/fa";
 import { ChecklistItem, ChecklistItemInput } from "../../../common/checklistTypes";
+import CheckBoxInput from "./CheckBoxInput";
 import "./CheckItemLine.scss";
 import ValidatedInput from "./ValidatedInput";
 
@@ -91,7 +92,7 @@ function CheckItemLine({ id, checked, title, sortOrder, isNewItem, listId }: Che
     <div ref={cardRef} className={`checklist-line ${isItemChecked ? "checked" : ""}`}>
       <div className="checklist-line-inner">
         <div className="checklist-line-left">
-          <input type="checkbox" checked={isItemChecked} onChange={handleCheckSwitch} />
+          <CheckBoxInput checked={isItemChecked} onChange={handleCheckSwitch} />
           <ValidatedInput placeholder="Entrez un titre" onValidated={handleTitleInputValidated} remoteValue={title} />
         </div>
 

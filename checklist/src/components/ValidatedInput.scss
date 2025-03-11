@@ -1,0 +1,24 @@
+.validated-input {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-grow: 1;
+  color: #e4e4e4;
+  > .input-text {
+    cursor: pointer;
+  }
+  > .input-text,
+  .input-input {
+    flex: 1 1 auto;
+    background-color: transparent;
+  }
+  .check-icon {
+    cursor: pointer;
+    color: var(--chakra-colors-green-200);
+  }
+
+  div:empty:before {
+    content: attr(data-placeholder);
+    color: gray;
+  }
+}

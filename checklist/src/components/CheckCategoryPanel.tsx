@@ -87,14 +87,11 @@ function CheckCategoryPanel({ checklistCategory, listId }: CheckCategoryPanelPro
   return (
     <>
       <Card className={`checklist-category-panel ${isHidden ? "hidden" : ""}`} pb={1} bgColor="gray.700" my={2}>
-        <Stack direction="row" borderRadius={5} py={0} px={2} alignItems="center">
+        <Stack className="category-header" direction="row" borderRadius={5} py={1} px={2} alignItems="center">
           <ValidatedInput
             remoteValue={checklistCategory.title || ""}
             placeholder="Nom catégorie"
             onValidated={handleTitleInputValidated}
-            color="teal.200"
-            fontSize={"sm"}
-            py={0}
           />
           <MyIconButton ReactIcon={RiMenuAddLine} color="teal.300" onClick={handleAddClick} fontSize={26} />
           <MyIconButton ReactIcon={FaRegTrashAlt} color="red.400" onClick={handleDeleteClick} fontSize={20} />

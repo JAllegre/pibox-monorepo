@@ -9,3 +9,12 @@
 .checklist-category-panel.hidden {
   display: none;
 }
+
+.checklist-category-panel {
+  .category-header {
+    .validated-input {
+      font-size: 16px;
+      color: var(--chakra-colors-teal-200);
+    }
+  }
+}

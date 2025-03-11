@@ -1,11 +1,13 @@
-import { Input, InputGroup, InputProps, InputRightElement } from "@chakra-ui/react";
-import { ChangeEvent, FC, KeyboardEvent, memo, MouseEvent, useCallback, useEffect, useRef, useState } from "react";
+import { ChangeEvent, ComponentProps, FC, KeyboardEvent, memo, useCallback, useEffect, useRef, useState } from "react";
 import { ImCheckmark } from "react-icons/im";
-import MyIconButton from "./MyIconButton";
+import "./ValidatedInput.scss";
 
-type ValidatedInputProps = InputProps & { onValidated: (value: string) => void; remoteValue: string };
+interface ValidatedInputProps extends ComponentProps<"input"> {
+  onValidated: (value: string) => void;
+  remoteValue: string;
+}
 
-const ValidatedInput: FC<ValidatedInputProps> = ({ onValidated, remoteValue, ...props }) => {
+const ValidatedInput: FC<ValidatedInputProps> = ({ onValidated, remoteValue, placeholder, ...props }) => {
   const [value, setValue] = useState(remoteValue || "");
   const [inputEdited, setInputEdited] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -20,12 +22,8 @@ const ValidatedInput: FC<ValidatedInputProps> = ({ onValidated, remoteValue, ...
     }
   };
 
-  const handleInputDoubleClick = (event: MouseEvent<HTMLInputElement>) => {
+  const handleInputDoubleClick = () => {
     setInputEdited(true);
-    window.getSelection()?.empty();
-    if (event?.currentTarget?.value?.length) {
-      inputRef.current?.setSelectionRange(event.currentTarget.value.length, event.currentTarget.value.length);
-    }
   };
 
   const handleTitleBlur = useCallback(async () => {
@@ -46,31 +44,27 @@ const ValidatedInput: FC<ValidatedInputProps> = ({ onValidated, remoteValue, ...
   }, [remoteValue]);
 
   return (
-    <InputGroup>
-      <Input
-        ref={inputRef}
-        size="sm"
-        p={1}
-        readOnly={!inputEdited}
-        sx={{ border: !inputEdited ? "none" : "" }}
-        flexGrow={1}
-        onDoubleClick={handleInputDoubleClick}
-        onBlur={handleTitleBlur}
-        onKeyUp={handleInputKeyUp}
-        onChange={handleInputChange}
-        value={value}
-        {...props}
-      />
-      <InputRightElement>
-        <MyIconButton
-          ReactIcon={ImCheckmark}
-          color="green.200"
-          onClick={handleValidationIconClick}
-          display={remoteValue !== value ? "" : "none"}
-          mb={2}
+    <div className={`validated-input`}>
+      {!inputEdited && (
+        <div className="input-text" data-placeholder={placeholder} onDoubleClick={handleInputDoubleClick}>
+          {value}
+        </div>
+      )}
+      {inputEdited && (
+        <input
+          className="input-input"
+          autoFocus
+          ref={inputRef}
+          onBlur={handleTitleBlur}
+          onKeyUp={handleInputKeyUp}
+          onChange={handleInputChange}
+          value={value}
+          placeholder={placeholder}
+          {...props}
         />
-      </InputRightElement>
-    </InputGroup>
+      )}
+      <div className="check-icon">{remoteValue !== value && <ImCheckmark onClick={handleValidationIconClick} />}</div>
+    </div>
   );
 };
 
