@@ -9,15 +9,17 @@
 }
 
 .checklist-line {
-  padding: 4px 2px;
+  padding: 2px 2px;
+
   .checklist-line-inner {
     background-color: var(--chakra-colors-gray-600);
-    border-radius: 8px;
-    padding: 10px 10px;
+
+    border-radius: 5px;
+    padding: 8px 5px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    gap: 10px;
+    gap: 5px;
 
     .checklist-line-left {
       display: flex;
@@ -27,11 +29,11 @@
     }
     .checklist-line-right {
       display: flex;
-      gap: 10px;
+      gap: 6px;
       align-items: center;
       .icon-button {
         color: var(--chakra-colors-blue-400);
-        font-size: 20px;
+        font-size: 25px;
         cursor: pointer;
         &.icon-button-danger {
           color: var(--chakra-colors-red-400);
@@ -41,5 +43,9 @@
         }
       }
     }
+  }
+
+  &.moved .checklist-line-inner {
+    background-color: var(--chakra-colors-gray-500);
   }
 }

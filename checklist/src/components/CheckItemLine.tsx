@@ -1,4 +1,3 @@
-import { Box, Card, CardBody, Stack } from "@chakra-ui/react";
 import { updateItem } from "@src/utils/api";
 import { useChecklistStore } from "@src/utils/ChecklistStore";
 import eventMgr, { EventType } from "@src/utils/eventMgr";
@@ -89,7 +88,10 @@ function CheckItemLine({ id, checked, title, sortOrder, isNewItem, listId }: Che
   }, [id]);
 
   return (
-    <div ref={cardRef} className={`checklist-line ${isItemChecked ? "checked" : ""}`}>
+    <div
+      ref={cardRef}
+      className={`checklist-line ${isItemChecked ? "checked" : ""} ${isNewItem || hasMoved ? "moved" : ""}`}
+    >
       <div className="checklist-line-inner">
         <div className="checklist-line-left">
           <CheckBoxInput checked={isItemChecked} onChange={handleCheckSwitch} />
@@ -109,53 +111,6 @@ function CheckItemLine({ id, checked, title, sortOrder, isNewItem, listId }: Che
         </div>
       </div>
     </div>
-  );
-
-  return (
-    <Card
-      ref={cardRef}
-      className={`checklist-line ${isItemChecked ? "checked" : ""}`}
-      my="1"
-      color="teal.50"
-      bgColor={isNewItem || hasMoved ? "teal.700" : "gray.600"}
-    >
-      <CardBody px={2} py={1}>
-        <Stack direction="row" alignItems="center" gap={1}>
-          <Box>
-            <input type="checkbox" checked={isItemChecked} onChange={handleCheckSwitch} />
-          </Box>
-          <Box>{title}</Box>
-          <Box>
-            <button onClick={handleUpClick}>up</button>
-            <button onClick={handleDownClick}>down</button>
-            <button onClick={handleDeleteClick}>delete</button>
-          </Box>
-        </Stack>
-      </CardBody>
-    </Card>
-    /*<Card
-      ref={cardRef}
-      className={`checklist-line ${isItemChecked ? "checked" : ""}`}
-      my="1"
-      color="teal.50"
-      bgColor={isNewItem || hasMoved ? "teal.700" : "gray.600"}
-    >
-      <CardBody px={2} py={1}>
-        <Stack direction="row" alignItems="center" gap={1}>
-          <Box>
-            <Switch isChecked={isItemChecked} onChange={handleCheckSwitch} size="md" />
-          </Box>
-          <ValidatedInput placeholder="Entrez un titre" onValidated={handleTitleInputValidated} remoteValue={title} />
-
-          <HStack>
-
-            <MyIconButton ReactIcon={FaArrowAltCircleUp} color="blue.400" onClick={handleUpClick} fontSize={20} />
-            <MyIconButton ReactIcon={FaArrowAltCircleDown} color="blue.400" onClick={handleDownClick} fontSize={20} />
-            <MyIconButton ReactIcon={FaRegTrashAlt} color="red.400" onClick={handleDeleteClick} fontSize={20} />
-          </HStack>
-        </Stack>
-      </CardBody>
-    </Card>*/
   );
 }
 

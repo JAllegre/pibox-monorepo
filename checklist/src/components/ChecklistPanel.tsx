@@ -212,12 +212,14 @@ const ChecklistPanel: FC = () => {
           w="100%"
           maxW="2xl"
           bgColor="gray.900"
+          pt={0}
+          pb={2}
           sx={{ zIndex: 100, top: 0 }}
         >
-          <HStack alignItems="center" px={1}>
+          <HStack alignItems="center" px={1} pb={1}>
             <Box pt="5px">
               <Link to={buildLinkPath()}>
-                <IoIosArrowDropleftCircle fontSize="30px" />
+                <IoIosArrowDropleftCircle fontSize="35px" />
               </Link>
             </Box>
             <ValidatedInput
@@ -226,12 +228,12 @@ const ChecklistPanel: FC = () => {
               onValidated={handleTitleInputValidated}
             />
           </HStack>
-          <HStack justifyContent="space-between" py={1} px={2} gap={4}>
+          <HStack justifyContent="space-between" px={2} gap={4}>
             <MyIconButton
               title={isEditMode ? "Mode Vue" : "Mode Edition"}
               ReactIcon={isEditMode ? FaEye : FaEdit}
               onClick={handleEditModeClick}
-              fontSize={30}
+              fontSize={40}
             />
 
             <SearchInput />
@@ -239,11 +241,11 @@ const ChecklistPanel: FC = () => {
               title={"Ajouter une catégorie"}
               ReactIcon={FaFolderPlus}
               onClick={handleAddACategoryClick}
-              fontSize={26}
+              fontSize={35}
             />
           </HStack>
         </Box>
-        <List py="80px">
+        <List py="85px">
           {sortedAndFilteredCategories.map((category, idx) => {
             return <CheckCategoryPanel key={category.id} idx={idx} checklistCategory={category} listId={listId} />;
           })}
