@@ -72,8 +72,8 @@ const CheckListHome = () => {
                   borderRadius="6px"
                 >
                   <HStack justifyContent="space-between">
-                    <Link to={`${buildLinkPath(String(checkList.id))}`}>
-                      <Box>{checkList.title}</Box>
+                    <Link className="list-link" to={`${buildLinkPath(String(checkList.id))}`}>
+                      {checkList.title}
                     </Link>
                     <Box className="icon-button icon-button-danger" onClick={handleDeleteClick(checkList.id)}>
                       <FaRegTrashAlt />
