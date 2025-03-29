@@ -1,5 +1,6 @@
 #!/bin/bash
 
+git pull
 sudo docker system prune -f
 
 if [ "$1" = "" ]; then
