@@ -1,51 +1,39 @@
-import {
-  Button,
-  Modal,
-  ModalBody,
-  ModalCloseButton,
-  ModalContent,
-  ModalFooter,
-  ModalHeader,
-  ModalOverlay,
-} from "@chakra-ui/react";
 import { removeCategory } from "@src/utils/api";
+import { useChecklistStore } from "@src/utils/ChecklistStore";
 import { useMutation } from "@tanstack/react-query";
 import { memo, useCallback } from "react";
+import SimpleModalDialog from "./SimpleModalDialog";
 interface DeleteCategoryModalProps {
   listId: number;
-  categoryId: number;
-  onClose: () => void;
 }
 
-function DeleteCategoryModal({ listId, categoryId, onClose }: DeleteCategoryModalProps) {
+function DeleteCategoryModal({ listId }: DeleteCategoryModalProps) {
+  const categoryIdToDelete = useChecklistStore((state) => state.categoryIdToDelete);
+  const setCategoryIdToDelete = useChecklistStore((state) => state.setCategoryIdToDelete);
+
   const { mutateAsync, error } = useMutation({
     mutationFn: ({ listId, categoryId }: { listId: number; categoryId: number }) => {
       return removeCategory(listId, categoryId);
     },
   });
 
-  const handleDeleteClick = useCallback(async () => {
-    await mutateAsync({ listId, categoryId });
-    onClose();
-  }, [categoryId, listId, mutateAsync, onClose]);
+  const handleConfirmModal = useCallback(async () => {
+    await mutateAsync({ listId, categoryId: categoryIdToDelete });
+    setCategoryIdToDelete(0);
+  }, [categoryIdToDelete, listId, mutateAsync, setCategoryIdToDelete]);
+
+  const handleCloseModal = useCallback(() => {
+    setCategoryIdToDelete(0);
+  }, [setCategoryIdToDelete]);
 
   return (
-    <>
-      <Modal isOpen={!!(listId && categoryId)} onClose={onClose}>
-        <ModalOverlay backdropFilter="blur(1px)" />
-        <ModalContent bgColor="gray.700">
-          <ModalHeader>Suppression d'une catégorie</ModalHeader>
-          <ModalCloseButton />
-          <ModalBody>{error?.message ? error.message : "Êtes vous sùr de vouloir supprimer cet catégorie ?"}</ModalBody>
-          <ModalFooter>
-            <Button colorScheme="red" mr={3} onClick={handleDeleteClick}>
-              Oui
-            </Button>
-            <Button onClick={onClose}>Annuler</Button>
-          </ModalFooter>
-        </ModalContent>
-      </Modal>
-    </>
+    <SimpleModalDialog
+      isOpen={!!(listId && categoryIdToDelete)}
+      title={"Suppression d'une catégorie"}
+      body={error?.message ? error.message : "Êtes vous sùr de vouloir supprimer cette catégorie ?"}
+      onConfirm={handleConfirmModal}
+      onClose={handleCloseModal}
+    />
   );
 }
 

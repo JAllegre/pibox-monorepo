@@ -23,7 +23,7 @@ function CheckCategoryPanel({ checklistCategory, listId }: CheckCategoryPanelPro
   const displayMode = usePersistChecklistStore((state) => state.displayMode);
   const [lastAddedItemId, setLastAddedItemId] = useState<number>(0);
   const searchFilter = useChecklistStore((state) => state.searchFilter);
-  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const setCategoryIdToDelete = useChecklistStore((state) => state.setCategoryIdToDelete);
   const updateCategoryMutation = useMutation({
     mutationFn: (checklistCategoryInput: Partial<ChecklistCategoryInput>) => {
       return updateCategory(listId, checklistCategory.id, checklistCategoryInput);
@@ -57,12 +57,8 @@ function CheckCategoryPanel({ checklistCategory, listId }: CheckCategoryPanelPro
   }, [checklistCategory.id, checklistCategory.items, listId]);
 
   const handleDeleteClick = useCallback(() => {
-    setShowDeleteModal(true);
-  }, []);
-
-  const onCloseDeleteModal = useCallback(() => {
-    setShowDeleteModal(false);
-  }, []);
+    setCategoryIdToDelete(checklistCategory.id);
+  }, [checklistCategory.id, setCategoryIdToDelete]);
 
   useEffect(() => {
     let tt: number = 0;
@@ -112,11 +108,7 @@ function CheckCategoryPanel({ checklistCategory, listId }: CheckCategoryPanelPro
           })}
         </Box>
       </Card>
-      <DeleteCategoryModal
-        listId={listId}
-        categoryId={showDeleteModal ? checklistCategory.id : 0}
-        onClose={onCloseDeleteModal}
-      />
+      <DeleteCategoryModal listId={listId} />
     </>
   );
 }

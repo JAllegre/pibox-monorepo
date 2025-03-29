@@ -28,6 +28,10 @@ export async function updateList(listId: number, checklistInput: Partial<Checkli
   return putData(`${baseApiUrl}/${listId}`, checklistInput);
 }
 
+export async function removeList(listId: number): Promise<void> {
+  return del(`${baseApiUrl}/${listId}`);
+}
+
 export async function addCategory(
   listId: number,
   checklistCategoryInput: ChecklistCategoryInput

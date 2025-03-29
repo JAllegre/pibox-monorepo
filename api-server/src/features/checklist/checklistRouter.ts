@@ -8,6 +8,7 @@ import {
   ChecklistListsRow,
   deleteOneCategory,
   deleteOneItem,
+  deleteOneList,
   getAllChecklistItems,
   getAllChecklistLists,
   insertOneCategory,
@@ -117,6 +118,21 @@ checklistRouter.put(`/:listId`, async (req: Request, res: Response, next: NextFu
 
     await updateOneList(listId, req.body);
     res.json({ message: "List successfully updated" });
+  } catch (err) {
+    next(err);
+  }
+});
+
+checklistRouter.delete(`/:listId`, async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const { listId } = grabRequestParameters(req);
+
+    if (listId == undefined) {
+      throw new AppError("No listId provided", 400);
+    }
+
+    const id = await deleteOneList(listId);
+    res.json({ message: "List successfully deleted", id });
   } catch (err) {
     next(err);
   }

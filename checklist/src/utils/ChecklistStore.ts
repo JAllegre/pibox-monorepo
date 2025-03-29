@@ -8,6 +8,10 @@ interface ChecklistState {
   setSearchFilter: (newSearchFilter: string) => void;
   itemIdToDelete: number;
   setItemIdToDelete: (newItemIdToDelete: number) => void;
+  categoryIdToDelete: number;
+  setCategoryIdToDelete: (newCategoryIdToDelete: number) => void;
+  listIdToDelete: number;
+  setListIdToDelete: (newListIdToDelete: number) => void;
 }
 
 export const useChecklistStore = create<ChecklistState>()(
@@ -17,6 +21,11 @@ export const useChecklistStore = create<ChecklistState>()(
       setSearchFilter: (newSearchFilter) => set(() => ({ searchFilter: newSearchFilter })),
       itemIdToDelete: 0,
       setItemIdToDelete: (newItemIdToDelete: number) => set(() => ({ itemIdToDelete: newItemIdToDelete })),
+      categoryIdToDelete: 0,
+      setCategoryIdToDelete: (newCategoryIdToDelete: number) =>
+        set(() => ({ categoryIdToDelete: newCategoryIdToDelete })),
+      listIdToDelete: 0,
+      setListIdToDelete: (newListIdToDelete: number) => set(() => ({ listIdToDelete: newListIdToDelete })),
     }),
     {
       name: "checklist-store",

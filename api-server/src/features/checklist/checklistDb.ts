@@ -155,6 +155,38 @@ export async function updateOneList(listId: number, listInput: ChecklistListInpu
     }
   });
 }
+export async function deleteOneList(listId: number): Promise<void> {
+  console.log("checklistDb.tsx/deleteOneCategory | listId=", listId);
+  checkId(listId);
+  const db = await connectDb();
+  return new Promise((resolve, reject) => {
+    let stmt: sqlite3.Statement | undefined;
+    try {
+      db.serialize(() => {
+        db.run(
+          `DELETE FROM ${DB_TABLE_CHECKLIST_ITEMS}  WHERE categoryId IN ( SELECT id FROM ${DB_TABLE_CHECKLIST_CATEGORIES} WHERE listId=?)`,
+          [listId],
+        )
+          .run(`DELETE FROM ${DB_TABLE_CHECKLIST_CATEGORIES}  WHERE listId=?`, [listId])
+          .run(
+            `DELETE FROM ${DB_TABLE_CHECKLIST_LISTS}  WHERE id=?`,
+            [listId],
+
+            (err: Error) => {
+              if (err) {
+                return reject(err);
+              }
+              resolve();
+            },
+          );
+      });
+    } catch (error) {
+      reject(error);
+    } finally {
+      endDb(db, stmt);
+    }
+  });
+}
 
 export async function insertOneCategory(checklistCategoryInput: ChecklistCategoryInput): Promise<number> {
   console.log("checklistDb.tsx/insertOneCategory | checklistCategoryInput=", checklistCategoryInput);
