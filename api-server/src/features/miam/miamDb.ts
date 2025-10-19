@@ -107,3 +107,22 @@ export async function updateOneRecipe(recipeId: number, recipeInput: RecipeInput
     }
   });
 }
+
+export async function deleteOneRecipe(recipeId: number): Promise<void> {
+  console.log("db.tsx/deleteOneRecipe | recipeId=", recipeId);
+  const db = await connectDb();
+  return new Promise((resolve, reject) => {
+    try {
+      db.run(`DELETE FROM ${DB_TABLE_RECIPES} WHERE id=?`, [recipeId], (err: Error) => {
+        if (err) {
+          return reject(err);
+        }
+        resolve();
+      });
+    } catch (error) {
+      reject(error);
+    } finally {
+      endDb(db);
+    }
+  });
+}
