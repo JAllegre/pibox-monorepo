@@ -20,7 +20,7 @@ COPY --from=builder /builder/api-server/node_modules ./node_modules
 
 COPY --from=builder /builder/api-server/build/ ./runtime
 
-COPY --from=builder /builder/api-server/tools ./tools
+COPY --from=builder /builder/api-server/tools ./runtime/api-server/tools
 
 CMD ["node", "runtime/api-server/src/main.js"]
 
