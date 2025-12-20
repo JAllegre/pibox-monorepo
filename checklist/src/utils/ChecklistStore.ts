@@ -3,11 +3,16 @@ import { DisplayMode } from "@src/types";
 import { create } from "zustand";
 import { devtools, persist } from "zustand/middleware";
 
+interface ItemToDelete {
+  id: number;
+  title: string;
+}
+
 interface ChecklistState {
   searchFilter: string;
-  setSearchFilter: (newSearchFilter: string) => void;
-  itemIdToDelete: number;
-  setItemIdToDelete: (newItemIdToDelete: number) => void;
+  setSearchFilter: (newSearchFilter?: string) => void;
+  itemIdToDelete?: ItemToDelete;
+  setItemIdToDelete: (newItemIdToDelete?: ItemToDelete) => void;
   categoryIdToDelete: number;
   setCategoryIdToDelete: (newCategoryIdToDelete: number) => void;
   listIdToDelete: number;
@@ -18,9 +23,9 @@ export const useChecklistStore = create<ChecklistState>()(
   devtools(
     (set) => ({
       searchFilter: "",
-      setSearchFilter: (newSearchFilter) => set(() => ({ searchFilter: newSearchFilter })),
-      itemIdToDelete: 0,
-      setItemIdToDelete: (newItemIdToDelete: number) => set(() => ({ itemIdToDelete: newItemIdToDelete })),
+      setSearchFilter: (newSearchFilter = "") => set(() => ({ searchFilter: newSearchFilter })),
+      itemIdToDelete: undefined,
+      setItemIdToDelete: (newItemIdToDelete?: ItemToDelete) => set(() => ({ itemIdToDelete: newItemIdToDelete })),
       categoryIdToDelete: 0,
       setCategoryIdToDelete: (newCategoryIdToDelete: number) =>
         set(() => ({ categoryIdToDelete: newCategoryIdToDelete })),

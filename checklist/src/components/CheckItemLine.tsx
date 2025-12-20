@@ -76,8 +76,8 @@ function CheckItemLine({ id, checked, title, sortOrder, isNewItem, listId }: Che
   }, [sortOrder]);
 
   const handleDeleteClick = useCallback(async () => {
-    setItemIdToDelete(id);
-  }, [id, setItemIdToDelete]);
+    setItemIdToDelete({ id, title });
+  }, [id, setItemIdToDelete, title]);
 
   const handleUpClick = useCallback(async () => {
     eventMgr.dispatch(EventType.MoveItem, { id, isUp: true });

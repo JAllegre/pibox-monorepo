@@ -26,23 +26,25 @@ function DeleteModal({ listId }: DeleteModalProps) {
     },
   });
   const handleDeleteClick = useCallback(async () => {
-    setItemIdToDelete(0);
-    await removeItemMutation.mutateAsync(itemIdToDelete);
-  }, [itemIdToDelete, removeItemMutation, setItemIdToDelete]);
+    setItemIdToDelete();
+    if (itemIdToDelete?.id) {
+      await removeItemMutation.mutateAsync(itemIdToDelete.id);
+    }
+  }, [itemIdToDelete?.id, removeItemMutation, setItemIdToDelete]);
 
   return (
     <>
-      <Modal isOpen={!!itemIdToDelete} onClose={() => setItemIdToDelete(0)}>
+      <Modal isOpen={!!itemIdToDelete} onClose={() => setItemIdToDelete()}>
         <ModalOverlay backdropFilter="blur(1px)" />
         <ModalContent bgColor="gray.700">
           <ModalHeader>Suppression d'un article</ModalHeader>
           <ModalCloseButton />
-          <ModalBody>Êtes vous sùr de vouloir supprimer cet article ?</ModalBody>
+          <ModalBody>{`Êtes vous sùr de vouloir supprimer "${itemIdToDelete?.title}" ?`}</ModalBody>
           <ModalFooter>
             <Button colorScheme="red" mr={3} onClick={handleDeleteClick}>
               Oui
             </Button>
-            <Button onClick={() => setItemIdToDelete(0)}>Annuler</Button>
+            <Button onClick={() => setItemIdToDelete()}>Annuler</Button>
           </ModalFooter>
         </ModalContent>
       </Modal>

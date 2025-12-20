@@ -31,6 +31,7 @@ const ChecklistPanel: FC = () => {
   const displayMode = usePersistChecklistStore((state) => state.displayMode);
   const setDisplayMode = usePersistChecklistStore((state) => state.setDisplayMode);
   const searchFilter = useChecklistStore((state) => state.searchFilter);
+  const setSearchFilter = useChecklistStore((state) => state.setSearchFilter);
   const { lId } = useParams();
   const listId = Number(lId);
 
@@ -81,17 +82,24 @@ const ChecklistPanel: FC = () => {
   );
 
   const handleEditModeClick = useCallback(() => {
+    setSearchFilter();
     setDisplayMode(displayMode === DisplayMode.Edit ? DisplayMode.View : DisplayMode.Edit);
-  }, [setDisplayMode, displayMode]);
+  }, [setSearchFilter, setDisplayMode, displayMode]);
 
   const handleAddACategoryClick = useCallback(async () => {
+    setSearchFilter();
     const newSortOrder = data?.checklist?.categories.reduce((acc, cat) => Math.max(acc, cat.sortOrder), 0);
     await addCategoryMutation.mutateAsync({
       listId: data?.checklist?.id || 0,
       title: "Nouvelle catégorie",
       sortOrder: newSortOrder ? newSortOrder + 10000 : 0,
     });
-  }, [addCategoryMutation, data?.checklist?.categories, data?.checklist?.id]);
+  }, [addCategoryMutation, data?.checklist?.categories, data?.checklist?.id, setSearchFilter]);
+
+  const handleClickLink = () => {
+    setSearchFilter();
+    console.log("handleClickLink");
+  };
 
   useEffect(() => {
     const cb = eventMgr.addListener(EventType.Refresh, () => {
@@ -218,7 +226,7 @@ const ChecklistPanel: FC = () => {
         >
           <HStack alignItems="center" px={1} pb={1}>
             <Box pt="5px">
-              <Link to={buildLinkPath()}>
+              <Link to={buildLinkPath()} onClick={handleClickLink}>
                 <IoIosArrowDropleftCircle fontSize="35px" />
               </Link>
             </Box>
