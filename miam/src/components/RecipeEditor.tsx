@@ -1,6 +1,6 @@
 import { RecipeInput, RecipeKind, RecipeRow } from "@common/miamTypes";
 import { ReloadIcon } from "@radix-ui/react-icons";
-import { addOneRecipe, updateOneRecipe } from "@src/lib/api";
+import { addOneRecipe, deleteOneRecipe, updateOneRecipe } from "@src/lib/api";
 import convertFileToImageDataUrl from "@src/lib/convertFileToImageDataUrl";
 import { getRecipeKindProperties } from "@src/lib/tools";
 import { Trash2 } from "lucide-react";
@@ -36,6 +36,7 @@ export default function RecipeEditor({ recipe }: RecipeEditorProps) {
   const [currentImageDataUrl, setCurrentImageDataUrl] = useState<string>(recipe?.imageDataUrl || "");
   const [currentKind, setCurrentKind] = useState<RecipeKind>(recipe?.kind || RecipeKind.Course);
   const navigate = useNavigate();
+  const [isDeletionValidated, setIsDeletionValidated] = useState<boolean>(false);
 
   const handleFileChange = useCallback(async (e: ChangeEvent<HTMLInputElement>) => {
     const imageDataUrl = await convertFileToImageDataUrl(e.target.files?.[0]);
@@ -84,6 +85,25 @@ export default function RecipeEditor({ recipe }: RecipeEditorProps) {
       navigate(Paths.Recipes);
     }
   }, [recipe, navigate]);
+
+  const handleDeleteClick = useCallback(() => {
+    if (isDeletionValidated) {
+      if (recipe?.id) {
+        deleteOneRecipe(recipe.id)
+          .then(() => {
+            navigate(Paths.Recipes);
+          })
+          .catch((error) => {
+            console.error("Failed to delete a recipe", error);
+          });
+      } else {
+        console.error("recipe.id is invalid");
+      }
+      setIsDeletionValidated(false);
+    } else {
+      setIsDeletionValidated(true);
+    }
+  }, [isDeletionValidated, recipe?.id]);
 
   return (
     <main className="py-3">
@@ -206,6 +226,9 @@ export default function RecipeEditor({ recipe }: RecipeEditorProps) {
           </Button>
           <Button type="reset" color="failure" onClick={handleResetClick}>
             Annuler
+          </Button>
+          <Button type="button" color="failure" variant="destructive" onClick={handleDeleteClick}>
+            {isDeletionValidated ? "Vraiment Sur ?" : "Supprimer"}
           </Button>
         </div>
       </form>

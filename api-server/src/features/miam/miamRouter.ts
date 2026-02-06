@@ -1,5 +1,5 @@
 import express, { NextFunction, Request, Response, Router } from "express";
-import { getAllRecipes, getOneRecipe, insertOneRecipe, updateOneRecipe } from "./miamDb";
+import { deleteOneRecipe, getAllRecipes, getOneRecipe, insertOneRecipe, updateOneRecipe } from "./miamDb";
 
 const miamRouter: Router = express.Router();
 
@@ -41,6 +41,15 @@ miamRouter.post(`${RECIPES_API}`, async (req: Request, res: Response, next: Next
 miamRouter.put(`${RECIPES_API}/:recipeId`, async (req: Request, res: Response, next: NextFunction) => {
   try {
     await updateOneRecipe(parseInt(req.params.recipeId, 10), req.body);
+    res.json({ message: "Recipe successfully updated" });
+  } catch (err) {
+    next(err);
+  }
+});
+
+miamRouter.delete(`${RECIPES_API}/:recipeId`, async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    await deleteOneRecipe(parseInt(req.params.recipeId, 10));
     res.json({ message: "Recipe successfully updated" });
   } catch (err) {
     next(err);

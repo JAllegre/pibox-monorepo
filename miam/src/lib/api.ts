@@ -1,6 +1,6 @@
 import { GetRecipeResponse, GetRecipesResponse, RecipeInput } from "@common/miamTypes";
 
-import { fetchData, postData } from "@common/clientApi";
+import { del, fetchData, postData } from "@common/clientApi";
 
 const baseApiUrl = `${import.meta.env.VITE_API_HOST}/api/miam/recipes`;
 
@@ -18,6 +18,10 @@ export async function updateOneRecipe(recipeId: number, recipeInput: RecipeInput
 
 export async function addOneRecipe(recipeInput: RecipeInput): Promise<GetRecipeResponse> {
   return postData(`${baseApiUrl}`, recipeInput);
+}
+
+export async function deleteOneRecipe(recipeId: number): Promise<void> {
+  return del(`${baseApiUrl}/${recipeId}`);
 }
 
 export async function checkPassword(password: string): Promise<undefined> {
