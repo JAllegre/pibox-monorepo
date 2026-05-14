@@ -18,12 +18,12 @@ export default function RecipePage() {
   const { recipe } = useLoaderData() as GetRecipeResponse;
   const { recipeId } = useParams();
   const { name, ingredients, steps, peopleNumber, imageDataUrl, kind } = recipe || {};
-  const { Icon, color } = getRecipeKindProperties(kind);
+  const { Icon } = getRecipeKindProperties(kind);
   return (
     <main className="recipe-page px-1 py-3">
       <div className="flex justify-between">
-        <div className="flex gap-2 items-baseline">
-          <Icon size={24} color={color} />
+        <div className="flex gap-2 items-center text-primary-600">
+          <Icon size={24} />
           <span className="text-2xl font-medium">{name}</span>
         </div>
         <Button size="icon" className="bg-primary-700 ">
