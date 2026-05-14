@@ -17,9 +17,9 @@ export default function RecipesPage() {
   };
 
   const { searchText } = useContext(SearchContext);
-  const toggleButtonClass = `border-primary-800 text-white select-none  border border-solid flex justify-center items-center px-4 py-1`;
-  const bgColor = "bg-primary-700";
-  const bgColorSelected = "bg-primary-600";
+  const toggleButtonClass = `text-white select-none  border border-primary-700 border-solid flex justify-center items-center px-4 py-1`;
+  const bgColor = "bg-primary-600";
+  const bgColorSelected = "bg-primary-500";
 
   function createJsxIconFromRecipeKind(recipeKind: RecipeKind) {
     const Icon = getRecipeKindProperties(recipeKind).Icon;
@@ -27,8 +27,8 @@ export default function RecipesPage() {
   }
 
   return (
-    <main className="flex-col justify-between items-center p-2 min-h-[100vh]">
-      <div className="flex justify-between p-1">
+    <main className="recipes-page flex-col justify-between items-center py-2 min-h-[100vh]">
+      <div className="flex justify-between items-center p-1">
         <div className="flex flex-grow justify-center">
           <div className="flex rounded-md  text-sm cursor-pointer">
             <div
@@ -61,8 +61,8 @@ export default function RecipesPage() {
             </div>
           </div>
         </div>
-        <Button size="icon" className="bg-primary-700 h-7 w-7">
-          <Link to={`${Paths.Recipes}/create`} className="text-[20px] p-5">
+        <Button size="icon" className="bg-primary-600 h-7 w-7">
+          <Link to={`${Paths.Recipes}/create`} className="text-[20px] p-2">
             <Plus />
           </Link>
         </Button>
@@ -79,7 +79,10 @@ export default function RecipesPage() {
           const { color, Icon } = getRecipeKindProperties(recipe.kind);
           return [
             ...acc,
-            <li key={`${recipe.name}-${recipe.id}`} className="px-2 py-1 hover:bg-gray-100">
+            <li
+              key={`${recipe.name}-${recipe.id}`}
+              className="px-3 py-2 mb-1 bg-primary-50 hover:bg-primary-100 border border-primary-200 rounded-lg"
+            >
               <Link to={`${Paths.Recipes}/${recipe.id}`}>
                 <div className="flex items-center justify-start gap-2">
                   <Icon size={18} strokeWidth={2} color={color} className="mb-1" />

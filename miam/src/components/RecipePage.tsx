@@ -20,7 +20,7 @@ export default function RecipePage() {
   const { name, ingredients, steps, peopleNumber, imageDataUrl, kind } = recipe || {};
   const { Icon, color } = getRecipeKindProperties(kind);
   return (
-    <main className="px-1 py-3">
+    <main className="recipe-page px-1 py-3">
       <div className="flex justify-between">
         <div className="flex gap-2 items-baseline">
           <Icon size={24} color={color} />
@@ -37,7 +37,7 @@ export default function RecipePage() {
         <div className="flex flex-col justify-between md:flex-row-reverse">
           {imageDataUrl ? (
             <div className="flex items-center justify-center md:basis-1/2 md:items-start">
-              <img src={imageDataUrl} alt="recipe" className="rounded-md shadow-md h-[200px] md:h-auto" />
+              <img src={imageDataUrl} alt="recipe" className="rounded-3xl shadow-lg h-[200px] md:h-auto" />
             </div>
           ) : (
             <div />
