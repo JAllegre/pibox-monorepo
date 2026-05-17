@@ -6,12 +6,21 @@ import { Link, useLoaderData, useParams } from "react-router-dom";
 import { Button } from "./ui/button";
 
 // Display a line of text
-function Line({ text }: { text: string }) {
+function Line({ text, className }: { text: string; className?: string }) {
+  text = text.trim();
   //if no text (means line break) set a non-breaking space to for line to be displayed
-  if (!text.trim() || text.trim() === ".") {
-    return <li className="pl-2" dangerouslySetInnerHTML={{ __html: "&nbsp" }} />;
+  if (!text || text === ".") {
+    return <li dangerouslySetInnerHTML={{ __html: "&nbsp" }} />;
   }
-  return <li className="pl-2">{text}</li>;
+
+  if (text.startsWith("#")) {
+    return <li className="ml-2 font-bold">{text.substring(1).trim()}</li>;
+  }
+
+  if (text.startsWith("-")) {
+    text = text.substring(1).trim();
+  }
+  return <li className={`ml-8 list-disc ${className || ""}`}>{text}</li>;
 }
 
 export default function RecipePage() {
@@ -44,7 +53,7 @@ export default function RecipePage() {
           )}
 
           <div>
-            <div className="text-md font-medium pt-3 md:pt-0">
+            <div className="text-2xl font-medium pt-3 md:pt-0">
               Ingrédients
               {!!peopleNumber && <span>(pour {peopleNumber} personnes)</span>}
             </div>
@@ -56,10 +65,10 @@ export default function RecipePage() {
           </div>
         </div>
         <div>
-          <div className="text-md font-medium pt-4">Préparation</div>
+          <div className="text-2xl font-medium pt-4">Préparation</div>
           <ul>
-            {steps?.split(/\r?\n/).map((step, i) => (
-              <Line key={`${step}-${i}`} text={step} />
+            {steps?.split(/\r?\n/).map((step) => (
+              <Line key={`${step}`} text={step} className="pb-4" />
             ))}
           </ul>
         </div>

@@ -76,16 +76,16 @@ export default function RecipesPage() {
           if (!matchSearch(searchText, recipe.name)) {
             return acc;
           }
-          const { color, Icon } = getRecipeKindProperties(recipe.kind);
+          const { color, Icon, hover } = getRecipeKindProperties(recipe.kind);
           return [
             ...acc,
             <li
               key={`${recipe.name}-${recipe.id}`}
-              className="px-3 py-2 mb-1 bg-primary-50 hover:bg-primary-100 border border-primary-200 rounded-lg"
+              className={`px-3 py-2 mb-1 ${hover} border border-gray-200 rounded-lg`}
             >
               <Link to={`${Paths.Recipes}/${recipe.id}`}>
                 <div className="flex items-center justify-start gap-2">
-                  <Icon size={18} strokeWidth={2} color={color} className="mb-1" />
+                  <Icon size={18} strokeWidth={2} className={`mb-1 ${color}`} />
                   <span className="font-semibold">{recipe.name}</span>
                 </div>
               </Link>

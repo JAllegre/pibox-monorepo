@@ -103,10 +103,15 @@ export default function RecipeEditor({ recipe }: RecipeEditorProps) {
     } else {
       setIsDeletionValidated(true);
     }
-  }, [isDeletionValidated, recipe?.id]);
+  }, [isDeletionValidated, navigate, recipe?.id]);
 
   return (
     <main className="py-3">
+      <div className="bg-orange-100 p-2 m-2">
+        <span>Caractères spéciaux:</span>
+        <br />
+        "#" : Sous section (affiché en gras) permettant de séparer 2 sous listes
+      </div>
       <form onSubmit={handleFormSubmit} action="">
         <input type="hidden" id="recipeId" name="recipeId" value={recipe?.id} />
         <div className="flex items-center gap-2 py-2">
