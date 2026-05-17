@@ -53,7 +53,7 @@ export default function RecipePage() {
           )}
 
           <div>
-            <div className="text-2xl font-medium pt-3 md:pt-0">
+            <div className="text-xl font-medium pt-3 md:pt-0">
               Ingrédients
               {!!peopleNumber && <span>(pour {peopleNumber} personnes)</span>}
             </div>
@@ -65,10 +65,10 @@ export default function RecipePage() {
           </div>
         </div>
         <div>
-          <div className="text-2xl font-medium pt-4">Préparation</div>
+          <div className="text-xl font-medium pt-4">Préparation</div>
           <ul>
             {steps?.split(/\r?\n/).map((step) => (
-              <Line key={`${step}`} text={step} className="pb-4" />
+              <Line key={`${step}`} text={step} className="pb-3" />
             ))}
           </ul>
         </div>
