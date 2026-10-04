@@ -48,7 +48,7 @@ function CheckItemLine({ id, checked, title, sortOrder, isNewItem, listId }: Che
       });
     },
 
-    [updateItemMutation]
+    [updateItemMutation],
   );
 
   useEffect(() => {
@@ -87,10 +87,53 @@ function CheckItemLine({ id, checked, title, sortOrder, isNewItem, listId }: Che
     eventMgr.dispatch(EventType.MoveItem, { id, isUp: false });
   }, [id]);
 
+  const handleDropItem = useCallback(async (draggedId: number, dragEvent?: DragEvent) => {
+    const cardRect = cardRef.current?.getBoundingClientRect();
+    if (!cardRect || !dragEvent) {
+      return;
+    }
+    console.log("drop", id, title, "to", draggedId, dragEvent.clientY, cardRect.top);
+    const isPointerOnTopHalf = dragEvent.clientY < cardRect.top + cardRect.height / 2;
+
+    eventMgr.dispatch(EventType.MoveItem, { id: draggedId, isUp: isPointerOnTopHalf });
+  }, []);
+
+  useEffect(() => {
+    const listenDragStart = (e: DragEvent) => {
+      e?.dataTransfer?.setData("text/plain", id.toString());
+      console.log("dragstart", id, title);
+    };
+
+    const listenDragDrop = (e: DragEvent) => {
+      const draggedId = e?.dataTransfer?.getData("text/plain") || "";
+      console.log("drop", id, title, "to", draggedId);
+      if (draggedId) {
+        handleDropItem(parseInt(draggedId), e);
+      }
+    };
+
+    const listenDragOver = (ev: DragEvent) => {
+      ev.preventDefault();
+    };
+
+    const cardNode = cardRef?.current;
+
+    cardNode?.addEventListener("dragstart", listenDragStart);
+    cardNode?.addEventListener("drop", listenDragDrop);
+    cardNode?.addEventListener("dragover", listenDragOver);
+
+    return () => {
+      cardNode?.removeEventListener("dragstart", listenDragStart);
+      cardNode?.removeEventListener("drop", listenDragDrop);
+      cardNode?.removeEventListener("dragover", listenDragOver);
+    };
+  }, [handleDropItem, id, title]);
+
   return (
     <div
       ref={cardRef}
       className={`checklist-line ${isItemChecked ? "checked" : ""} ${isNewItem || hasMoved ? "moved" : ""}`}
+      draggable
     >
       <div className="checklist-line-inner">
         <div className="checklist-line-left">

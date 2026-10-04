@@ -1,6 +1,7 @@
 export enum EventType {
   Refresh = "checklist-refresh",
   MoveItem = "checklist-move-item",
+  MoveCategory = "checklist-move-category",
 }
 export interface CustomEventDetailsMoveItem {
   id: number;

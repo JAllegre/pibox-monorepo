@@ -18,7 +18,7 @@ import { FaFolderPlus } from "react-icons/fa6";
 import { IoIosArrowDropleftCircle } from "react-icons/io";
 import { Link, useParams } from "react-router-dom";
 import MyReactQuerySuspense from "../utils/MyReactQuerySuspense";
-import { addCategory, getChecklist, updateItem, updateList } from "../utils/api";
+import { addCategory, getChecklist, updateCategory, updateItem, updateList } from "../utils/api";
 import eventMgr, { CustomEventDetailsMoveItem, EventType } from "../utils/eventMgr";
 import CheckCategoryPanel from "./CheckCategoryPanel";
 import "./ChecklistPanel.scss";
@@ -58,6 +58,21 @@ const ChecklistPanel: FC = () => {
     },
   });
 
+  const updateCategoryMutation = useMutation({
+    mutationFn: ({
+      categoryId,
+      checklistCategoryInput,
+    }: {
+      categoryId: number;
+      checklistCategoryInput: Partial<ChecklistCategoryInput>;
+    }) => {
+      if (data?.checklist?.id) {
+        return updateCategory(data.checklist.id, categoryId, checklistCategoryInput);
+      }
+      return Promise.reject("No checklist id found");
+    },
+  });
+
   const updateItemMutation = useMutation({
     mutationFn: ({
       itemId,
@@ -78,7 +93,7 @@ const ChecklistPanel: FC = () => {
       await updateListMutation.mutateAsync({ title: value });
     },
 
-    [updateListMutation]
+    [updateListMutation],
   );
 
   const handleEditModeClick = useCallback(() => {
@@ -130,7 +145,7 @@ const ChecklistPanel: FC = () => {
 
             return filteredItems;
           },
-          []
+          [],
         );
 
         currentFilteredCategories.push(filteredCategory);
@@ -193,7 +208,57 @@ const ChecklistPanel: FC = () => {
       // setLastMovedItemId(itemId);
       await updateItemMutation.mutateAsync({ itemId: itemId, checklistCategoryInput: { sortOrder: newOrder } });
     },
-    [sortedAndFilteredCategories, updateItemMutation]
+    [sortedAndFilteredCategories, updateItemMutation],
+  );
+
+  const handleMoveCategory = useCallback(
+    async (categoryId: number, isMovedUp: boolean) => {
+      const categoryIndex = sortedAndFilteredCategories.findIndex((c) => c.id === categoryId);
+      if (categoryIndex === -1) {
+        console.error("CheckListPanel.tsx", "handleMoveCategory", "category not found");
+        return;
+      }
+
+      const currentOrder = sortedAndFilteredCategories[categoryIndex].sortOrder;
+      let newOrder = currentOrder;
+
+      if (isMovedUp) {
+        if (categoryIndex === 0) {
+          return;
+        }
+        const categoryBefore = sortedAndFilteredCategories[categoryIndex - 1];
+        if (categoryIndex === 1) {
+          newOrder = categoryBefore.sortOrder / 2;
+        } else {
+          const categoryBeforeBefore = sortedAndFilteredCategories[categoryIndex - 2];
+          newOrder = (categoryBeforeBefore.sortOrder + categoryBefore.sortOrder) / 2;
+        }
+        if (newOrder === currentOrder) {
+          // Should never occur but I see it
+          newOrder -= 2;
+        }
+      } else {
+        if (categoryIndex >= sortedAndFilteredCategories.length - 1) {
+          return;
+        }
+        const categoryAfter = sortedAndFilteredCategories[categoryIndex + 1];
+        if (categoryIndex >= sortedAndFilteredCategories.length - 2) {
+          newOrder = categoryAfter.sortOrder + 50;
+        } else {
+          const categoryAfterAfter = sortedAndFilteredCategories[categoryIndex + 2];
+          newOrder = (categoryAfter.sortOrder + categoryAfterAfter.sortOrder) / 2;
+          if (newOrder === currentOrder) {
+            // Should never occur but I see it
+            newOrder += 1;
+          }
+        }
+      }
+      await updateCategoryMutation.mutateAsync({
+        categoryId: sortedAndFilteredCategories[categoryIndex].id,
+        checklistCategoryInput: { sortOrder: newOrder },
+      });
+    },
+    [sortedAndFilteredCategories, updateCategoryMutation],
   );
 
   useEffect(() => {
@@ -202,13 +267,22 @@ const ChecklistPanel: FC = () => {
       // @ts-expect-error to fix later
       ({ detail: { id, isUp } }: { detail: CustomEventDetailsMoveItem }) => {
         handleMoveItem(id, isUp);
-      }
+      },
+    );
+
+    const cb2 = eventMgr.addListener(
+      EventType.MoveCategory,
+      // @ts-expect-error to fix later
+      ({ detail: { id, isUp } }: { detail: CustomEventDetailsMoveCategory }) => {
+        handleMoveCategory(id, isUp);
+      },
     );
 
     return () => {
       eventMgr.removeListener(EventType.MoveItem, cb);
+      eventMgr.removeListener(EventType.MoveCategory, cb2);
     };
-  }, [handleMoveItem]);
+  }, [handleMoveItem, handleMoveCategory]);
   const isEditMode = displayMode === DisplayMode.Edit;
 
   return (

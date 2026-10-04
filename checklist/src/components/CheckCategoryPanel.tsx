@@ -1,9 +1,10 @@
 import { Box, Card, Stack } from "@chakra-ui/react";
 import { DisplayMode } from "@src/types";
 import { useChecklistStore, usePersistChecklistStore } from "@src/utils/ChecklistStore";
+import eventMgr, { EventType } from "@src/utils/eventMgr";
 import { useMutation } from "@tanstack/react-query";
 import { memo, useCallback, useEffect, useMemo, useState } from "react";
-import { FaRegTrashAlt } from "react-icons/fa";
+import { FaArrowAltCircleDown, FaArrowAltCircleUp, FaRegTrashAlt } from "react-icons/fa";
 import { RiMenuAddLine } from "react-icons/ri";
 import { ChecklistCategory, ChecklistCategoryInput, ChecklistItemStatus } from "../../../common/checklistTypes";
 import { addItem, updateCategory } from "../utils/api";
@@ -35,7 +36,7 @@ function CheckCategoryPanel({ checklistCategory, listId }: CheckCategoryPanelPro
       await updateCategoryMutation.mutateAsync({ title: value });
     },
 
-    [updateCategoryMutation]
+    [updateCategoryMutation],
   );
 
   const handleAddClick = useCallback(async () => {
@@ -59,6 +60,14 @@ function CheckCategoryPanel({ checklistCategory, listId }: CheckCategoryPanelPro
   const handleDeleteClick = useCallback(() => {
     setCategoryIdToDelete(checklistCategory.id);
   }, [checklistCategory.id, setCategoryIdToDelete]);
+
+  const handleUpClick = useCallback(async () => {
+    eventMgr.dispatch(EventType.MoveCategory, { id: checklistCategory.id, isUp: true });
+  }, [checklistCategory.id]);
+
+  const handleDownClick = useCallback(async () => {
+    eventMgr.dispatch(EventType.MoveCategory, { id: checklistCategory.id, isUp: false });
+  }, [checklistCategory.id]);
 
   useEffect(() => {
     let tt: number = 0;
@@ -89,6 +98,8 @@ function CheckCategoryPanel({ checklistCategory, listId }: CheckCategoryPanelPro
             placeholder="Nom catégorie"
             onValidated={handleTitleInputValidated}
           />
+          <MyIconButton ReactIcon={FaArrowAltCircleUp} color="teal.300" onClick={handleUpClick} fontSize={26} />
+          <MyIconButton ReactIcon={FaArrowAltCircleDown} color="teal.300" onClick={handleDownClick} fontSize={26} />
           <MyIconButton ReactIcon={RiMenuAddLine} color="teal.300" onClick={handleAddClick} fontSize={26} />
           <MyIconButton ReactIcon={FaRegTrashAlt} color="red.400" onClick={handleDeleteClick} fontSize={20} />
         </Stack>
